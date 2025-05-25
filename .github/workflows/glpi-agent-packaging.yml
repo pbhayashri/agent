@@ -5,7 +5,7 @@ name: GLPI Agent Packaging
 # Set number_of_nightly_build_to_keep to the number of nightly release to keep
 # Set number_of_nightly_build_to_keep to 0 to not publish nightly builds
 env:
-  publish_development_build: no
+  publish_development_build: yes
   number_of_development_build_to_keep: 3
   number_of_nightly_build_to_keep: 3
   macosx_notarize_support: yes
