@@ -683,5 +683,5 @@ sub run {
     $self->backup_file($zip_file);
 
     # do zip, 9 as max. compression  
-    $self->boss->zip_dir($zip_src, $zip_file, 9);
+ 
 }
