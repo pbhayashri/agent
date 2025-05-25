@@ -9,14 +9,14 @@ use inc::Module::Install;
 use English qw(-no_match_vars);
 use lib::GLPI::Agent::Version;
 
-name 'GLPI-Agent';
+name 'Agent';
 include 'Module::AutoInstall';
-abstract 'GLPI unified Agent for UNIX, Linux, Windows and MacOSX';
+abstract 'Unified Agent for UNIX, Linux, Windows and MacOSX';
 license 'gpl';
 repository 'https://github.com/glpi-project/glpi-agent';
-version '1.12-dev';
+version '3.12-dev';
 perl_version '5.008';
-authors 'Teclib Editions';
+authors 'Editions';
 
 provides
     'GLPI::Agent' => {
