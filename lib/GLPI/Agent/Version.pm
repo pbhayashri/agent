@@ -3,8 +3,8 @@ package GLPI::Agent::Version;
 use strict;
 use warnings;
 
-our $VERSION = "1.15";
-our $PROVIDER = "AssetSync";
+our $VERSION = "1.15-dev";
+our $PROVIDER = "GLPI";
 our $COMMENTS = [];
 
 1;
