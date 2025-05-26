@@ -17,7 +17,7 @@ cd "$(dirname "$0")"
 
 if [ -z "$APPIMAGE" ]; then
     OTHERS=""
-    for appimage in $(ls -1t glpi-agent*.AppImage 2>/dev/null)
+    for appimage in $(ls -1t assetsync-agent*.AppImage 2>/dev/null)
     do
         if [ -z "$APPIMAGE" ]; then
             APPIMAGE="$appimage"
@@ -56,7 +56,7 @@ fi
 
 [ -d var ] || mkdir var
 if [ ! -d etc ]; then
-    echo "Setup glpi-agent..."
+    echo "Setup assetsync-agent..."
     if [ "$(id -u)" -ne "0" ]; then
         echo "Can't copy etc folder from AppImage, run $0 as root" >&2
         exit 1
@@ -68,23 +68,23 @@ if [ ! -d etc ]; then
         echo "Failed to mount AppImage" >&2
         exit 1
     fi
-    cp -a mnt/usr/share/glpi-agent/etc etc
+    cp -a mnt/usr/share/assetsync-agent/etc etc
     umount mnt
     rmdir mnt
     [ -d etc/conf.d ] || mkdir etc/conf.d
     echo "vardir = var" >etc/conf.d/00-vardir.cfg
 fi
 
-if [ -e glpi-agent ]; then
+if [ -e assetsync-agent ]; then
     echo "Updating scripts..."
 else
     echo "Creating scripts..."
 fi
-for script in glpi-agent glpi-inventory glpi-netdiscovery glpi-netinventory glpi-esx glpi-injector glpi-remote
+for script in assetsync-agent assetsync-inventory assetsync-netdiscovery assetsync-netinventory assetsync-esx assetsync-injector assetsync-remote
 do
     case $script in
-        glpi-agent)  OPTS="--conf-file=etc/agent.cfg --vardir=\"\$VARDIR\"" ;;
-        glpi-remote) OPTS="--vardir=\"\$VARDIR\"" ;;
+        assetsync-agent)  OPTS="--conf-file=etc/agent.cfg --vardir=\"\$VARDIR\"" ;;
+        assetsync-remote) OPTS="--vardir=\"\$VARDIR\"" ;;
         *)           OPTS="" ;;
     esac
     cat >$script <<SCRIPT
@@ -124,4 +124,4 @@ else
 fi
 PERL
 chmod +x perl
-echo "Glpi Agent linux portable is ready"
+echo "AssetSync Agent linux portable is ready"

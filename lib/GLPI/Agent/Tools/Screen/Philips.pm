@@ -1,9 +1,9 @@
-package GLPI::Agent::Tools::Screen::Philips;
+package AssetSync::Agent::Tools::Screen::Philips;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Tools::Screen';
+use parent 'AssetSync::Agent::Tools::Screen';
 
 # Handles case monitor doesn't report serial2 in edid while it is connected
 # throught HDMI port. In that case, we uses serial1 as an integer, not hex.

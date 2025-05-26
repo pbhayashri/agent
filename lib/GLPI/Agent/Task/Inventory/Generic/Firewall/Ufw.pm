@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::Generic::Firewall::Ufw;
+package AssetSync::Agent::Task::Inventory::Generic::Firewall::Ufw;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools::Constants;
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools::Constants;
+use AssetSync::Agent::Tools;
 
 sub isEnabled {
     return

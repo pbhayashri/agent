@@ -8,20 +8,20 @@ use Test::Deep;
 use Test::Exception;
 use Test::More;
 
-use GLPI::Agent::XML::Response;
-use GLPI::Agent::SNMP::Live;
+use AssetSync::Agent::XML::Response;
+use AssetSync::Agent::SNMP::Live;
 
 plan tests => 12;
 
 my $snmp;
 throws_ok {
-    $snmp = GLPI::Agent::SNMP::Live->new();
+    $snmp = AssetSync::Agent::SNMP::Live->new();
     $snmp->testSession();
 } qr/^no hostname parameter/,
 'instanciation: no hostname parameter';
 
 throws_ok {
-    $snmp = GLPI::Agent::SNMP::Live->new(
+    $snmp = AssetSync::Agent::SNMP::Live->new(
         hostname => 'localhost',
         version  => 'foo'
     );
@@ -30,7 +30,7 @@ throws_ok {
 'instanciation: invalid version parameter';
 
 throws_ok {
-    $snmp = GLPI::Agent::SNMP::Live->new(
+    $snmp = AssetSync::Agent::SNMP::Live->new(
         hostname => 'localhost',
         version  => 5
     );
@@ -39,7 +39,7 @@ throws_ok {
 'instanciation: invalid version parameter';
 
 throws_ok {
-    $snmp = GLPI::Agent::SNMP::Live->new(
+    $snmp = AssetSync::Agent::SNMP::Live->new(
         hostname => 'localhost',
         version => 1
     );
@@ -48,7 +48,7 @@ throws_ok {
 'instanciation: undefined community';
 
 throws_ok {
-    $snmp = GLPI::Agent::SNMP::Live->new(
+    $snmp = AssetSync::Agent::SNMP::Live->new(
         version   => 1,
         community => 'public',
         hostname  => 'none'
@@ -58,7 +58,7 @@ throws_ok {
 'instanciation: unresolvable host';
 
 throws_ok {
-    $snmp = GLPI::Agent::SNMP::Live->new(
+    $snmp = AssetSync::Agent::SNMP::Live->new(
         version   => 1,
         community => 'public',
         hostname  => '1.1.1.1'
@@ -71,7 +71,7 @@ SKIP: {
 skip 'live SNMP test disabled', 6 unless $ENV{TEST_LIVE_SNMP};
 
 lives_ok {
-    $snmp = GLPI::Agent::SNMP::Live->new(
+    $snmp = AssetSync::Agent::SNMP::Live->new(
         version   => '1',
         community => 'public',
         hostname  => 'localhost'
@@ -103,7 +103,7 @@ cmp_deeply(
 );
 
 lives_ok {
-    $snmp = GLPI::Agent::SNMP::Live->new(
+    $snmp = AssetSync::Agent::SNMP::Live->new(
         version   => '2c',
         community => 'public',
         hostname  => 'localhost'

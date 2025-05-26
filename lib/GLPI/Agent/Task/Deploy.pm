@@ -1,25 +1,25 @@
-package GLPI::Agent::Task::Deploy;
+package AssetSync::Agent::Task::Deploy;
 
 # Full protocol documentation available here:
 #  http://fusioninventory.org/documentation/dev/spec/protocol/deploy.html
 
 use strict;
 use warnings;
-use parent 'GLPI::Agent::Task';
+use parent 'AssetSync::Agent::Task';
 
 use UNIVERSAL::require;
 
-use GLPI::Agent::HTTP::Client::Fusion;
-use GLPI::Agent::Storage;
-use GLPI::Agent::Task::Deploy::ActionProcessor;
-use GLPI::Agent::Task::Deploy::Datastore;
-use GLPI::Agent::Task::Deploy::File;
-use GLPI::Agent::Task::Deploy::Job;
-use GLPI::Agent::Event;
+use AssetSync::Agent::HTTP::Client::Fusion;
+use AssetSync::Agent::Storage;
+use AssetSync::Agent::Task::Deploy::ActionProcessor;
+use AssetSync::Agent::Task::Deploy::Datastore;
+use AssetSync::Agent::Task::Deploy::File;
+use AssetSync::Agent::Task::Deploy::Job;
+use AssetSync::Agent::Event;
 
-use GLPI::Agent::Task::Deploy::Version;
+use AssetSync::Agent::Task::Deploy::Version;
 
-our $VERSION = GLPI::Agent::Task::Deploy::Version::VERSION;
+our $VERSION = AssetSync::Agent::Task::Deploy::Version::VERSION;
 
 sub isEnabled {
     my ($self) = @_;
@@ -91,7 +91,7 @@ sub processRemote {
     }
 
     my $folder = $self->{target}->getStorage()->getDirectory();
-    my $datastore = GLPI::Agent::Task::Deploy::Datastore->new(
+    my $datastore = AssetSync::Agent::Task::Deploy::Datastore->new(
         config => $self->{config},
         path   => $folder,
         logger => $logger
@@ -122,7 +122,7 @@ sub processRemote {
     }
 
     foreach my $sha512 ( keys %{ $answer->{associatedFiles} } ) {
-        $files->{$sha512} = GLPI::Agent::Task::Deploy::File->new(
+        $files->{$sha512} = AssetSync::Agent::Task::Deploy::File->new(
             client    => $self->{client},
             sha512    => $sha512,
             data      => $answer->{associatedFiles}{$sha512},
@@ -148,7 +148,7 @@ sub processRemote {
             }
         }
 
-        push @$jobList, GLPI::Agent::Task::Deploy::Job->new(
+        push @$jobList, AssetSync::Agent::Task::Deploy::Job->new(
             remoteUrl       => $remoteUrl,
             client          => $self->{client},
             machineid       => $self->{deviceid},
@@ -299,7 +299,7 @@ sub processRemote {
             if $job->requiresSoftwaresInventory();
 
         # PROCESSING
-        my $actionProcessor = GLPI::Agent::Task::Deploy::ActionProcessor->new(
+        my $actionProcessor = AssetSync::Agent::Task::Deploy::ActionProcessor->new(
             logger  => $logger,
             workdir => $workdir->path()
         );
@@ -419,11 +419,11 @@ sub run {
     my $event = $self->resetEvent();
     if ($event) {
         my $name = $event->name;
-        if ($name && $event->maintenance && GLPI::Agent::Task::Deploy::Maintenance->require()) {
+        if ($name && $event->maintenance && AssetSync::Agent::Task::Deploy::Maintenance->require()) {
             my $nextEvent;
             my $targetid = $self->{target}->id;
             $logger->debug("Deploy task $name event for $targetid target");
-            my $maintenance = GLPI::Agent::Task::Deploy::Maintenance->new(
+            my $maintenance = AssetSync::Agent::Task::Deploy::Maintenance->new(
                 target  => $self->{target},
                 config  => $self->{config},
                 logger  => $self->{logger},
@@ -440,7 +440,7 @@ sub run {
         }
     }
 
-    $self->{client} = GLPI::Agent::HTTP::Client::Fusion->new(
+    $self->{client} = AssetSync::Agent::HTTP::Client::Fusion->new(
         logger  => $logger,
         config  => $self->{config},
     );
@@ -488,7 +488,7 @@ sub run {
 
     # Also plan a partial software inventory if this has been required in a job
     if ($self->{_software_inventory_required}) {
-        $self->addEvent(GLPI::Agent::Event->new(
+        $self->addEvent(AssetSync::Agent::Event->new(
             name        => "software inventory",
             task        => "inventory",
             partial     => "software",
@@ -503,7 +503,7 @@ sub run {
 sub newEvent {
     my ($self) = @_;
 
-    return GLPI::Agent::Event->new(
+    return AssetSync::Agent::Event->new(
         name        => "storage maintenance",
         task        => "deploy",
         maintenance => "yes",
@@ -518,12 +518,12 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Task::Deploy - Software deployment support for GLPI Agent
+AssetSync::Agent::Task::Deploy - Software deployment support for AssetSync Agent
 
 =head1 DESCRIPTION
 
 With this module, the agent can accept software deployment
-request from an GLPI server with a FusionInventory compatible plugin.
+request from an AssetSync server with a FusionInventory compatible plugin.
 
 This module uses SSL certificat to authentificat the server. You may have
 to point F<--ca-cert-file> or F<--ca-cert-dir> to your public certificat.

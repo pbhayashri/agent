@@ -10,9 +10,9 @@ use Test::More;
 use Test::NoWarnings;
 use Test::MockModule;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Virtualization::Virtuozzo;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Virtualization::Virtuozzo;
+use AssetSync::Agent::Tools::Virtualization;
 
 my %tests = (
     sample1 => {
@@ -117,13 +117,13 @@ my %tests = (
 plan tests => scalar(keys(%tests)) + 1;
 
 my $module = Test::MockModule->new(
-    'GLPI::Agent::Task::Inventory::Virtualization::Virtuozzo'
+    'AssetSync::Agent::Task::Inventory::Virtualization::Virtuozzo'
 );
 
 foreach my $test (keys %tests) {
     my $file = "resources/virtualization/virtuozzo/$test";
 
-    my $inventory = GLPI::Test::Inventory->new();
+    my $inventory = AssetSync::Test::Inventory->new();
     # Set a fake UUID as host UUID as used to create VM UUID
     $inventory->setHardware({ UUID => "fakeUUID" });
 
@@ -142,7 +142,7 @@ foreach my $test (keys %tests) {
         }
     );
 
-    GLPI::Agent::Task::Inventory::Virtualization::Virtuozzo::doInventory(
+    AssetSync::Agent::Task::Inventory::Virtualization::Virtuozzo::doInventory(
         file            => $file,
         inventory       => $inventory,
         ctid_template   => "resources/virtualization/virtuozzo/".$tests{$test}->{ctid_template}

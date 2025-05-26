@@ -1,3 +1,3 @@
-var/lib/glpi-agent
-etc/glpi-agent
-etc/glpi-agent/conf.d
+var/lib/assetsync-agent
+etc/assetsync-agent
+etc/assetsync-agent/conf.d

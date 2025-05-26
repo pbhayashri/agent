@@ -10,9 +10,9 @@ use Test::More;
 use Test::NoWarnings;
 use Cpanel::JSON::XS;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Tools::Virtualization;
-use GLPI::Agent::Task::Inventory::Virtualization::Docker;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Tools::Virtualization;
+use AssetSync::Agent::Task::Inventory::Virtualization::Docker;
 
 plan tests => 2;
 
@@ -37,28 +37,28 @@ my @inputList = (
 my $test = [
         {
             UUID => '7938ef110db9',
-            IMAGE=> 'driket54/glpi',
+            IMAGE=> 'driket54/assetsync',
             STATUS=> STATUS_OFF,
             NAME=> 'suspicious_dubinsky',
             VMTYPE     => 'docker',
         },
         {
             UUID => '216ff5c60d3e',
-            IMAGE=> 'driket54/glpi',
+            IMAGE=> 'driket54/assetsync',
             STATUS=> STATUS_OFF,
             NAME=> 'jolly_jepsen',
             VMTYPE     => 'docker',
         },
         {
             UUID => '22b330476769',
-            IMAGE=> 'driket54/glpi',
+            IMAGE=> 'driket54/assetsync',
             STATUS=> STATUS_OFF,
             NAME=> 'lonely_archimedes',
             VMTYPE     => 'docker',
         },
         {
             UUID => '2473dae7d24d',
-            IMAGE=> 'driket54/glpi',
+            IMAGE=> 'driket54/assetsync',
             STATUS=> STATUS_OFF,
             NAME=> 'loving_noyce',
             VMTYPE     => 'docker',
@@ -67,21 +67,21 @@ my $test = [
             UUID => '982fe8008bbf',
             IMAGE=> 'mariadb:5.5',
             STATUS=> STATUS_OFF,
-            NAME=> 'maraidb-5.5-glpi',
+            NAME=> 'maraidb-5.5-assetsync',
             VMTYPE     => 'docker',
         },
         {
             UUID => '5cc66341f6bc',
-            IMAGE=> 'driket54/glpi',
+            IMAGE=> 'driket54/assetsync',
             STATUS=> STATUS_OFF,
-            NAME=> 'glpiall_glpi_1',
+            NAME=> 'AssetSyncall_AssetSync_1',
             VMTYPE     => 'docker',
         },
         {
             UUID => 'cdd54d47e939',
             IMAGE=> 'mariadb',
             STATUS=> STATUS_OFF,
-            NAME=> 'glpiall_mysql_1',
+            NAME=> 'AssetSyncall_mysql_1',
             VMTYPE     => 'docker',
         },
         {
@@ -114,24 +114,24 @@ my $test = [
         },
         {
             UUID => 'b98829235592',
-            IMAGE=> 'driket54/glpi',
+            IMAGE=> 'driket54/assetsync',
             STATUS=> STATUS_RUNNING,
-            NAME=> 'glpi_http',
+            NAME=> 'AssetSync_http',
             VMTYPE     => 'docker',
         },
         {
             UUID => 'f8700da0f53c',
             IMAGE=> 'mariadb:5.5',
             STATUS=> STATUS_OFF,
-            NAME=> 'mariadb-glpi',
+            NAME=> 'mariadb-assetsync',
             VMTYPE     => 'docker',
         }
 ];
 
-my @containers = GLPI::Agent::Task::Inventory::Virtualization::Docker::_getContainers(
+my @containers = AssetSync::Agent::Task::Inventory::Virtualization::Docker::_getContainers(
     file => 'resources/containers/docker/docker_ps-a-with-template.sample'
 );
-my $jsonData = GLPI::Agent::Tools::getAllLines(
+my $jsonData = AssetSync::Agent::Tools::getAllLines(
     file => 'resources/containers/docker/docker_inspect.json'
 );
 my $coder = Cpanel::JSON::XS->new->allow_nonref;
@@ -144,7 +144,7 @@ for my $cont (@$containersFromJson) {
 }
 my @containersNew = ();
 for my $h (@containers) {
-        $h->{STATUS} = GLPI::Agent::Task::Inventory::Virtualization::Docker::_getStatus(
+        $h->{STATUS} = AssetSync::Agent::Task::Inventory::Virtualization::Docker::_getStatus(
             string => $coder->encode($containers->{$h->{NAME}})
         );
         push @containersNew, $h;

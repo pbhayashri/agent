@@ -14,14 +14,14 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Generic::Softwares::RPM;
-use GLPI::Agent::Task::Inventory::Generic::Softwares::Deb;
-use GLPI::Agent::Task::Inventory::Generic::Softwares::Gentoo;
-use GLPI::Agent::Task::Inventory::Generic::Softwares::Nix;
-use GLPI::Agent::Task::Inventory::Generic::Softwares::Pacman;
-use GLPI::Agent::Task::Inventory::Generic::Softwares::Snap;
-use GLPI::Agent::Task::Inventory::Generic::Softwares::Flatpak;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Generic::Softwares::RPM;
+use AssetSync::Agent::Task::Inventory::Generic::Softwares::Deb;
+use AssetSync::Agent::Task::Inventory::Generic::Softwares::Gentoo;
+use AssetSync::Agent::Task::Inventory::Generic::Softwares::Nix;
+use AssetSync::Agent::Task::Inventory::Generic::Softwares::Pacman;
+use AssetSync::Agent::Task::Inventory::Generic::Softwares::Snap;
+use AssetSync::Agent::Task::Inventory::Generic::Softwares::Flatpak;
 
 my $rpm_packages = [
     {
@@ -569,10 +569,10 @@ my $flatpak_packages = [
 
 plan tests => 12 + (scalar(@{$flatpak_packages}) + 1);
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 my $packages;
-$packages = GLPI::Agent::Task::Inventory::Generic::Softwares::RPM::_getPackagesList(
+$packages = AssetSync::Agent::Task::Inventory::Generic::Softwares::RPM::_getPackagesList(
     file => "resources/linux/packaging/rpm"
 );
 SKIP: {
@@ -587,7 +587,7 @@ lives_ok {
         foreach @$packages;
 } 'rpm: registering';
 
-$packages = GLPI::Agent::Task::Inventory::Generic::Softwares::Deb::_getPackagesList(
+$packages = AssetSync::Agent::Task::Inventory::Generic::Softwares::Deb::_getPackagesList(
     file => "resources/linux/packaging/dpkg"
 );
 cmp_deeply($packages, $deb_packages, 'dpkg: parsing');
@@ -596,7 +596,7 @@ lives_ok {
         foreach @$packages;
 } 'dpkg: registering';
 
-$packages = GLPI::Agent::Task::Inventory::Generic::Softwares::Nix::_getPackagesList(
+$packages = AssetSync::Agent::Task::Inventory::Generic::Softwares::Nix::_getPackagesList(
     file => "resources/linux/packaging/nix"
 );
 cmp_deeply($packages, $nix_packages, 'nix: parsing');
@@ -605,7 +605,7 @@ lives_ok {
         foreach @$packages;
 } 'nix: registering';
 
-$packages = GLPI::Agent::Task::Inventory::Generic::Softwares::Pacman::_getPackagesList(
+$packages = AssetSync::Agent::Task::Inventory::Generic::Softwares::Pacman::_getPackagesList(
     file => "resources/linux/packaging/pacman"
 );
 cmp_deeply($packages, $pacman_packages, 'pacman: parsing');
@@ -615,36 +615,36 @@ lives_ok {
 } 'pacman: registering';
 
 ok(
-    !GLPI::Agent::Task::Inventory::Generic::Softwares::Gentoo::_equeryNeedsWildcard(
+    !AssetSync::Agent::Task::Inventory::Generic::Softwares::Gentoo::_equeryNeedsWildcard(
         file => "resources/linux/equery/gentoo1"
     ),
     "old equery version"
 );
 
 ok(
-    GLPI::Agent::Task::Inventory::Generic::Softwares::Gentoo::_equeryNeedsWildcard(
+    AssetSync::Agent::Task::Inventory::Generic::Softwares::Gentoo::_equeryNeedsWildcard(
         file => "resources/linux/equery/gentoo2"
     ),
     "new equery version"
 );
 
-$packages = GLPI::Agent::Task::Inventory::Generic::Softwares::Snap::_getPackagesList(
+$packages = AssetSync::Agent::Task::Inventory::Generic::Softwares::Snap::_getPackagesList(
     file => "resources/linux/packaging/snap"
 );
 foreach my $snap (@{$packages}) {
-    GLPI::Agent::Task::Inventory::Generic::Softwares::Snap::_getPackagesInfo(
+    AssetSync::Agent::Task::Inventory::Generic::Softwares::Snap::_getPackagesInfo(
         snap => $snap,
         file => "resources/linux/packaging/snap_".$snap->{NAME}
     );
 }
 cmp_deeply($packages, $snap_packages, 'snap: parsing');
 
-$packages = GLPI::Agent::Task::Inventory::Generic::Softwares::Flatpak::_getFlatpakList(
+$packages = AssetSync::Agent::Task::Inventory::Generic::Softwares::Flatpak::_getFlatpakList(
     file => "resources/linux/packaging/flatpak"
 );
 foreach my $flatpak (@{$packages}) {
     my $appid = $flatpak->{_APPID};
-    $flatpak = GLPI::Agent::Task::Inventory::Generic::Softwares::Flatpak::_getFlatpakInfo(
+    $flatpak = AssetSync::Agent::Task::Inventory::Generic::Softwares::Flatpak::_getFlatpakInfo(
         flatpak => $flatpak,
         file    => "resources/linux/packaging/flatpak_".$appid."_".$flatpak->{_BRANCH}."_".$flatpak->{SYSTEM_CATEGORY}
     );

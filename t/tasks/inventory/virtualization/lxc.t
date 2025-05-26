@@ -8,8 +8,8 @@ use Test::Deep;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Task::Inventory::Virtualization::Lxc;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Agent::Task::Inventory::Virtualization::Lxc;
+use AssetSync::Agent::Tools::Virtualization;
 
 my %result_lxc_info = (
     'lxc-info_-n_name1' => STATUS_RUNNING,
@@ -51,7 +51,7 @@ my %container_tests = (
     '200-proxmox'  => {
         version => 3.0,
         result  => {
-            NAME    => 'glpi-10-rc1',
+            NAME    => 'assetsync-10-rc1',
             VMTYPE  => 'lxc',
             STATUS  => STATUS_RUNNING,
             MAC     => 'fa:ee:26:ef:6b:1c',
@@ -64,7 +64,7 @@ my %container_tests = (
 plan tests => keys(%result_lxc_info) + keys(%container_tests) + 1;
 
 foreach my $file (keys(%result_lxc_info)) {
-    my $state = GLPI::Agent::Task::Inventory::Virtualization::Lxc::_getVirtualMachineState(
+    my $state = AssetSync::Agent::Task::Inventory::Virtualization::Lxc::_getVirtualMachineState(
         file => "resources/virtualization/lxc/$file"
     );
     is($state, $result_lxc_info{$file}, "checking $file LXC state");
@@ -73,7 +73,7 @@ foreach my $file (keys(%result_lxc_info)) {
 foreach my $name (keys(%container_tests)) {
     my $file = "resources/virtualization/lxc/$name";
     $file =~ s|/|\\|g if $OSNAME eq "MSWin32";
-    my $config = GLPI::Agent::Task::Inventory::Virtualization::Lxc::_getVirtualMachine(
+    my $config = AssetSync::Agent::Task::Inventory::Virtualization::Lxc::_getVirtualMachine(
         name          => $name =~ /(^.*)-proxmox$/ ? $1 : $name,
         ctid          => $name =~ /(^.*)-proxmox$/ ? $1 : "",
         version       => $container_tests{$name}->{version},

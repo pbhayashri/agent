@@ -1,14 +1,14 @@
-package GLPI::Agent::Task::Inventory::Virtualization::Docker;
+package AssetSync::Agent::Task::Inventory::Virtualization::Docker;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use Cpanel::JSON::XS;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Virtualization;
 
 # wanted info fields for each container
 my @wantedInfos = qw/ID Image Ports Names/;

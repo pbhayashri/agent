@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::RemoteInventory::Remote::Winrm;
+package AssetSync::Agent::Task::RemoteInventory::Remote::Winrm;
 
 use strict;
 use warnings;
@@ -6,16 +6,16 @@ use warnings;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
-use parent 'GLPI::Agent::Task::RemoteInventory::Remote';
+use parent 'AssetSync::Agent::Task::RemoteInventory::Remote';
 
 use URI;
 use POSIX;
 use MIME::Base64;
 use Encode qw(decode encode);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::SOAP::WsMan;
-use GLPI::Agent::Tools::Win32::TimeZone;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::SOAP::WsMan;
+use AssetSync::Agent::Tools::Win32::TimeZone;
 
 use constant    supported => 1;
 
@@ -50,7 +50,7 @@ sub handle_url {
 sub prepare {
     my ($self) = @_;
 
-    $self->{_winrm} = GLPI::Agent::SOAP::WsMan->new(
+    $self->{_winrm} = AssetSync::Agent::SOAP::WsMan->new(
         logger      => $self->{logger},
         config      => $self->config(),
         url         => $self->{_canonical_url},
@@ -82,7 +82,7 @@ sub checking_error {
         unless $vendor =~ /microsoft/i;
 
     my $deviceid = $self->getRemoteRegistryValue(
-        path => 'HKEY_LOCAL_MACHINE/Software/GLPI-Agent/Remote/deviceid',
+        path => 'HKEY_LOCAL_MACHINE/Software/AssetSync-Agent/Remote/deviceid',
     );
     if ($deviceid) {
         $self->deviceid(deviceid => $deviceid);
@@ -93,7 +93,7 @@ sub checking_error {
             or return "Can't compute deviceid getting remote hostname";
         $self->{logger}->debug2("Registering $deviceid as remote deviceid");
         $self->remoteStoreDeviceid(
-            path        => 'HKLM/Software/GLPI-Agent/Remote/deviceid',
+            path        => 'HKLM/Software/AssetSync-Agent/Remote/deviceid',
             deviceid    => $deviceid,
         )
             or return "Can't store deviceid on remote";

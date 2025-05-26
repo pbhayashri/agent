@@ -5,4 +5,4 @@ lxc.cgroup.memory.limit_in_bytes = 2147483648
 lxc.cgroup.cpuset.cpus = 0,2
 
 lxc.net.0.hwaddr = FA:EE:26:EF:6B:1C
-lxc.uts.name = glpi-10-rc1
+lxc.uts.name = assetsync-10-rc1

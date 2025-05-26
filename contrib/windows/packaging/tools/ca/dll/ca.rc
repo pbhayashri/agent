@@ -27,10 +27,10 @@
 #define VER_FILE_TYPE           VFT_DLL
 #define VER_FILE_SUBTYPE        VFT2_UNKNOWN
 #define VER_FILE_OS             VOS__WINDOWS32
-#define VER_FILE_DESCRIPTION    "CustomActions for GLPI Agent"
+#define VER_FILE_DESCRIPTION    "CustomActions for AssetSync Agent"
 #define VER_COMPANY_NAME        "teclib-edition.com"
-#define VER_LEGAL_COPYRIGHT     "Copyright (c) GLPI Project"
-#define VER_PRODUCT_NAME        "GLPI-Agent Installer"
+#define VER_LEGAL_COPYRIGHT     "Copyright (c) AssetSync Project"
+#define VER_PRODUCT_NAME        "AssetSync-Agent Installer"
 
 VS_VERSION_INFO VERSIONINFO
     FILEVERSION     VER_FILE_VERSION

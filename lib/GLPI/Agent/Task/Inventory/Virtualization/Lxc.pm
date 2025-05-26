@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Inventory::Virtualization::Lxc;
+package AssetSync::Agent::Task::Inventory::Virtualization::Lxc;
 
 # Authors: Egor Shornikov <se@wbr.su>, Egor Morozov <akrus@flygroup.st>
 # License: GPLv2+
@@ -6,12 +6,12 @@ package GLPI::Agent::Task::Inventory::Virtualization::Lxc;
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Linux;
-use GLPI::Agent::Tools::Network;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Linux;
+use AssetSync::Agent::Tools::Network;
+use AssetSync::Agent::Tools::Virtualization;
 
 sub isEnabled {
     return canRun('lxc-ls') || canRun('pct');

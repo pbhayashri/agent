@@ -5,11 +5,11 @@ INSTALLPATH="`pwd`"
 cd ..
 
 echo "Stopping and unloading service"
-sudo launchctl stop com.teclib.glpi-agent
-sudo launchctl unload /Library/LaunchDaemons/com.teclib.glpi-agent.plist
+sudo launchctl stop com.teclib.assetsync-agent
+sudo launchctl unload /Library/LaunchDaemons/com.teclib.assetsync-agent.plist
 
 # Still wait until process has been stopped
-read PID XXX <<<`ps -ec -o pid,command | grep glpi-agent`
+read PID XXX <<<`ps -ec -o pid,command | grep assetsync-agent`
 if [ "$PID" !=  "" ]; then
     let TIMEOUT=300
     while sudo kill -0 $PID 2>/dev/null
@@ -35,10 +35,10 @@ do
   sudo rm -f -R "$FILE"
 done <<-FILES
     $INSTALLPATH
-    /var/log/glpi-agent.log
+    /var/log/assetsync-agent.log
     /usr/local/bin/dmidecode
-    /Library/LaunchDaemons/com.teclib.glpi-agent.plist
+    /Library/LaunchDaemons/com.teclib.assetsync-agent.plist
 FILES
 
 # Unregister package
-sudo pkgutil --forget com.teclib.glpi-agent $INSTALLPATH
+sudo pkgutil --forget com.teclib.assetsync-agent $INSTALLPATH

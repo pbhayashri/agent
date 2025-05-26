@@ -1,16 +1,16 @@
-package GLPI::Agent::HTTP::Server::ToolBox::Credentials;
+package AssetSync::Agent::HTTP::Server::ToolBox::Credentials;
 
 use strict;
 use warnings;
 
-use parent "GLPI::Agent::HTTP::Server::ToolBox";
+use parent "AssetSync::Agent::HTTP::Server::ToolBox";
 
 use English qw(-no_match_vars);
 use Encode qw(encode);
 use HTML::Entities;
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools;
 
 use constant    credentials => "credentials";
 
@@ -29,7 +29,7 @@ sub new {
 
     my $self = {
         logger  => $params{toolbox}->{logger} ||
-                    GLPI::Agent::Logger->new(),
+                    AssetSync::Agent::Logger->new(),
         toolbox => $params{toolbox},
         name    => $name,
     };

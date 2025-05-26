@@ -1,4 +1,4 @@
-package GLPI::Agent::SOAP::WsMan::Attribute;
+package AssetSync::Agent::SOAP::WsMan::Attribute;
 
 use strict;
 use warnings;

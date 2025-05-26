@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools;
+package AssetSync::Agent::Tools;
 
 use strict;
 use warnings;
@@ -12,7 +12,7 @@ use File::stat;
 use File::Which;
 use UNIVERSAL::require;
 
-use GLPI::Agent::Tools::Expiration;
+use AssetSync::Agent::Tools::Expiration;
 
 # Keep a copy of @ARGV, only for Provider inventory
 BEGIN {
@@ -42,7 +42,7 @@ our @EXPORT = qw(
     getAllLines
     getLinesCount
     compareVersion
-    glpiVersion
+    AssetSyncVersion
     canRun
     canRead
     hex2char
@@ -379,7 +379,7 @@ sub compareVersion {
 }
 
 # Return a version as an integer to be used in versions comparison
-sub glpiVersion {
+sub AssetSyncVersion {
     my ($version) = @_;
 
     return 0 unless $version && $version =~ /^v?(\d+)(?:\.(\d+))?(?:\.(\d+))?/;
@@ -744,7 +744,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools - OS-independent generic functions
+AssetSync::Agent::Tools - OS-independent generic functions
 
 =head1 DESCRIPTION
 

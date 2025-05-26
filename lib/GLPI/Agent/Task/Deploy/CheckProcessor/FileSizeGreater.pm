@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::Deploy::CheckProcessor::FileSizeGreater;
+package AssetSync::Agent::Task::Deploy::CheckProcessor::FileSizeGreater;
 
 use strict;
 use warnings;
 
-use parent "GLPI::Agent::Task::Deploy::CheckProcessor";
+use parent "AssetSync::Agent::Task::Deploy::CheckProcessor";
 
 sub prepare {
 }

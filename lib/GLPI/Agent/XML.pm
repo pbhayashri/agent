@@ -1,4 +1,4 @@
-package GLPI::Agent::XML;
+package AssetSync::Agent::XML;
 
 use strict;
 use warnings;
@@ -8,14 +8,14 @@ use UNIVERSAL::require;
 use English qw(-no_match_vars);
 use Encode qw(encode decode);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 # We need to use a dedicated worker thread to support XML::LibXML on win32 as
 # libxml2 DLL is not fully threads-safe if few contexts
 my $need_dedicated_thread = $OSNAME eq "MSWin32" ? 1 : 0;
 if ($need_dedicated_thread) {
-    GLPI::Agent::Tools::Win32->require() or die $@;
-    GLPI::Agent::Tools::Win32::start_Win32_OLE_Worker();
+    AssetSync::Agent::Tools::Win32->require() or die $@;
+    AssetSync::Agent::Tools::Win32::start_Win32_OLE_Worker();
 }
 
 sub new {
@@ -25,7 +25,7 @@ sub new {
     bless $self, $class;
 
     if ($need_dedicated_thread && !$params{threaded}) {
-        $self->{_id} = _GLPI_XML_win32_thread_binding(
+        $self->{_id} = _AssetSync_XML_win32_thread_binding(
             api     => "new",
             args    => [ %params ]
         );
@@ -100,7 +100,7 @@ sub has_xml {
     my ($self) = @_;
 
     if ($need_dedicated_thread && $self->{_id}) {
-        return _GLPI_XML_win32_thread_binding(
+        return _AssetSync_XML_win32_thread_binding(
             _id  => $self->{_id},
             api  => "has_xml",
             args => []
@@ -116,7 +116,7 @@ sub string {
     return $self unless defined($string) && length($string);
 
     if ($need_dedicated_thread && $self->{_id}) {
-        _GLPI_XML_win32_thread_binding(
+        _AssetSync_XML_win32_thread_binding(
             _id  => $self->{_id},
             api  => "string",
             args => [ $string ]
@@ -140,7 +140,7 @@ sub file {
     return $self unless defined($file) && -e $file;
 
     if ($need_dedicated_thread && $self->{_id}) {
-        _GLPI_XML_win32_thread_binding(
+        _AssetSync_XML_win32_thread_binding(
             _id  => $self->{_id},
             api  => "file",
             args => [ $file ]
@@ -182,7 +182,7 @@ sub _build_xml {
         if (ref($hash->{$key}) eq 'HASH') {
             $hash = $hash->{$key};
         } elsif (ref($hash->{$key})) {
-            die "GLPI::Agent::XML: Unsupported array ref as $key document root\n";
+            die "AssetSync::Agent::XML: Unsupported array ref as $key document root\n";
         } else {
             $root->appendTextNode(_encode($hash->{$key}));
             return 1;
@@ -243,7 +243,7 @@ sub write {
     my ($self, $hash) = @_;
 
     if ($need_dedicated_thread && $self->{_id}) {
-        return _GLPI_XML_win32_thread_binding(
+        return _AssetSync_XML_win32_thread_binding(
             _id  => $self->{_id},
             api  => "write",
             args => [ $hash ]
@@ -292,7 +292,7 @@ sub dump_as_hash {
     my ($self, $node) = @_;
 
     if ($need_dedicated_thread && $self->{_id}) {
-        return _GLPI_XML_win32_thread_binding(
+        return _AssetSync_XML_win32_thread_binding(
             _id  => $self->{_id},
             api  => "dump_as_hash",
             args => [ $node ]
@@ -348,7 +348,7 @@ sub dump_as_hash {
             } elsif (!ref($ret->{$name})) {
                 $ret->{$name}->{$textkey} .= $leaf;
             } elsif ($leaf) {
-                warn "GLPI::Agent::XML: Unsupported value type for $name: '$leaf'".(ref($leaf) ? " (".ref($leaf).")" : "")."\n";
+                warn "AssetSync::Agent::XML: Unsupported value type for $name: '$leaf'".(ref($leaf) ? " (".ref($leaf).")" : "")."\n";
             }
         }
         # We should skip XML attributs when reading a MacOSX plist file
@@ -379,7 +379,7 @@ sub dump_as_hash {
         # Cleanup empty nodes like "<node>\n    </node>"
         $ret = '' if $ret =~ /^\n\s+$/m;
     } else {
-        warn "GLPI::Agent::XML: Unsupported XML::LibXML node type: $type\n";
+        warn "AssetSync::Agent::XML: Unsupported XML::LibXML node type: $type\n";
     }
 
     return $ret;
@@ -388,7 +388,7 @@ sub dump_as_hash {
 # On win32, we want to cache XML objects in a dedicated thread
 my %XMLs;
 my $xmlid = 0;
-sub _GLPI_XML_win32_binded_thread {
+sub _AssetSync_XML_win32_binded_thread {
     my (%infos) = @_;
 
     my $api = $infos{api};
@@ -408,16 +408,16 @@ sub _GLPI_XML_win32_binded_thread {
     $xmlid = ++$xmlid % 4294967296 ;
     while (exists($XMLs{$xmlid})) { $xmlid++ };
 
-    $XMLs{$xmlid} = GLPI::Agent::XML->new(@{$infos{args}}, threaded => 1);
+    $XMLs{$xmlid} = AssetSync::Agent::XML->new(@{$infos{args}}, threaded => 1);
     return $xmlid;
 }
 
-sub _GLPI_XML_win32_thread_binding {
+sub _AssetSync_XML_win32_thread_binding {
     my (%params) = @_;
 
-    return GLPI::Agent::Tools::Win32::call_not_thread_safe_api_on_win32({
-        module => 'GLPI::Agent::XML',
-        funct  => '_GLPI_XML_win32_binded_thread',
+    return AssetSync::Agent::Tools::Win32::call_not_thread_safe_api_on_win32({
+        module => 'AssetSync::Agent::XML',
+        funct  => '_AssetSync_XML_win32_binded_thread',
         args   => \@_
     });
 }
@@ -425,7 +425,7 @@ sub _GLPI_XML_win32_thread_binding {
 sub DESTROY {
     local($., $@, $!, $^E, $?);
     my ($self) = @_;
-    $self->{_id} and _GLPI_XML_win32_thread_binding(
+    $self->{_id} and _AssetSync_XML_win32_thread_binding(
         _id     => $self->{_id},
         destroy => 1
     );

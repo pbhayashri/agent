@@ -1,17 +1,17 @@
-package GLPI::Test::Inventory;
+package AssetSync::Test::Inventory;
 
 use strict;
 use warnings;
-use parent qw(GLPI::Agent::Inventory);
+use parent qw(AssetSync::Agent::Inventory);
 
-use GLPI::Agent::Config;
-use GLPI::Agent::Logger;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Logger;
 
 sub new {
     my ($class, %params) = @_;
 
-    my $logger = GLPI::Agent::Logger->new(
-        config => GLPI::Agent::Config->new(
+    my $logger = AssetSync::Agent::Logger->new(
+        config => AssetSync::Agent::Config->new(
             options => {
                 config => 'none',
                 debug  => 2,

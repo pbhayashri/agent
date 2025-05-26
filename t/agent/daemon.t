@@ -8,14 +8,14 @@ use English qw(-no_match_vars);
 use Test::Deep;
 use Test::More;
 
-use GLPI::Agent;
-use GLPI::Agent::Config;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Daemon;
+use AssetSync::Agent;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Daemon;
 
 plan tests => 11;
 
-my $agent = GLPI::Agent::Daemon->new(
+my $agent = AssetSync::Agent::Daemon->new(
     libdir  => './lib'
 );
 $agent->{datadir} = './share';
@@ -41,7 +41,7 @@ $agent->init(options => $options);
 delete $agent->{config}->{_options};
 
 # after init call, the member 'config' is defined and well blessed
-ok (ref($agent->{config}) eq 'GLPI::Agent::Config');
+ok (ref($agent->{config}) eq 'AssetSync::Agent::Config');
 ok (defined($agent->{config}->{'conf-file'}));
 ok (scalar(@{$agent->{config}->{'no-task'}}) == 2);
 
@@ -67,7 +67,7 @@ SKIP: {
     my $testKey = 'tag';
     my $testValue = 'TEST_REGISTRY_VALUE';
     # change value in registry
-    my $settingsInRegistry = GLPI::Test::Utils::openWin32Registry();
+    my $settingsInRegistry = AssetSync::Test::Utils::openWin32Registry();
     $settingsInRegistry->{$testKey} = $testValue;
 
     my $keyInitialValue = $agent->{config}->{$testKey};

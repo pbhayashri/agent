@@ -1,16 +1,16 @@
-package GLPI::Agent::Task::Inventory::Win32::AntiVirus;
+package AssetSync::Agent::Task::Inventory::Win32::AntiVirus;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use UNIVERSAL::require;
 use File::Spec;
 use File::Basename qw(dirname);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Win32;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Win32;
 
 use constant    category    => "antivirus";
 
@@ -376,8 +376,8 @@ sub _setESETInfos {
         if ($xml) {
             my $expiration;
             eval {
-                GLPI::Agent::XML->require();
-                my $tree = GLPI::Agent::XML->new(string => $xml)->dump_as_hash();
+                AssetSync::Agent::XML->require();
+                my $tree = AssetSync::Agent::XML->new(string => $xml)->dump_as_hash();
                 $expiration = $tree->{ESET}->{PRODUCT_LICENSE_FILE}->{LICENSE}->{ACTIVE_PRODUCT}->{-EXPIRATION_DATE};
             };
             # Extracted expiration is like: 2018-11-17T12:00:00Z

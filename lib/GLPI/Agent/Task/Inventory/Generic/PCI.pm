@@ -1,11 +1,11 @@
-package GLPI::Agent::Task::Inventory::Generic::PCI;
+package AssetSync::Agent::Task::Inventory::Generic::PCI;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub isEnabled {
     return canRun('lspci');

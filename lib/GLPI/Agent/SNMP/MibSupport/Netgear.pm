@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Netgear;
+package AssetSync::Agent::SNMP::MibSupport::Netgear;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 use constant netgear    => '.1.3.6.1.4.1.4526';
 
@@ -59,10 +59,10 @@ sub run {
 
         $chassis->{SERIAL} = getCanonicalString($serial->{$unit});
 
-        # From GLPI 10.0.19, we can set discovered stack_number to help GLPI to
+        # From AssetSync 10.0.19, we can set discovered stack_number to help AssetSync to
         # know which ports are associated with this stack unit
-        my $glpi_version = $device->{glpi} ? glpiVersion($device->{glpi}) : 0;
-        if (!$glpi_version || $glpi_version >= glpiVersion('10.0.19')) {
+        my $AssetSync_version = $device->{assetsync} ? AssetSyncVersion($device->{assetsync}) : 0;
+        if (!$AssetSync_version || $AssetSync_version >= AssetSyncVersion('10.0.19')) {
             $chassis->{STACK_NUMBER} = $unit;
         }
     }
@@ -74,7 +74,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Netgear - Inventory module for Netgear devices
+AssetSync::Agent::SNMP::MibSupport::Netgear - Inventory module for Netgear devices
 
 =head1 DESCRIPTION
 

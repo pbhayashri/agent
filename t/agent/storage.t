@@ -9,13 +9,13 @@ use Test::Deep;
 use Test::Exception;
 use Test::More;
 
-use GLPI::Agent::Storage;
+use AssetSync::Agent::Storage;
 
 plan tests => 16;
 
 my $storage;
 throws_ok {
-    $storage = GLPI::Agent::Storage->new();
+    $storage = AssetSync::Agent::Storage->new();
 } qr/^no directory parameter/,
 'instanciation: no directory';
 
@@ -28,14 +28,14 @@ SKIP: {
     skip "chmod doesn't work on Windows", 2 if $OSNAME eq 'MSWin32';
     skip ", not applicable: test runned by root", 2 if $UID == 0;
     throws_ok {
-        $storage = GLPI::Agent::Storage->new(
+        $storage = AssetSync::Agent::Storage->new(
             directory => $readdir
         );
     } qr/^Can't write in/,
     'instanciation: non-writable directory';
 
     throws_ok {
-        $storage = GLPI::Agent::Storage->new(
+        $storage = AssetSync::Agent::Storage->new(
             directory => "$readdir/subdir"
         );
     } qr/^Can't create/,
@@ -47,13 +47,13 @@ mkdir $writedir;
 chmod 0755, $writedir;
 
 lives_ok {
-    $storage = GLPI::Agent::Storage->new(
+    $storage = AssetSync::Agent::Storage->new(
         directory => $writedir
     );
 } 'instanciation: writable directory';
 
 lives_ok {
-    $storage = GLPI::Agent::Storage->new(
+    $storage = AssetSync::Agent::Storage->new(
         directory => "$writedir/subdir"
     );
 } 'instanciation: creatable subdirectory';

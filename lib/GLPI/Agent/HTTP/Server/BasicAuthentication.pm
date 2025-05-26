@@ -1,9 +1,9 @@
-package GLPI::Agent::HTTP::Server::BasicAuthentication;
+package AssetSync::Agent::HTTP::Server::BasicAuthentication;
 
 use strict;
 use warnings;
 
-use base "GLPI::Agent::HTTP::Server::Plugin";
+use base "AssetSync::Agent::HTTP::Server::Plugin";
 
 use MIME::Base64;
 
@@ -36,7 +36,7 @@ sub defaults {
         realm               => undef,
         user                => undef,
         password            => undef,
-        # Supported by class GLPI::Agent::HTTP::Server::Plugin
+        # Supported by class AssetSync::Agent::HTTP::Server::Plugin
         maxrate             => 600,
         maxrate_period      => 600,
         forbid_not_trusted  => "no",
@@ -65,7 +65,7 @@ sub init {
     $self->{re_path_match} = qr{^$url_path_regexp$};
 
     # Setup a default realm if not set
-    $self->config('realm', "GLPI Agent")
+    $self->config('realm', "AssetSync Agent")
         unless $self->config('realm');
 }
 
@@ -123,7 +123,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::HTTP::Server::BasicAuthentication - A plugin to enable basic authentication
+AssetSync::Agent::HTTP::Server::BasicAuthentication - A plugin to enable basic authentication
 
 =head1 DESCRIPTION
 
@@ -141,7 +141,7 @@ It can only apply on other plugins requests and eventually on /runnow & /status 
 
 =item port             C<0> by default to use default one
 
-=item realm            C<GLPI Agent> by default
+=item realm            C<AssetSync Agent> by default
 
 =item user             not defined by default. The plugin is disabled untill one is set.
 

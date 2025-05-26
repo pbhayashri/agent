@@ -14,12 +14,12 @@ use Test::MockModule;
 use Test::Deep qw(cmp_deeply);
 use Test::NoWarnings;
 
-use GLPI::Agent;;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Config;
-use GLPI::Agent::Target;
+use AssetSync::Agent;;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Target;
 
-GLPI::Agent::Task::RemoteInventory->use();
+AssetSync::Agent::Task::RemoteInventory->use();
 
 my $vardir = tempdir(CLEANUP => 1);
 
@@ -32,7 +32,7 @@ my %baseconfig = (
     'remote-workers' => 1,
 );
 
-my $agent = GLPI::Agent->new(
+my $agent = AssetSync::Agent->new(
     datadir => tempdir(CLEANUP => 1),
     vardir  => $vardir,
     libdir  => 'blib/lib',
@@ -40,15 +40,15 @@ my $agent = GLPI::Agent->new(
 
 my $runs;
 
-my $inventory_module = Test::MockModule->new('GLPI::Agent::Task::Inventory');
+my $inventory_module = Test::MockModule->new('AssetSync::Agent::Task::Inventory');
 $inventory_module->mock('run', sub {});
 
 # Store API is called while a remote has been processed
-my $remotes_module = Test::MockModule->new('GLPI::Agent::Task::RemoteInventory::Remotes');
+my $remotes_module = Test::MockModule->new('AssetSync::Agent::Task::RemoteInventory::Remotes');
 $remotes_module->mock('store', sub { $runs++ });
 
 # Modify Ssh remote to do nothing
-my $ssh_remote_module = Test::MockModule->new('GLPI::Agent::Task::RemoteInventory::Remote::Ssh');
+my $ssh_remote_module = Test::MockModule->new('AssetSync::Agent::Task::RemoteInventory::Remote::Ssh');
 $ssh_remote_module->mock('checking_error', sub { 0 });
 
 my %test_cases = (
@@ -105,7 +105,7 @@ foreach my $test_case (sort keys(%test_cases)) {
 
     my $task;
     lives_ok {
-        $task = GLPI::Agent::Task::RemoteInventory->new(
+        $task = AssetSync::Agent::Task::RemoteInventory->new(
             config       => $agent->{config},
             datadir      => $agent->{datadir},
             logger       => $agent->{logger},

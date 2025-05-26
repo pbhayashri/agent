@@ -1,4 +1,4 @@
-package GLPI::Agent::HTTP::Server::Proxy;
+package AssetSync::Agent::HTTP::Server::Proxy;
 
 use strict;
 use warnings;
@@ -7,22 +7,22 @@ use English qw(-no_match_vars);
 use Compress::Zlib;
 use File::Temp;
 
-use base "GLPI::Agent::HTTP::Server::Plugin";
+use base "AssetSync::Agent::HTTP::Server::Plugin";
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::XML;
-use GLPI::Agent::Tools::UUID;
-use GLPI::Agent::HTTP::Client::OCS;
-use GLPI::Agent::HTTP::Client::GLPI;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::XML;
+use AssetSync::Agent::Tools::UUID;
+use AssetSync::Agent::HTTP::Client::OCS;
+use AssetSync::Agent::HTTP::Client::AssetSync;
 
-use GLPI::Agent::Protocol::Message;
-use GLPI::Agent::Protocol::Answer;
+use AssetSync::Agent::Protocol::Message;
+use AssetSync::Agent::Protocol::Answer;
 
 our $VERSION = "2.5";
 
 sub urlMatch {
     my ($self, $path) = @_;
-    # By default, re_path_match => qr{^/proxy/(apiversion|glpi)/?$}
+    # By default, re_path_match => qr{^/proxy/(apiversion|assetsync)/?$}
     return 0 unless $path =~ $self->{re_path_match};
     $self->{request} = $1;
     return 1;
@@ -48,16 +48,16 @@ sub defaults {
         prolog_freq         => 24,
         max_proxy_threads   => 10,
         max_pass_through    => 5,
-        glpi_protocol       => "yes",
+        AssetSync_protocol       => "yes",
         no_category         => "",
-        # Supported by class GLPI::Agent::HTTP::Server::Plugin
+        # Supported by class AssetSync::Agent::HTTP::Server::Plugin
         maxrate             => 30,
         maxrate_period      => 3600,
         forbid_not_trusted  => "no",
     };
 }
 
-# Don't publish an url on glpi-agent index page
+# Don't publish an url on assetsync-agent index page
 sub url {}
 
 sub supported_method {
@@ -84,15 +84,15 @@ sub init {
     my $url_path = $self->config('url_path');
     $self->debug("Using $url_path as base url matching")
         if ($url_path ne $defaults->{url_path});
-    $self->{re_path_match} = qr{^$url_path/(apiversion|glpi)/?$};
+    $self->{re_path_match} = qr{^$url_path/(apiversion|assetsync)/?$};
 
     # Normalize only_local_store
     $self->{only_local_store} = $self->config('only_local_store') !~ /^0|no$/i ? 1 : 0;
-    $self->{glpi_protocol}    = $self->config('glpi_protocol')    !~ /^0|no$/i ? 1 : 0;
+    $self->{AssetSync_protocol}    = $self->config('AssetSync_protocol')    !~ /^0|no$/i ? 1 : 0;
 
-    # Set finally we will only store locally if no server is indeed configured and glpi_protocol is set
-    if ($self->config('glpi_protocol') && scalar(grep { $_->isType('server') } $self->{server}->{agent}->getTargets()) == 0) {
-        $self->debug("Forcing only local storing as no glpi server is configured and glpi_protocol is set");
+    # Set finally we will only store locally if no server is indeed configured and AssetSync_protocol is set
+    if ($self->config('AssetSync_protocol') && scalar(grep { $_->isType('server') } $self->{server}->{agent}->getTargets()) == 0) {
+        $self->debug("Forcing only local storing as no assetsync server is configured and AssetSync_protocol is set");
         $self->{only_local_store} = 1;
     }
 
@@ -129,7 +129,7 @@ sub events_cb {
         or return 0;
 
     if ($dump =~ /^\{/) {
-        my $answer = GLPI::Agent::Protocol::Answer->new(
+        my $answer = AssetSync::Agent::Protocol::Answer->new(
             message => $dump,
         );
         $self->{answer}->{$reqid} = $answer;
@@ -174,7 +174,7 @@ sub handle {
     my $agent = $self->{server}->{agent};
 
     # Set requestid from header if it matches the spec
-    $requestid = $request->header('GLPI-Request-ID');
+    $requestid = $request->header('AssetSync-Request-ID');
     undef $requestid unless defined($requestid) && $requestid =~ /^[0-9A-F]{8}$/;
     $self->{requestid} = $requestid;
 
@@ -226,7 +226,7 @@ sub _send {
         $answer->getContent(),
     );
 
-    $response->header( 'GLPI-Request-ID' => $self->{requestid} ) if $self->{requestid};
+    $response->header( 'AssetSync-Request-ID' => $self->{requestid} ) if $self->{requestid};
 
     $self->{client}->send_response($response);
 
@@ -243,7 +243,7 @@ sub _handle_proxy_request {
 
     my $remoteid = $clientIp;
 
-    # /proxy/glpi request
+    # /proxy/assetsync request
 
     # From here we should fork and return
     my $agent = $self->{server}->{agent};
@@ -267,14 +267,14 @@ sub _handle_proxy_request {
     my $content_type = $request->header('Content-type');
     $self->debug2("$content_type type request from $remoteid") if $content_type;
 
-    my $proxyid = $request->header('GLPI-Proxy-ID') // "";
+    my $proxyid = $request->header('AssetSync-Proxy-ID') // "";
     if ($proxyid) {
         # Check pass-through limit
         my @proxies= split(/,/, $proxyid);
         if (@proxies >= $self->config('max_pass_through')) {
             $self->info("Max pass-through reached for request from $clientIp");
             return $self->_send(
-                GLPI::Agent::Protocol::Answer->new(
+                AssetSync::Agent::Protocol::Answer->new(
                     httpcode    => 403,
                     httpstatus  => "LIMITED-PROXY",
                     status      => "error",
@@ -284,7 +284,7 @@ sub _handle_proxy_request {
         } elsif (grep { $agent->{agentid} eq $_ } @proxies) {
             $self->error("Proxy loop detected for request from $clientIp");
             return $self->_send(
-                GLPI::Agent::Protocol::Answer->new(
+                AssetSync::Agent::Protocol::Answer->new(
                     httpcode    => 404,
                     httpstatus  => "PROXY-LOOP-DETECTED",
                     status      => "error",
@@ -296,10 +296,10 @@ sub _handle_proxy_request {
 
     my ($url, $params) = split(/[?]/, $request->uri());
 
-    my $agentid = $request->header('GLPI-Agent-ID') // "";
+    my $agentid = $request->header('AssetSync-Agent-ID') // "";
     $remoteid = "$agentid\@$clientIp" if $agentid;
 
-    # Handle GET requests with parameters in URL or GLPI-Request-ID as header
+    # Handle GET requests with parameters in URL or AssetSync-Request-ID as header
 
     if ($self->{requestid} && $request->method() eq "GET") {
         $self->debug("Asked for $self->{requestid} request status from $remoteid");
@@ -380,17 +380,17 @@ sub _handle_proxy_request {
         $content_type = "application/xml" if $content =~ /^<\?xml/;
     }
 
-    @servers = grep { $_->isGlpiServer() } $agent->getTargets()
+    @servers = grep { $_->isAssetSyncServer() } $agent->getTargets()
         unless $self->config('only_local_store');
 
-    # GLPI protocol based on JSON involves the usage of dedicated HTTP headers
-    # GLPI-Agent-ID is mandatory in that case
-    if ($self->config('glpi_protocol') && $agentid && is_uuid_string($agentid) && (@servers || $self->config('only_local_store'))) {
+    # AssetSync protocol based on JSON involves the usage of dedicated HTTP headers
+    # AssetSync-Agent-ID is mandatory in that case
+    if ($self->config('AssetSync_protocol') && $agentid && is_uuid_string($agentid) && (@servers || $self->config('only_local_store'))) {
 
         my $message;
         if ($content_type !~ m|^application/json$|i) {
             # Only not json request expected here is a contact request
-            my $xml = GLPI::Agent::XML->new(string => $content)->dump_as_hash();
+            my $xml = AssetSync::Agent::XML->new(string => $content)->dump_as_hash();
             unless ($xml) {
                 $self->debug("Not supported message: $EVAL_ERROR");
                 return $self->proxy_error(403, "Unsupported Content");
@@ -405,7 +405,7 @@ sub _handle_proxy_request {
             }
             $self->debug("Got legacy PROLOG request from $remoteid");
             # By default, tell agent to request contact asap with new protocol
-            my $answer = GLPI::Agent::Protocol::Answer->new(
+            my $answer = AssetSync::Agent::Protocol::Answer->new(
                 httpcode    => 202,
                 httpstatus  => "ACCEPTED",
                 status      => "pending",
@@ -415,7 +415,7 @@ sub _handle_proxy_request {
             );
             # But emulate a server answer when needed
             if ($self->config('only_local_store')) {
-                $self->debug("Answering as a GLPI server would do to $remoteid");
+                $self->debug("Answering as a AssetSync server would do to $remoteid");
                 $answer->success();
                 my $inventory = {};
                 $inventory->{"no-category"} = $self->config("no_category") if $self->config("no_category");
@@ -430,14 +430,14 @@ sub _handle_proxy_request {
                     expiration  => $self->config("prolog_freq"),
                 );
             } else {
-                $self->debug("Answering to $remoteid client to immediatly use GLPI protocol");
+                $self->debug("Answering to $remoteid client to immediatly use AssetSync protocol");
             }
             return $self->_send($answer);
         }
 
-        # Try to handle any JSON as GLPI agent protocol message
+        # Try to handle any JSON as AssetSync agent protocol message
         eval {
-            $message = GLPI::Agent::Protocol::Message->new(
+            $message = AssetSync::Agent::Protocol::Message->new(
                 message => $content,
             );
         };
@@ -479,7 +479,7 @@ sub _handle_proxy_request {
         }
 
         if ($self->config('only_local_store') || !@servers) {
-            my $answer = GLPI::Agent::Protocol::Answer->new(
+            my $answer = AssetSync::Agent::Protocol::Answer->new(
                 status      => "ok",
             );
             if ($action eq "contact") {
@@ -510,7 +510,7 @@ sub _handle_proxy_request {
         # From here we must tell client the request has been accepted and then
         # try to send inventory to servers
         my $expiration = $self->{_proxyreq_expiration} // 10;
-        my $answer = GLPI::Agent::Protocol::Answer->new(
+        my $answer = AssetSync::Agent::Protocol::Answer->new(
             httpcode    => 202,
             httpstatus  => "ACCEPTED",
             status      => "pending",
@@ -530,7 +530,7 @@ sub _handle_proxy_request {
         }
 
         # Prepare a client to foward request
-        my $proxyclient = GLPI::Agent::HTTP::Client::GLPI->new(
+        my $proxyclient = AssetSync::Agent::HTTP::Client::AssetSync->new(
             logger  => $self->{logger},
             config  => $serverconfig,
             agentid => $agentid,
@@ -590,7 +590,7 @@ sub _handle_proxy_request {
     my $deviceid;
     if ($content =~ m|^<\?xml|ms) {
         # Check if it's a PROLOG request
-        my $xml = GLPI::Agent::XML->new(string => $content);
+        my $xml = AssetSync::Agent::XML->new(string => $content);
         unless ($xml->has_xml()) {
             $self->info("Unsupported content in $self->{request} request from $clientIp");
             $self->debug("Content from $clientIp was starting with '".(substr($content,0,40))."'");
@@ -626,7 +626,7 @@ sub _handle_proxy_request {
 
             $self->debug2("PROLOG request from $remoteid");
 
-            my $xml = GLPI::Agent::XML->new();
+            my $xml = AssetSync::Agent::XML->new();
             my $data = {
                 REPLY => {
                     RESPONSE    => 'SEND',
@@ -693,12 +693,12 @@ sub _handle_proxy_request {
     }
 
     if (@servers) {
-        my $proxyclient = GLPI::Agent::HTTP::Client::OCS->new(
+        my $proxyclient = AssetSync::Agent::HTTP::Client::OCS->new(
             logger  => $self->{logger},
             config  => $serverconfig,
         );
 
-        my $message = GLPI::Agent::HTTP::Server::Proxy::Message->new(
+        my $message = AssetSync::Agent::HTTP::Server::Proxy::Message->new(
             content  => $content,
         );
 
@@ -736,7 +736,7 @@ sub proxy_error {
 
 ## no critic (ProhibitMultiplePackages)
 package
-    GLPI::Agent::HTTP::Server::Proxy::Message;
+    AssetSync::Agent::HTTP::Server::Proxy::Message;
 
 sub new {
     my ($class, %params) = @_;
@@ -758,7 +758,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::HTTP::Server::Proxy - An embedded HTTP server plugin
+AssetSync::Agent::HTTP::Server::Proxy - An embedded HTTP server plugin
 providing a proxy for agents not able to contact the server
 
 =head1 DESCRIPTION
@@ -771,7 +771,7 @@ The following default requests are accepted:
 
 =over
 
-=item /proxy/glpi
+=item /proxy/assetsync
 
 =item /proxy/apiversion
 

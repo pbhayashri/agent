@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Solaris::Softwares;
+package AssetSync::Agent::Task::Inventory::Solaris::Softwares;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use UNIVERSAL::require;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant    category    => "software";
 

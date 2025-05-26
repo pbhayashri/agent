@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::MacOS::License;
+package AssetSync::Agent::Task::Inventory::MacOS::License;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::License;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::License;
 
 use constant    category    => "licenseinfo";
 

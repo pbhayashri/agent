@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Linux::AntiVirus::Cortex;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Linux::AntiVirus::Cortex;
 
 my %av_tests = (
     'cortex-xdr-8.2.1.120305' => {
@@ -26,11 +26,11 @@ plan tests =>
     (2 * scalar keys %av_tests) +
     1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %av_tests) {
     my $base_file = "resources/linux/antivirus/$test";
-    my $antivirus = GLPI::Agent::Task::Inventory::Linux::AntiVirus::Cortex::_getCortex(basefile => $base_file);
+    my $antivirus = AssetSync::Agent::Task::Inventory::Linux::AntiVirus::Cortex::_getCortex(basefile => $base_file);
     cmp_deeply($antivirus, $av_tests{$test}, "$test: parsing");
     lives_ok {
         $inventory->addEntry(section => 'ANTIVIRUS', entry => $antivirus);

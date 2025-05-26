@@ -1,11 +1,11 @@
-package GLPI::Agent::Tools::USB::Gertec;
+package AssetSync::Agent::Tools::USB::Gertec;
 
 use strict;
 use warnings;
 
-use parent qw(GLPI::Agent::Tools::USB);
+use parent qw(AssetSync::Agent::Tools::USB);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 # Actually supported only on MSWin32
 sub enabled {

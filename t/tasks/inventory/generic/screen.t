@@ -11,10 +11,10 @@ use Test::MockModule;
 use UNIVERSAL::require;
 use Data::Dumper;
 
-use GLPI::Agent::Config;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Task::Inventory::Generic::Screen;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Task::Inventory::Generic::Screen;
 
 plan(skip_all => 'Parse::EDID >= 1.0.4 required')
     unless Parse::EDID->require('1.0.4');
@@ -934,7 +934,7 @@ foreach my $test (sort keys %edid_tests) {
     my $file = "resources/generic/edid/$test";
     my $edid = getAllLines(file => $file)
         or die "Can't read $file: $!\n";
-    my $info = GLPI::Agent::Task::Inventory::Generic::Screen::_getEdidInfo(edid => $edid, datadir => './share');
+    my $info = AssetSync::Agent::Task::Inventory::Generic::Screen::_getEdidInfo(edid => $edid, datadir => './share');
     if (!$edid_tests{$test} || !keys(%{$edid_tests{$test}})) {
         $dumper = Data::Dumper->new([$info], [$test])->Useperl(1)->Indent(1)->Quotekeys(0)->Sortkeys(1)->Pad("    ");
         $dumper->{xpad} = "    ";
@@ -948,11 +948,11 @@ foreach my $test (sort keys %edid_tests) {
 }
 
 my $module = Test::MockModule->new(
-    'GLPI::Agent::Tools::MacOS'
+    'AssetSync::Agent::Tools::MacOS'
 );
 
-my $logger = GLPI::Agent::Logger->new(
-    config => GLPI::Agent::Config->new(
+my $logger = AssetSync::Agent::Logger->new(
+    config => AssetSync::Agent::Config->new(
         options => {
             config => 'none',
             logger => 'Test'
@@ -972,7 +972,7 @@ foreach my $test (sort keys %macos_tests) {
         }
     );
 
-    my @screen = GLPI::Agent::Task::Inventory::Generic::Screen::_getScreensFromMacOS(logger => $logger);
+    my @screen = AssetSync::Agent::Task::Inventory::Generic::Screen::_getScreensFromMacOS(logger => $logger);
     # Dump found expect when still not integrated in test file
     unless ($macos_tests{$test}->{expect} && @{$macos_tests{$test}->{expect}}) {
         my $dumper = Data::Dumper->new([\@screen], ["\$macos_tests{$test}->{expect}"])->Useperl(1)->Indent(1)->Quotekeys(0)->Sortkeys(1)->Pad("        ");
@@ -981,7 +981,7 @@ foreach my $test (sort keys %macos_tests) {
     }
     cmp_deeply(\@screen, $macos_tests{$test}->{expect}, "MacOS: $test");
 
-    my @screeninv = GLPI::Agent::Task::Inventory::Generic::Screen::_getScreens(logger => $logger, screens => \@screen);
+    my @screeninv = AssetSync::Agent::Task::Inventory::Generic::Screen::_getScreens(logger => $logger, screens => \@screen);
     # Dump found invtest when still not integrated in test file
     unless ($macos_tests{$test}->{invtest} && @{$macos_tests{$test}->{invtest}}) {
         my $dumper = Data::Dumper->new([\@screeninv], ["\$macos_tests{$test}->{invtest}"])->Useperl(1)->Indent(1)->Quotekeys(0)->Sortkeys(1)->Pad("        ");

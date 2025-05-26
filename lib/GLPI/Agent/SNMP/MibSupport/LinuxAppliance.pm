@@ -1,13 +1,13 @@
-package GLPI::Agent::SNMP::MibSupport::LinuxAppliance;
+package AssetSync::Agent::SNMP::MibSupport::LinuxAppliance;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Hardware;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Hardware;
+use AssetSync::Agent::Tools::SNMP;
 
 use constant    iso         => '.1.3.6.1.2.1';
 use constant    sysDescr    => iso . '.1.1.0';
@@ -362,8 +362,8 @@ sub run {
             push @{$device->{STORAGES}}, $storage;
         }
 
-        my $glpi_version = $device->{glpi} ? glpiVersion($device->{glpi}) : 0;
-        if (!$glpi_version || $glpi_version > glpiVersion('10.0.10')) {
+        my $AssetSync_version = $device->{assetsync} ? AssetSyncVersion($device->{assetsync}) : 0;
+        if (!$AssetSync_version || $AssetSync_version > AssetSyncVersion('10.0.10')) {
             my $volumesNames      = $self->walk(syno_raidName) // {};
             my $volumesFreeSizes  = $self->walk(syno_raidFreeSize) // {};
             my $volumesTotalSizes = $self->walk(syno_raidTotalSize) // {};
@@ -385,7 +385,7 @@ sub run {
                     if defined($volumn->{FREE}) && defined($volumn->{TOTAL});
             }
         } elsif ($device->{logger}) {
-            $device->{logger}->debug("Skipping DISKS inventory as glpi $glpi_version is out-dated, you should upgrade your glpi server");
+            $device->{logger}->debug("Skipping DISKS inventory as assetsync $AssetSync_version is out-dated, you should upgrade your assetsync server");
         }
 
         my $dsmInfo_version = $self->get(dsmInfo_version);
@@ -459,7 +459,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::LinuxAppliance - Inventory module for Linux Appliances
+AssetSync::Agent::SNMP::MibSupport::LinuxAppliance - Inventory module for Linux Appliances
 
 =head1 DESCRIPTION
 

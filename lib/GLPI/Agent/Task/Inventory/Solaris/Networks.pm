@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::Inventory::Solaris::Networks;
+package AssetSync::Agent::Task::Inventory::Solaris::Networks;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 #ce5: flags=1000843<UP,BROADCAST,RUNNING,MULTICAST,IPv4> mtu 1500 index 3
 #        inet 55.37.101.171 netmask fffffc00 broadcast 55.37.103.255
@@ -16,10 +16,10 @@ use parent 'GLPI::Agent::Task::Inventory::Module';
 #IFC=/sbin/ifconfig
 #DLADM=/usr/sbin/dladm
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Solaris;
-use GLPI::Agent::Tools::Network;
-use GLPI::Agent::Tools::Unix;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Solaris;
+use AssetSync::Agent::Tools::Network;
+use AssetSync::Agent::Tools::Unix;
 
 use constant    category    => "network";
 

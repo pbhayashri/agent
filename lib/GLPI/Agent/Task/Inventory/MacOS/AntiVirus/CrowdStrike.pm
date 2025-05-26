@@ -1,11 +1,11 @@
-package GLPI::Agent::Task::Inventory::MacOS::AntiVirus::CrowdStrike;
+package AssetSync::Agent::Task::Inventory::MacOS::AntiVirus::CrowdStrike;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 my $command = '/Applications/Falcon.app/Contents/Resources/falconctl';
 

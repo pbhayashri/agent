@@ -1,4 +1,4 @@
-package GLPI::Test::Proxy;
+package AssetSync::Test::Proxy;
 
 use strict;
 use warnings;

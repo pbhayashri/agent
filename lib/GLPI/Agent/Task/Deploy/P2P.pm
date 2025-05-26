@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Deploy::P2P;
+package AssetSync::Agent::Task::Deploy::P2P;
 
 use strict;
 use warnings;
@@ -10,15 +10,15 @@ use Parallel::ForkManager;
 
 use UNIVERSAL::require;
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools;
 
 sub new {
     my ($class, %params) = @_;
 
     my $self = {
         logger        => $params{logger} ||
-                         GLPI::Agent::Logger->new(),
+                         AssetSync::Agent::Logger->new(),
         datastore     => $params{datastore},
         max_workers   => $params{max_workers}   || 10,
         cache_timeout => $params{cache_timeout} || 1200,
@@ -61,12 +61,12 @@ sub findPeers {
     my @interfaces;
 
     if ($OSNAME eq 'linux') {
-        GLPI::Agent::Tools::Linux->require();
-        @interfaces = GLPI::Agent::Tools::Linux::getInterfacesFromIfconfig();
+        AssetSync::Agent::Tools::Linux->require();
+        @interfaces = AssetSync::Agent::Tools::Linux::getInterfacesFromIfconfig();
 
     } elsif ($OSNAME eq 'MSWin32') {
-        GLPI::Agent::Tools::Win32->require();
-        @interfaces = GLPI::Agent::Tools::Win32::getInterfaces();
+        AssetSync::Agent::Tools::Win32->require();
+        @interfaces = AssetSync::Agent::Tools::Win32::getInterfaces();
     }
 
     if (!@interfaces) {

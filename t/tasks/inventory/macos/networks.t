@@ -9,7 +9,7 @@ use Test::Deep;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Task::Inventory::MacOS::Networks;
+use AssetSync::Agent::Task::Inventory::MacOS::Networks;
 
 my %tests = (
     'macosx-01' => [
@@ -777,12 +777,12 @@ foreach my $test (keys %tests) {
     my $netsetup_file = "resources/macos/ifconfig/$test-networksetup";
 
     my $netsetup;
-    $netsetup = GLPI::Agent::Task::Inventory::MacOS::Networks::_parseNetworkSetup(
+    $netsetup = AssetSync::Agent::Task::Inventory::MacOS::Networks::_parseNetworkSetup(
         file => $netsetup_file
     );
     ok( $netsetup, "_parseNetworkSetup() for $test" );
 
-    my $nets = GLPI::Agent::Task::Inventory::MacOS::Networks::_getInterfaces(
+    my $nets = AssetSync::Agent::Task::Inventory::MacOS::Networks::_getInterfaces(
         file        => $ifconfig_file,
         netsetup    => $netsetup
     );

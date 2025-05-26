@@ -6,7 +6,7 @@ use warnings;
 use Test::Deep;
 use Test::More;
 
-use GLPI::Agent::Tools::Generic;
+use AssetSync::Agent::Tools::Generic;
 
 my %dmidecode_tests = (
     'freebsd-6.2' =>  {

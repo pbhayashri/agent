@@ -1,11 +1,11 @@
-package GLPI::Agent::Task::Inventory::MacOS::AntiVirus::Cortex;
+package AssetSync::Agent::Task::Inventory::MacOS::AntiVirus::Cortex;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 my $command = '/Library/Application Support/PaloAltoNetworks/Traps/bin/cytool';
 

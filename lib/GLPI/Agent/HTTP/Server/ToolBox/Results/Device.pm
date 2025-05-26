@@ -1,4 +1,4 @@
-package GLPI::Agent::HTTP::Server::ToolBox::Results::Device;
+package AssetSync::Agent::HTTP::Server::ToolBox::Results::Device;
 
 use strict;
 use warnings;

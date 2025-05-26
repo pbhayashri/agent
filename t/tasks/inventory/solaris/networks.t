@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Solaris::Networks;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Solaris::Networks;
 
 my %ifconfig_tests = (
     'solaris-10' => [
@@ -232,11 +232,11 @@ plan tests =>
         scalar(map { keys %{$dladm_tests{$_}} } keys %dladm_tests) +
     1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %ifconfig_tests) {
     my $file = "resources/generic/ifconfig/$test";
-    my @interfaces = GLPI::Agent::Task::Inventory::Solaris::Networks::_parseIfconfig(file => $file);
+    my @interfaces = AssetSync::Agent::Task::Inventory::Solaris::Networks::_parseIfconfig(file => $file);
     cmp_deeply(\@interfaces, $ifconfig_tests{$test}, "$test: parsing");
     lives_ok {
         $inventory->addEntry(section => 'NETWORKS', entry => $_)
@@ -249,7 +249,7 @@ foreach my $test (sort keys %dladm_tests) {
         my $file = "resources/solaris/dladm/$test-$name";
         $file =~ s/:/_/g;
         is(
-            GLPI::Agent::Task::Inventory::Solaris::Networks::_getInterfaceSpeedviaDladm(
+            AssetSync::Agent::Task::Inventory::Solaris::Networks::_getInterfaceSpeedviaDladm(
                 file => $file,
                 name => $name,
             ),
@@ -262,7 +262,7 @@ foreach my $test (sort keys %dladm_tests) {
 foreach my $test (sort keys %kstat_tests) {
     my $file = "resources/solaris/kstat/$test";
     is(
-        GLPI::Agent::Task::Inventory::Solaris::Networks::_getInterfaceSpeed(file => $file),
+        AssetSync::Agent::Task::Inventory::Solaris::Networks::_getInterfaceSpeed(file => $file),
         $kstat_tests{$test},
         "$test: parsing"
     );
@@ -270,7 +270,7 @@ foreach my $test (sort keys %kstat_tests) {
 
 foreach my $test (keys %parsefcinfo_tests) {
     my $file = "resources/solaris/fcinfo_hba-port/$test";
-    my @interfaces = GLPI::Agent::Task::Inventory::Solaris::Networks::_parsefcinfo(file => $file);
+    my @interfaces = AssetSync::Agent::Task::Inventory::Solaris::Networks::_parsefcinfo(file => $file);
     cmp_deeply(\@interfaces, $parsefcinfo_tests{$test}, "$test fcinfo: parsing");
     lives_ok {
         $inventory->addEntry(section => 'NETWORKS', entry => $_)

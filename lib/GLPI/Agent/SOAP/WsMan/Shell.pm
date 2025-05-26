@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::Shell;
+package AssetSync::Agent::SOAP::WsMan::Shell;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package
@@ -12,12 +12,12 @@ package
 use parent
     'Node';
 
-use GLPI::Agent::SOAP::WsMan::Attribute;
-use GLPI::Agent::SOAP::WsMan::InputStreams;
-use GLPI::Agent::SOAP::WsMan::OutputStreams;
-use GLPI::Agent::SOAP::WsMan::CommandLine;
-use GLPI::Agent::SOAP::WsMan::Command;
-use GLPI::Agent::SOAP::WsMan::Arguments;
+use AssetSync::Agent::SOAP::WsMan::Attribute;
+use AssetSync::Agent::SOAP::WsMan::InputStreams;
+use AssetSync::Agent::SOAP::WsMan::OutputStreams;
+use AssetSync::Agent::SOAP::WsMan::CommandLine;
+use AssetSync::Agent::SOAP::WsMan::Command;
+use AssetSync::Agent::SOAP::WsMan::Arguments;
 
 use constant    xmlns   => 'rsp';
 use constant    xsd     => "http://schemas.microsoft.com/wbem/wsman/1/windows/shell";

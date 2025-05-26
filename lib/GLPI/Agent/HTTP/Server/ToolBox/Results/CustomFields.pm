@@ -1,9 +1,9 @@
-package GLPI::Agent::HTTP::Server::ToolBox::Results::CustomFields;
+package AssetSync::Agent::HTTP::Server::ToolBox::Results::CustomFields;
 
 use strict;
 use warnings;
 
-use parent "GLPI::Agent::HTTP::Server::ToolBox::Results::Fields";
+use parent "AssetSync::Agent::HTTP::Server::ToolBox::Results::Fields";
 
 use Encode qw(encode);
 use HTML::Entities;
@@ -139,7 +139,7 @@ sub update_xml {
         # Prepare CONTAINER node with plugin version
         my $container = {
             -plugin     => "toolbox",
-            -version    => $GLPI::Agent::HTTP::Server::ToolBox::VERSION,
+            -version    => $AssetSync::Agent::HTTP::Server::ToolBox::VERSION,
             ID          => $section->{id},
         };
         # Then include a FIELDS node

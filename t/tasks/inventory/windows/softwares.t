@@ -14,11 +14,11 @@ use Test::More;
 use UNIVERSAL::require;
 use File::Temp qw(tempdir);
 
-use GLPI::Agent::Inventory;
-use GLPI::Agent::XML;
-use GLPI::Test::Utils;
-use GLPI::Agent::Tools::Win32::Constants;
-use GLPI::Agent::Protocol::Inventory;
+use AssetSync::Agent::Inventory;
+use AssetSync::Agent::XML;
+use AssetSync::Test::Utils;
+use AssetSync::Agent::Tools::Win32::Constants;
+use AssetSync::Agent::Protocol::Inventory;
 
 BEGIN {
     # use mock modules for non-available ones
@@ -33,7 +33,7 @@ if (!$Config{usethreads} || $Config{usethreads} ne 'define') {
 
 Test::NoWarnings->use();
 
-GLPI::Agent::Task::Inventory::Win32::Softwares->require();
+AssetSync::Agent::Task::Inventory::Win32::Softwares->require();
 
 my %softwares_tests = (
     'mssql' => [
@@ -7430,7 +7430,7 @@ my $folder = tempdir( "softwares-XXXXXXXX", CLEANUP => $ENV{TEST_DEBUG} ? 0 : 1,
 print STDERR "\nTest files written in $folder\n" if $ENV{TEST_DEBUG};
 
 my $module = Test::MockModule->new(
-    'GLPI::Agent::Task::Inventory::Win32::Softwares'
+    'AssetSync::Agent::Task::Inventory::Win32::Softwares'
 );
 $module->mock(
     'canRun',
@@ -7438,24 +7438,24 @@ $module->mock(
 );
 
 my $tools_module = Test::MockModule->new(
-    'GLPI::Agent::Tools::Win32'
+    'AssetSync::Agent::Tools::Win32'
 );
 
 foreach my $test (keys %softwares_tests) {
 
     $encoding  = $encoding{$test};
-    $inventory = GLPI::Agent::Inventory->new();
+    $inventory = AssetSync::Agent::Inventory->new();
 
     $tools_module->mock(
         '_getRegistryKey',
         mockGetRegistryKey($test)
     );
 
-    my $softwares = GLPI::Agent::Task::Inventory::Win32::Softwares::_getSoftwaresList();
+    my $softwares = AssetSync::Agent::Task::Inventory::Win32::Softwares::_getSoftwaresList();
 
     my $file = "resources/win32/powershell/$test.txt";
     if (-e $file) {
-        my $uwp = GLPI::Agent::Task::Inventory::Win32::Softwares::_getAppxPackages(
+        my $uwp = AssetSync::Agent::Task::Inventory::Win32::Softwares::_getAppxPackages(
             file    => $file
         );
         push @{$softwares}, @{$uwp} if $uwp;
@@ -7472,12 +7472,12 @@ foreach my $test (keys %softwares_tests) {
     } "$test: registering";
 
     lives_ok {
-        # Reproduce the way a XML file is written in GLPI::Agent::Task::Inventory
+        # Reproduce the way a XML file is written in AssetSync::Agent::Task::Inventory
         $inventory->setFormat('xml');
         my $handle;
         open $handle, ">", "$folder/$test.xml";
         binmode $handle, ':encoding(UTF-8)';
-        my $xml = GLPI::Agent::XML->new();
+        my $xml = AssetSync::Agent::XML->new();
         print $handle $xml->write({
             REQUEST => {
                 CONTENT  => $inventory->getContent(),
@@ -7489,7 +7489,7 @@ foreach my $test (keys %softwares_tests) {
     } "$test: write UTF-8 XML file";
 
     lives_ok {
-        # Reproduce the way a JSON file is written in GLPI::Agent::Task::Inventory
+        # Reproduce the way a JSON file is written in AssetSync::Agent::Task::Inventory
         $inventory->setFormat('json');
         my $handle;
         open $handle, ">", "$folder/$test.json";
@@ -7507,7 +7507,7 @@ foreach my $test (keys %hotfixes_tests) {
         mockGetWMIObjects($test)
     );
 
-    my $hotfixes = GLPI::Agent::Task::Inventory::Win32::Softwares::_getHotfixesList(is64bit => 0);
+    my $hotfixes = AssetSync::Agent::Task::Inventory::Win32::Softwares::_getHotfixesList(is64bit => 0);
     cmp_deeply(
         $hotfixes,
         $hotfixes_tests{$test},

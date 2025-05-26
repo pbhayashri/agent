@@ -9,9 +9,9 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Virtualization::Libvirt;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Virtualization::Libvirt;
+use AssetSync::Agent::Tools::Virtualization;
 
 my %list_tests = (
     list1 => [
@@ -114,11 +114,11 @@ plan tests =>
     (scalar keys %dumpxml_tests)  +
     1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %list_tests) {
     my $file = "resources/virtualization/virsh/$test";
-    my @machines = GLPI::Agent::Task::Inventory::Virtualization::Libvirt::_parseList(file => $file);
+    my @machines = AssetSync::Agent::Task::Inventory::Virtualization::Libvirt::_parseList(file => $file);
     cmp_deeply(\@machines, $list_tests{$test}, "virst list parsing: $test");
     lives_ok {
         $inventory->addEntry(section => 'VIRTUALMACHINES', entry => $_)
@@ -128,6 +128,6 @@ foreach my $test (keys %list_tests) {
 
 foreach my $test (keys %dumpxml_tests) {
     my $file = "resources/virtualization/virsh/$test";
-    my %infos = GLPI::Agent::Task::Inventory::Virtualization::Libvirt::_parseDumpxml(file => $file);
+    my %infos = AssetSync::Agent::Task::Inventory::Virtualization::Libvirt::_parseDumpxml(file => $file);
     cmp_deeply(\%infos, $dumpxml_tests{$test}, "virsh dumpxml parsing: $test");
 }

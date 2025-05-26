@@ -1,19 +1,19 @@
-package GLPI::Agent::Task::Inventory::Generic::Databases::MongoDB;
+package AssetSync::Agent::Task::Inventory::Generic::Databases::MongoDB;
 
 use English qw(-no_match_vars);
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Generic::Databases';
+use parent 'AssetSync::Agent::Task::Inventory::Generic::Databases';
 
 use Cpanel::JSON::XS;
 use English qw(-no_match_vars);
 use POSIX qw(strftime);
 use File::Temp;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Inventory::DatabaseService;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Inventory::DatabaseService;
 
 sub isEnabled {
     return canRun('mongo') || canRun('mongosh');
@@ -25,7 +25,7 @@ sub doInventory {
     my $inventory = $params{inventory};
 
     # Try to retrieve credentials updating params
-    GLPI::Agent::Task::Inventory::Generic::Databases::_credentials(\%params, "mongodb");
+    AssetSync::Agent::Task::Inventory::Generic::Databases::_credentials(\%params, "mongodb");
 
     my $dbservices = _getDatabaseService(%params);
 
@@ -50,7 +50,7 @@ sub _getDatabaseService {
         unless defined($params{mongosh}); # Needed for tests
 
     foreach my $credential (@{$credentials}) {
-        GLPI::Agent::Task::Inventory::Generic::Databases::trying_credentials($params{logger}, $credential);
+        AssetSync::Agent::Task::Inventory::Generic::Databases::trying_credentials($params{logger}, $credential);
         my $rcfile = _mongoRcFile($credential);
         $params{rcfile} = $rcfile->filename if $rcfile;
 
@@ -89,7 +89,7 @@ sub _getDatabaseService {
             $lastboot = strftime("%Y-%m-%d %H:%M:%S", gmtime(int($lastbootmilli/1000)));
         }
 
-        my $dbs = GLPI::Agent::Inventory::DatabaseService->new(
+        my $dbs = AssetSync::Agent::Inventory::DatabaseService->new(
             type            => "mongodb",
             name            => $name,
             version         => $version,

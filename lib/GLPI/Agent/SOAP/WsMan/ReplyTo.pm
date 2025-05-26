@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::ReplyTo;
+package AssetSync::Agent::SOAP::WsMan::ReplyTo;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package
@@ -14,7 +14,7 @@ use parent
 
 use constant    xmlns   => 'a';
 
-use GLPI::Agent::SOAP::WsMan::Address;
+use AssetSync::Agent::SOAP::WsMan::Address;
 
 sub anonymous {
     my ($class) = @_;

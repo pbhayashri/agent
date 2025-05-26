@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::MacOS::Batteries;
+package AssetSync::Agent::Task::Inventory::MacOS::Batteries;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::MacOS;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::MacOS;
 
 use constant    category    => "battery";
 
@@ -32,7 +32,7 @@ sub doInventory {
 sub _getBattery {
     my (%params) = @_;
 
-    my $infos = GLPI::Agent::Tools::MacOS::getSystemProfilerInfos(
+    my $infos = AssetSync::Agent::Tools::MacOS::getSystemProfilerInfos(
         type            => 'SPPowerDataType',
         %params,
         format => 'text'

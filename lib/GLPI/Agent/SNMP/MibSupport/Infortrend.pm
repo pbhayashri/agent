@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Infortrend;
+package AssetSync::Agent::SNMP::MibSupport::Infortrend;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 # See IFT-SNMP-MIB
 use constant    infortrend  => '.1.3.6.1.4.1.1714' ;
@@ -133,7 +133,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Infortrend - Inventory module for Infortrend SAN
+AssetSync::Agent::SNMP::MibSupport::Infortrend - Inventory module for Infortrend SAN
 
 =head1 DESCRIPTION
 

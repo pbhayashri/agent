@@ -10,6 +10,6 @@ wmi: wmi queries results
 registry: registry exports
 
 powershell: powershell scripts output
-- for UWP software inventory, run from GLPI Agent installation folder:
+- for UWP software inventory, run from AssetSync Agent installation folder:
    chcp 65001
-   perl\bin\glpi-agent.exe -Iperl\agent -MGLPI::Agent::Task::Inventory::Win32::Softwares -MGLPI::Agent::Tools::Win32 -e "binmode STDOUT, ':encoding(UTF-8)'; print map { \"$_\n\" } runPowerShell(script => &GLPI::Agent::Task::Inventory::Win32::Softwares::_appxscript())"
+   perl\bin\assetsync-agent.exe -Iperl\agent -MAssetSync::Agent::Task::Inventory::Win32::Softwares -MAssetSync::Agent::Tools::Win32 -e "binmode STDOUT, ':encoding(UTF-8)'; print map { \"$_\n\" } runPowerShell(script => &AssetSync::Agent::Task::Inventory::Win32::Softwares::_appxscript())"

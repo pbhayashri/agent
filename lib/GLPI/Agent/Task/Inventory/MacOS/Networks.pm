@@ -1,15 +1,15 @@
-package GLPI::Agent::Task::Inventory::MacOS::Networks;
+package AssetSync::Agent::Task::Inventory::MacOS::Networks;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Network;
-use GLPI::Agent::Tools::Unix;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Network;
+use AssetSync::Agent::Tools::Unix;
 
 use constant    category    => "network";
 

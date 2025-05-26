@@ -19,7 +19,7 @@ import (
 
 const version = "0.9"
 
-const useragent = "GLPI-Injector-v"+version
+const useragent = "AssetSync-Injector-v"+version
 
 var opts struct {
 	Debug bool `long:"debug" description:"debug mode to output server answer"`
@@ -43,8 +43,8 @@ var opts struct {
 }
 
 var example []string = []string{
-	"glpi-injector -v -f /tmp/toto-2010-09-10-11-42-22.json --url https://login:pw@example/",
-	"glpi-injector -v -R -d /srv/ftp/fusion --url https://login:pw@example/",
+	"assetsync-injector -v -f /tmp/toto-2010-09-10-11-42-22.json --url https://login:pw@example/",
+	"assetsync-injector -v -R -d /srv/ftp/fusion --url https://login:pw@example/",
 	"",
 }
 

@@ -1,10 +1,10 @@
-package GLPI::Agent::SNMP::Device::Components;
+package AssetSync::Agent::SNMP::Device::Components;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 # See ENTITY-MIB
 use constant
@@ -238,7 +238,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::Device::Components - GLPI agent SNMP device components
+AssetSync::Agent::SNMP::Device::Components - AssetSync agent SNMP device components
 
 =head1 DESCRIPTION
 

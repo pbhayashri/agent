@@ -6,7 +6,7 @@ use warnings;
 use Test::Deep;
 use Test::More;
 
-use GLPI::Agent::Tools::BSD;
+use AssetSync::Agent::Tools::BSD;
 
 my %ifconfig_tests = (
     'freebsd-8.1' => [

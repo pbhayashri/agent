@@ -14,11 +14,11 @@ use File::Temp qw(tempdir);
 use Test::More;
 use Test::Exception;
 
-use GLPI::Test::Agent;
-use GLPI::Agent::HTTP::Server;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Target::Server;
-use GLPI::Test::Utils;
+use AssetSync::Test::Agent;
+use AssetSync::Agent::HTTP::Server;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Target::Server;
+use AssetSync::Test::Utils;
 
 plan skip_all => 'Not working on github action windows image'
     if $OSNAME eq 'MSWin32' && exists($ENV{GITHUB_ACTIONS});
@@ -26,15 +26,15 @@ plan skip_all => 'Not working on github action windows image'
 plan tests => 55;
 
 # find an available port
-my $port = GLPI::Agent::Tools::first { test_port($_) } 8080 .. 8180;
+my $port = AssetSync::Agent::Tools::first { test_port($_) } 8080 .. 8180;
 
-my $logger = GLPI::Agent::Logger->new(
+my $logger = AssetSync::Agent::Logger->new(
     logger => [ 'Test' ]
 );
 
-my $agent = GLPI::Test::Agent->new();
+my $agent = AssetSync::Test::Agent->new();
 
-my $target = GLPI::Agent::Target::Server->new(
+my $target = AssetSync::Agent::Target::Server->new(
     logger     => $logger,
     url        => 'http://127.0.0.1/',
     basevardir => $agent->{config}->{vardir}
@@ -46,7 +46,7 @@ push @{$agent->{targets}}, $target;
 my $server;
 
 lives_ok {
-    $server = GLPI::Agent::HTTP::Server->new(
+    $server = AssetSync::Agent::HTTP::Server->new(
         agent     => $agent,
         ip        => '127.0.0.1',
         logger    => $logger,

@@ -10,7 +10,7 @@ use LWP::UserAgent;
 use Digest::SHA;
 
 use Changelog;
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 # Touch sysobject.ids file with last commit date to make mirror API works as expected
 my $date = qx{LANG=C git log -n 1 --format=format:\%aD share/sysobject.ids};
@@ -23,7 +23,7 @@ $sha->addfile("share/sysobject.ids");
 my $digest = $sha->hexdigest;
 
 my $response = $ua->mirror(
-    "https://raw.githubusercontent.com/glpi-project/sysobject.ids/master/sysobject.ids",
+    "https://raw.githubusercontent.com/assetsync-project/sysobject.ids/master/sysobject.ids",
     "share/sysobject.ids"
 );
 

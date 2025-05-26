@@ -12,16 +12,16 @@ use Test::More;
 use HTTP::Response;
 use HTTP::Headers;
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::HTTP::Client::OCS;
-use GLPI::Agent::XML::Query;
-use GLPI::Test::Server;
-use GLPI::Test::Utils;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::HTTP::Client::OCS;
+use AssetSync::Agent::XML::Query;
+use AssetSync::Test::Server;
+use AssetSync::Test::Utils;
 
 unsetProxyEnvVar();
 
 # find an available port
-my $port = GLPI::Agent::Tools::first { test_port($_) } 8080 .. 8180;
+my $port = AssetSync::Agent::Tools::first { test_port($_) } 8080 .. 8180;
 
 if (!$port) {
     plan skip_all => 'no available port';
@@ -29,11 +29,11 @@ if (!$port) {
     plan tests => 8;
 }
 
-my $logger = GLPI::Agent::Logger->new(
+my $logger = AssetSync::Agent::Logger->new(
     logger => [ 'Test' ]
 );
 
-my $message = GLPI::Agent::XML::Query->new(
+my $message = AssetSync::Agent::XML::Query->new(
     deviceid => 'foo',
     query => 'foo',
     msg => {
@@ -42,14 +42,14 @@ my $message = GLPI::Agent::XML::Query->new(
     },
 );
 
-my $client = GLPI::Agent::HTTP::Client::OCS->new(
+my $client = AssetSync::Agent::HTTP::Client::OCS->new(
     logger => $logger
 );
 
 # http connection tests
 my ($server, $response);
 
-$server = GLPI::Test::Server->new(
+$server = AssetSync::Test::Server->new(
     port => $port,
 );
 my $compressed   = HTTP::Headers->new("Content-type" => "application/x-compress-zlib");
@@ -171,7 +171,7 @@ sub check_response_ok {
     ok(defined $response, "response from server");
     isa_ok(
         $response,
-        'GLPI::Agent::XML::Response',
+        'AssetSync::Agent::XML::Response',
         'response class'
     );
 

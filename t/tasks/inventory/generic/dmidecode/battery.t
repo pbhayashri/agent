@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Generic::Dmidecode::Battery;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Battery;
 
 my %tests = (
     'freebsd-6.2' => undef,
@@ -81,12 +81,12 @@ plan tests =>
     (scalar grep { $_ } values %tests) +
     1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %tests) {
     my $file = "resources/generic/dmidecode/$test";
     $file = "resources/generic/dmidecode/batteries/$test" unless -e $file;
-    my @batteries = GLPI::Agent::Task::Inventory::Generic::Dmidecode::Battery::_getBatteries(file => $file);
+    my @batteries = AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Battery::_getBatteries(file => $file);
     cmp_deeply(\@batteries, $tests{$test} || [], "$test: parsing");
     next unless @batteries;
     lives_ok {

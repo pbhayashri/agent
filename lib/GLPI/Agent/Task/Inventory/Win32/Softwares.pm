@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Win32::Softwares;
+package AssetSync::Agent::Task::Inventory::Win32::Softwares;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Win32;
-use GLPI::Agent::Tools::Win32::Constants;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Win32;
+use AssetSync::Agent::Tools::Win32::Constants;
 
 use constant    category    => "software";
 
@@ -40,8 +40,8 @@ sub doInventory {
 
     my $userprofiles;
     if ($params{scan_profiles}) {
-        GLPI::Agent::Tools::Win32::Users->require();
-        $userprofiles = [ GLPI::Agent::Tools::Win32::Users::getSystemUserProfiles() ];
+        AssetSync::Agent::Tools::Win32::Users->require();
+        $userprofiles = [ AssetSync::Agent::Tools::Win32::Users::getSystemUserProfiles() ];
         _loadUserSoftware(
             inventory => $inventory,
             profiles  => $userprofiles,
@@ -78,7 +78,7 @@ sub doInventory {
     }
 
     # Cleanup privileges if we had to load user profiles
-    GLPI::Agent::Tools::Win32::cleanupPrivileges()
+    AssetSync::Agent::Tools::Win32::cleanupPrivileges()
         if $params{scan_profiles};
 
     my $hotfixes = _getHotfixesList(is64bit => $is64bit);
@@ -131,7 +131,7 @@ sub _loadUserSoftware {
             push @userhives, loadUserHive(sid => $sid, file => $ntuserdat);
         }
 
-        my $username = GLPI::Agent::Tools::Win32::Users::getProfileUsername($profile)
+        my $username = AssetSync::Agent::Tools::Win32::Users::getProfileUsername($profile)
             or next;
 
         my $profileSoft = "HKEY_USERS/$sid/SOFTWARE/";

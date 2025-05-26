@@ -1,4 +1,4 @@
-package GLPI::Test::Module;
+package AssetSync::Test::Module;
 
 use strict;
 use warnings;

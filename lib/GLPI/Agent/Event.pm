@@ -1,4 +1,4 @@
-package GLPI::Agent::Event;
+package AssetSync::Agent::Event;
 
 use strict;
 use warnings;
@@ -18,7 +18,7 @@ sub new {
     #  - init event are triggered when the service starts
     #  - can't be triggered via http request
     # 2. runnow:
-    #  - can be trigerred by /now http requests from agent HTTP UI or GLPI
+    #  - can be trigerred by /now http requests from agent HTTP UI or AssetSync
     #  - must be evaluated before partial inventory as it can use "partial" param
     #  - can be used to trigger one or more tasks via task or tasks param
     #  - can be delayed using delay param to provide a delay value in seconds
@@ -33,7 +33,7 @@ sub new {
     #    - full default is 1 and has precedence other partial if the 2 are defined
     # 4. partial inventory:
     #  - can be trigerred by /now http requests
-    #  - can be requested by glpi-inventory run via --partial parameter
+    #  - can be requested by assetsync-inventory run via --partial parameter
     # 5. maintenance: internal event to trigger maintenance needs
     #  - for deploy, it cleans up storage from file parts when too old
     #  - can't be triggered via http request

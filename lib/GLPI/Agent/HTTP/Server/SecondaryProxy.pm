@@ -1,14 +1,14 @@
-package GLPI::Agent::HTTP::Server::SecondaryProxy;
+package AssetSync::Agent::HTTP::Server::SecondaryProxy;
 
 use strict;
 use warnings;
 
 use English qw(-no_match_vars);
 
-use base "GLPI::Agent::HTTP::Server::Proxy";
+use base "AssetSync::Agent::HTTP::Server::Proxy";
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::HTTP::Client::OCS;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::HTTP::Client::OCS;
 
 our $VERSION = "1.1";
 
@@ -25,7 +25,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::HTTP::Server::SecondaryProxy - An embedded HTTP server
+AssetSync::Agent::HTTP::Server::SecondaryProxy - An embedded HTTP server
 plugin providing a secondary proxy for agents not able to contact the server.
 
 Useful if you need to open a proxy on 2 different ports and even one with SSL
@@ -41,7 +41,7 @@ The following default requests are accepted:
 
 =over
 
-=item /proxy/glpi
+=item /proxy/assetsync
 
 =item /proxy/apiversion
 

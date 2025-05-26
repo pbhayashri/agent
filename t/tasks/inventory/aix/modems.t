@@ -7,7 +7,7 @@ use Test::Deep;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Task::Inventory::AIX::Modems;
+use AssetSync::Agent::Task::Inventory::AIX::Modems;
 
 my %tests = (
     'aix-4.3.1' => [],
@@ -23,6 +23,6 @@ plan tests => (scalar keys %tests) + 1;
 
 foreach my $test (keys %tests) {
     my $file = "resources/aix/lsdev/$test-adapter";
-    my @modems = GLPI::Agent::Task::Inventory::AIX::Modems::_getModems(file => $file);
+    my @modems = AssetSync::Agent::Task::Inventory::AIX::Modems::_getModems(file => $file);
     cmp_deeply(\@modems, $tests{$test}, "modems: $test");
 }

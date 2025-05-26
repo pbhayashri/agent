@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::RNX;
+package AssetSync::Agent::SNMP::MibSupport::RNX;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 use constant sysdescr       => '.1.3.6.1.2.1.1.1.0';
 
@@ -60,7 +60,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::RNX - Inventory module for RNX Pdu devices
+AssetSync::Agent::SNMP::MibSupport::RNX - Inventory module for RNX Pdu devices
 
 =head1 DESCRIPTION
 

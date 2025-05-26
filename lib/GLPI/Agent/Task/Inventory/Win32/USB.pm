@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Win32::USB;
+package AssetSync::Agent::Task::Inventory::Win32::USB;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Win32;
-use GLPI::Agent::Tools::USB;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Win32;
+use AssetSync::Agent::Tools::USB;
 
 use constant    category    => "usb";
 
@@ -71,7 +71,7 @@ sub _getDevicesFromWMI {
         # Support manufacturers wrongly using iSerial with fields definition
         $serial = $1 if $serial =~ /^S\/N:([0-9A-F]+)/i;
 
-        push @devices, GLPI::Agent::Tools::USB->new(
+        push @devices, AssetSync::Agent::Tools::USB->new(
             logger      => $params{logger},
             caption     => $object->{Caption},
             name        => $object->{Name},

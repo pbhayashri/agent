@@ -1,14 +1,14 @@
 
-package GLPI::Agent::Tools::IpmiFru;
+package AssetSync::Agent::Tools::IpmiFru;
 
 use strict;
 use warnings;
 
 use parent 'Exporter';
 
-use GLPI::Agent::Inventory;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::PartNumber;
+use AssetSync::Agent::Inventory;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::PartNumber;
 
 our @EXPORT = qw(
     getIpmiFru
@@ -122,7 +122,7 @@ sub parseFru {
     # Validate PartNumber, as example, this fixes Dell PartNumbers
     my $partnum = $device->{PARTNUM} // $device->{MODEL};
     if ($partnum) {
-        my $partnumber_factory = GLPI::Agent::Tools::PartNumber->new();
+        my $partnumber_factory = AssetSync::Agent::Tools::PartNumber->new();
         my $partnumber = $partnumber_factory->match(
             partnumber      => $partnum,
             manufacturer    => $device->{MANUFACTURER},
@@ -144,7 +144,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::ImpiFru
+AssetSync::Agent::Tools::ImpiFru
 
 =head1 DESCRIPTION
 

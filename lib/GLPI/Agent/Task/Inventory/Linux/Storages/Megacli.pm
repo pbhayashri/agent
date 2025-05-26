@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Linux::Storages::Megacli;
+package AssetSync::Agent::Task::Inventory::Linux::Storages::Megacli;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
-our $runMeIfTheseChecksFailed = ['GLPI::Agent::Task::Inventory::Linux::Storages::MegacliWithSmartctl'];
+our $runMeIfTheseChecksFailed = ['AssetSync::Agent::Task::Inventory::Linux::Storages::MegacliWithSmartctl'];
 
 sub isEnabled {
     return canRun('megacli');

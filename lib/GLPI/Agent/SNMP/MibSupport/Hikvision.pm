@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Hikvision;
+package AssetSync::Agent::SNMP::MibSupport::Hikvision;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 # See Hikvision-MIB
 
@@ -76,7 +76,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Hikvision - Inventory module for Hikvision
+AssetSync::Agent::SNMP::MibSupport::Hikvision - Inventory module for Hikvision
 
 =head1 DESCRIPTION
 

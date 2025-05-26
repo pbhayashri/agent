@@ -7,7 +7,7 @@ use Test::Deep;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Task::Inventory::Virtualization::Qemu;
+use AssetSync::Agent::Task::Inventory::Virtualization::Qemu;
 
 my @tests = (
     {
@@ -73,7 +73,7 @@ plan tests => (scalar @tests) + 1;
 
 foreach my $test (@tests) {
     my $values =
-      GLPI::Agent::Task::Inventory::Virtualization::Qemu::_parseProcessList(
+      AssetSync::Agent::Task::Inventory::Virtualization::Qemu::_parseProcessList(
         $test);
     cmp_deeply( $values, $test->{_result} );
 }

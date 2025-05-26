@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::Inventory::Generic::Timezone;
+package AssetSync::Agent::Task::Inventory::Generic::Timezone;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
@@ -11,7 +11,7 @@ use UNIVERSAL::require;
 use POSIX;
 use Time::Local;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant    category    => "os";
 
@@ -30,7 +30,7 @@ sub doInventory {
 
     # We should handle remote case
     if ($remote) {
-        my $tz = $GLPI::Agent::Tools::remote->remoteTimeZone();
+        my $tz = $AssetSync::Agent::Tools::remote->remoteTimeZone();
         $inventory->setOperatingSystem({ TIMEZONE => $tz }) if $tz;
         return;
     }

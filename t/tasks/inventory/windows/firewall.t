@@ -9,8 +9,8 @@ use Test::More;
 use Test::Deep;
 use Test::MockModule;
 use UNIVERSAL::require;
-use GLPI::Test::Utils;
-use GLPI::Agent::Tools::Constants;
+use AssetSync::Test::Utils;
+use AssetSync::Agent::Tools::Constants;
 
 BEGIN {
     # use mock modules for non-available ones
@@ -24,7 +24,7 @@ if (!$Config{usethreads} || $Config{usethreads} ne 'define') {
 }
 
 Test::NoWarnings->use();
-GLPI::Agent::Task::Inventory::Win32::Firewall->require();
+AssetSync::Agent::Task::Inventory::Win32::Firewall->require();
 
 my %expectedFirewallProfiles = (
     '7_firewall' => {
@@ -109,7 +109,7 @@ plan tests => 1
         + scalar (keys %expectedProfilesForInventory);
 
 my $module = Test::MockModule->new(
-    'GLPI::Agent::Tools::Win32'
+    'AssetSync::Agent::Tools::Win32'
 );
 
 for my $testKey (keys %expectedFirewallProfiles) {
@@ -119,7 +119,7 @@ for my $testKey (keys %expectedFirewallProfiles) {
         _mockGetRegistryKey($testKey)
     );
 
-    my $firewallProfiles = GLPI::Agent::Task::Inventory::Win32::Firewall::_getFirewallProfiles();
+    my $firewallProfiles = AssetSync::Agent::Task::Inventory::Win32::Firewall::_getFirewallProfiles();
     cmp_deeply (
         $firewallProfiles,
         $expectedFirewallProfiles{$testKey},
@@ -131,7 +131,7 @@ for my $testKey (keys %expectedFirewallProfiles) {
         mockGetWMIObjects($testKey)
     );
 
-    my @profiles =  GLPI::Agent::Task::Inventory::Win32::Firewall::_makeProfileAndConnectionsAssociation();
+    my @profiles =  AssetSync::Agent::Task::Inventory::Win32::Firewall::_makeProfileAndConnectionsAssociation();
 
     # we must sort values before compare it
     my $sortingSub = sub {
@@ -150,7 +150,7 @@ for my $testKey (keys %expectedFirewallProfiles) {
     );
 }
 
-# Adapted from GLPI::Test::Utils mockGetRegistryKey() to support
+# Adapted from AssetSync::Test::Utils mockGetRegistryKey() to support
 # shared subkey from NetworkList registry dumps
 sub _mockGetRegistryKey {
     my ($test) = @_;

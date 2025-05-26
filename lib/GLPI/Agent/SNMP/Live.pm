@@ -1,21 +1,21 @@
-package GLPI::Agent::SNMP::Live;
+package AssetSync::Agent::SNMP::Live;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP';
+use parent 'AssetSync::Agent::SNMP';
 
 use English qw(-no_match_vars);
 use Net::SNMP;
 use Net::SNMP qw/SNMP_PORT :snmp/;
 
-use GLPI::Agent::Config;
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Tools;
 
 my ($config, $config_load_timeout);
 my $config_file = "snmp-advanced-support.cfg";
 
-# etc/snmp-advanced-support.cfg configuration file can be use to change GLPI::Agent::SNMP::Live behavior
+# etc/snmp-advanced-support.cfg configuration file can be use to change AssetSync::Agent::SNMP::Live behavior
 my $defaults = {
     # oids is a comma-separated list of oids used during session testing. All oids will be requested
     # and only one has to respond to validate session. If none provides any answer, this means there's
@@ -43,7 +43,7 @@ sub new {
 
      # Load snmp-advanced-support.cfg configuration at worst one time by minute
     unless ($self->{_oids} && $config && $config_load_timeout && $config_load_timeout >= time) {
-        $config = GLPI::Agent::Config->new(
+        $config = AssetSync::Agent::Config->new(
             defaults => $defaults,
             options  => { config => "none" },
         );
@@ -234,7 +234,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::Live - Live SNMP client
+AssetSync::Agent::SNMP::Live - Live SNMP client
 
 =head1 DESCRIPTION
 

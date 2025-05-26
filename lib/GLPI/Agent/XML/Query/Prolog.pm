@@ -1,9 +1,9 @@
-package GLPI::Agent::XML::Query::Prolog;
+package AssetSync::Agent::XML::Query::Prolog;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::XML::Query';
+use parent 'AssetSync::Agent::XML::Query';
 
 sub new {
     my ($class, %params) = @_;
@@ -23,7 +23,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::XML::Query::Prolog - Prolog agent message
+AssetSync::Agent::XML::Query::Prolog - Prolog agent message
 
 =head1 DESCRIPTION
 
@@ -35,7 +35,7 @@ processed, requiring execution parameters.
 =head2 new(%params)
 
 The constructor. The following parameters are allowed, in addition to those
-from the base class C<GLPI::Agent::XML::Query>, as keys of the
+from the base class C<AssetSync::Agent::XML::Query>, as keys of the
 %params hash:
 
 =over

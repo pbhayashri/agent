@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::Fault;
+package AssetSync::Agent::SOAP::WsMan::Fault;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package

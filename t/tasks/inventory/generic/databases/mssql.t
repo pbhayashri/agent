@@ -11,8 +11,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Generic::Databases::MSSQL;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Generic::Databases::MSSQL;
 
 $Data::Dumper::Indent    = 1;
 $Data::Dumper::Terse     = 1;
@@ -194,11 +194,11 @@ my %credentials = (
 
 plan tests => (2 * scalar keys %db_tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %db_tests) {
     my $file  = "resources/generic/databases/$test";
-    my $dbs   = GLPI::Agent::Task::Inventory::Generic::Databases::MSSQL::_getDatabaseService(
+    my $dbs   = AssetSync::Agent::Task::Inventory::Generic::Databases::MSSQL::_getDatabaseService(
         file        => $file,
         credentials => $credentials{$test} // [{}],
         istest      => defined($db_tests{$test}) ? 1 : 0,

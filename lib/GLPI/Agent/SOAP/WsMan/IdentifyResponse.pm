@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::IdentifyResponse;
+package AssetSync::Agent::SOAP::WsMan::IdentifyResponse;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package
@@ -14,7 +14,7 @@ use parent
 
 use constant    xmlns   => 'wsmid';
 
-use GLPI::Agent::SOAP::WsMan::Identify;
+use AssetSync::Agent::SOAP::WsMan::Identify;
 
 sub values {
     return [ qw(ProtocolVersion ProductVendor ProductVersion) ];

@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::Inventory::Linux::Distro;
+package AssetSync::Agent::Task::Inventory::Linux::Distro;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use constant    category    => "os";
 

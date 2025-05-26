@@ -76,7 +76,7 @@ sub new {
     my ($class, $options) = @_;
 
     my $self = {
-        _bin        => "/usr/bin/glpi-agent",
+        _bin        => "/usr/bin/assetsync-agent",
         _silent     => delete $options->{silent}  // 0,
         _verbose    => delete $options->{verbose} // 0,
         _service    => delete $options->{service}, # checked later against cron
@@ -329,7 +329,7 @@ sub getDeps {
 sub configure {
     my ($self, $folder) = @_;
 
-    $folder = "/etc/glpi-agent/conf.d" unless $folder;
+    $folder = "/etc/assetsync-agent/conf.d" unless $folder;
 
     # Check if a configuration exists in archive
     my @configs = grep { m{^config/[^/]+\.(cfg|crt|pem)$} } $self->{_archive}->files();
@@ -402,16 +402,16 @@ sub configure {
 sub ask_configure {
     my ($self) = @_;
 
-    $self->info("glpi-agent is about to be installed as ".($self->{_service} ? "service" : "cron task"));
+    $self->info("assetsync-agent is about to be installed as ".($self->{_service} ? "service" : "cron task"));
 
     if (defined($self->{_options}->{server})) {
         if (length($self->{_options}->{server})) {
-            $self->info("GLPI server will be configured to: ".$self->{_options}->{server});
+            $self->info("AssetSync server will be configured to: ".$self->{_options}->{server});
         } else {
             $self->info("Disabling server configuration");
         }
     } else {
-        print "\nProvide an url to configure GLPI server:\n> ";
+        print "\nProvide an url to configure AssetSync server:\n> ";
         my $server = <STDIN>;
         chomp($server);
         $self->{_options}->{server} = $server if length($server);
@@ -470,7 +470,7 @@ sub install {
             # Wait a little so the service won't misunderstand SIGUSR1 signal
             sleep 1;
             $self->info("Asking service to run inventory now as requested...");
-            $self->system("systemctl -s SIGUSR1 kill glpi-agent");
+            $self->system("systemctl -s SIGUSR1 kill assetsync-agent");
         }
     } elsif ($self->{_cron}) {
         $self->install_cron();
@@ -486,9 +486,9 @@ sub install {
 
 sub clean {
     my ($self) = @_;
-    die "Can't clean glpi-agent related files if it is currently installed\n" if keys(%{$self->{_packages}});
+    die "Can't clean assetsync-agent related files if it is currently installed\n" if keys(%{$self->{_packages}});
     $self->info("Cleaning...");
-    $self->run("rm -rf /etc/glpi-agent /var/lib/glpi-agent");
+    $self->run("rm -rf /etc/assetsync-agent /var/lib/assetsync-agent");
 }
 
 sub run {
@@ -511,19 +511,19 @@ sub uninstall {
 
 sub install_service {
     my ($self) = @_;
-    $self->info("Enabling glpi-agent service...");
+    $self->info("Enabling assetsync-agent service...");
 
     # Always stop the service if necessary to be sure configuration is applied
-    my $isactivecmd = "systemctl is-active glpi-agent" . ($self->verbose ? "" : " 2>/dev/null");
-    $self->system("systemctl stop glpi-agent")
+    my $isactivecmd = "systemctl is-active assetsync-agent" . ($self->verbose ? "" : " 2>/dev/null");
+    $self->system("systemctl stop assetsync-agent")
         if qx{$isactivecmd} eq "active";
 
-    my $ret = $self->run("systemctl enable glpi-agent" . ($self->verbose ? "" : " 2>/dev/null"));
-    return $self->info("Failed to enable glpi-agent service") if $ret;
+    my $ret = $self->run("systemctl enable assetsync-agent" . ($self->verbose ? "" : " 2>/dev/null"));
+    return $self->info("Failed to enable assetsync-agent service") if $ret;
 
-    $self->verbose("Starting glpi-agent service...");
-    $ret = $self->run("systemctl reload-or-restart glpi-agent" . ($self->verbose ? "" : " 2>/dev/null"));
-    $self->info("Failed to start glpi-agent service") if $ret;
+    $self->verbose("Starting assetsync-agent service...");
+    $ret = $self->run("systemctl reload-or-restart assetsync-agent" . ($self->verbose ? "" : " 2>/dev/null"));
+    $self->info("Failed to start assetsync-agent service") if $ret;
 }
 
 sub install_cron {
@@ -533,14 +533,14 @@ sub install_cron {
 
 sub uninstall_service {
     my ($self) = @_;
-    $self->info("Disabling glpi-agent service...");
+    $self->info("Disabling assetsync-agent service...");
 
-    my $isactivecmd = "systemctl is-active glpi-agent" . ($self->verbose ? "" : " 2>/dev/null");
-    $self->system("systemctl stop glpi-agent")
+    my $isactivecmd = "systemctl is-active assetsync-agent" . ($self->verbose ? "" : " 2>/dev/null");
+    $self->system("systemctl stop assetsync-agent")
         if qx{$isactivecmd} eq "active";
 
-    my $ret = $self->run("systemctl disable glpi-agent" . ($self->verbose ? "" : " 2>/dev/null"));
-    return $self->info("Failed to disable glpi-agent service") if $ret;
+    my $ret = $self->run("systemctl disable assetsync-agent" . ($self->verbose ? "" : " 2>/dev/null"));
+    return $self->info("Failed to disable assetsync-agent service") if $ret;
 }
 
 sub clean_packages {

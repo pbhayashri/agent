@@ -12,16 +12,16 @@ use Fcntl qw(:seek);
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Config;
-use GLPI::Agent::Logger;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Logger;
 
 plan tests => 29;
 
-my $logger = GLPI::Agent::Logger->new();
+my $logger = AssetSync::Agent::Logger->new();
 
 isa_ok(
     $logger,
-    'GLPI::Agent::Logger',
+    'AssetSync::Agent::Logger',
     'logger class'
 );
 
@@ -33,14 +33,14 @@ is(
 
 isa_ok(
     $logger->{backends}->[0],
-    'GLPI::Agent::Logger::Stderr',
+    'AssetSync::Agent::Logger::Stderr',
     'default backend class'
 );
 
 if ($OSNAME eq 'MSWin32') {
 
-    $logger = GLPI::Agent::Logger->new(
-        config => GLPI::Agent::Config->new(
+    $logger = AssetSync::Agent::Logger->new(
+        config => AssetSync::Agent::Config->new(
             options => {
                 config  => 'none',
                 logger  => 'stderr,Test'
@@ -57,19 +57,19 @@ if ($OSNAME eq 'MSWin32') {
         plan tests => 2;
         isa_ok(
             $logger->{backends}->[0],
-            'GLPI::Agent::Logger::Stderr',
+            'AssetSync::Agent::Logger::Stderr',
             'first backend class'
         );
 
         isa_ok(
             $logger->{backends}->[1],
-            'GLPI::Agent::Logger::Test',
+            'AssetSync::Agent::Logger::Test',
             'third backend class'
         );
     };
 } else {
-    $logger = GLPI::Agent::Logger->new(
-        config => GLPI::Agent::Config->new(
+    $logger = AssetSync::Agent::Logger->new(
+        config => AssetSync::Agent::Config->new(
             options => {
                 config  => 'none',
                 logger  => 'Stderr,Syslog,Test'
@@ -87,19 +87,19 @@ if ($OSNAME eq 'MSWin32') {
         plan tests => 3;
         isa_ok(
             $logger->{backends}->[0],
-            'GLPI::Agent::Logger::Stderr',
+            'AssetSync::Agent::Logger::Stderr',
             'first backend class'
         );
 
         isa_ok(
             $logger->{backends}->[1],
-            'GLPI::Agent::Logger::Syslog',
+            'AssetSync::Agent::Logger::Syslog',
             'second backend class'
         );
 
         isa_ok(
             $logger->{backends}->[2],
-            'GLPI::Agent::Logger::Test',
+            'AssetSync::Agent::Logger::Test',
             'third backend class'
         );
     };
@@ -107,8 +107,8 @@ if ($OSNAME eq 'MSWin32') {
 
 # stderr backend tests
 
-$logger = GLPI::Agent::Logger->new(
-    config => GLPI::Agent::Config->new(
+$logger = AssetSync::Agent::Logger->new(
+    config => AssetSync::Agent::Config->new(
         options => {
             config  => 'none',
             logger  => 'stderr'
@@ -127,7 +127,7 @@ ok(
 );
 
 # Test just updating debug level
-$logger = GLPI::Agent::Logger->new(
+$logger = AssetSync::Agent::Logger->new(
     debug => 1
 );
 
@@ -165,8 +165,8 @@ is(
     'error message formatting'
 );
 
-$logger = GLPI::Agent::Logger->new(
-    config => GLPI::Agent::Config->new(
+$logger = AssetSync::Agent::Logger->new(
+    config => AssetSync::Agent::Config->new(
         options => {
             config  => 'none',
             debug   => 2,
@@ -185,8 +185,8 @@ ok(
     'debug message presence'
 );
 
-$logger = GLPI::Agent::Logger->new(
-    config => GLPI::Agent::Config->new(
+$logger = AssetSync::Agent::Logger->new(
+    config => AssetSync::Agent::Config->new(
         options => {
             config  => 'none',
             debug   => 1,
@@ -221,7 +221,7 @@ is(
 );
 
 # Test just updating color config
-$logger = GLPI::Agent::Logger->new(
+$logger = AssetSync::Agent::Logger->new(
     color => 0
 );
 
@@ -236,8 +236,8 @@ my $tmpdir = tempdir(CLEANUP => $ENV{TEST_DEBUG} ? 0 : 1);
 my $logfile;
 
 $logfile = "$tmpdir/test1";
-$logger = GLPI::Agent::Logger->new(
-    config => GLPI::Agent::Config->new(
+$logger = AssetSync::Agent::Logger->new(
+    config => AssetSync::Agent::Config->new(
         options => {
             config  => 'none',
             logger  => 'file',
@@ -254,8 +254,8 @@ ok(
 );
 
 $logfile = "$tmpdir/test2";
-$logger = GLPI::Agent::Logger->new(
-    config => GLPI::Agent::Config->new(
+$logger = AssetSync::Agent::Logger->new(
+    config => AssetSync::Agent::Config->new(
         options => {
             config  => 'none',
             debug   => 1,
@@ -296,8 +296,8 @@ like(
 );
 
 $logfile = "$tmpdir/test3";
-$logger = GLPI::Agent::Logger->new(
-    config => GLPI::Agent::Config->new(
+$logger = AssetSync::Agent::Logger->new(
+    config => AssetSync::Agent::Config->new(
         options => {
             config  => 'none',
             logger  => 'file',
@@ -312,8 +312,8 @@ ok(
 );
 
 $logfile = "$tmpdir/test4";
-$logger = GLPI::Agent::Logger->new(
-    config => GLPI::Agent::Config->new(
+$logger = AssetSync::Agent::Logger->new(
+    config => AssetSync::Agent::Config->new(
         options => {
             config  => 'none',
             logger  => 'file',

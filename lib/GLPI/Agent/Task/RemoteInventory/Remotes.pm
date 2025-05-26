@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::RemoteInventory::Remotes;
+package AssetSync::Agent::Task::RemoteInventory::Remotes;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::Task::RemoteInventory::Remote;
+use AssetSync::Agent::Task::RemoteInventory::Remote;
 
 sub new {
     my ($class, %params) = @_;
@@ -26,7 +26,7 @@ sub new {
             # Skip if url is still known for a remote
             next if grep { $_->url() eq $url } $self->getall();
 
-            my $remote = GLPI::Agent::Task::RemoteInventory::Remote->new(
+            my $remote = AssetSync::Agent::Task::RemoteInventory::Remote->new(
                 url     => $url,
                 config  => $self->{_config},
                 logger  => $params{logger},
@@ -51,7 +51,7 @@ sub new {
         foreach my $id (keys(%{$remotes})) {
             my $dump = $remotes->{$id};
             next unless ref($dump) eq 'HASH';
-            my $remote = GLPI::Agent::Task::RemoteInventory::Remote->new(
+            my $remote = AssetSync::Agent::Task::RemoteInventory::Remote->new(
                 dump    => $dump,
                 config  => $self->{_config},
                 logger  => $self->{logger},
@@ -162,7 +162,7 @@ sub store {
 sub add {
     my ($self, $remote) = @_;
 
-    return unless $remote && ref($remote) =~ /^GLPI::Agent::Task::RemoteInventory::Remote/;
+    return unless $remote && ref($remote) =~ /^AssetSync::Agent::Task::RemoteInventory::Remote/;
 
     $self->{_remotes}->{$remote->deviceid()} = $remote;
     return $remote->deviceid();

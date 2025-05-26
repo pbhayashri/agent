@@ -1,13 +1,13 @@
-package GLPI::Agent::Logger::Syslog;
+package AssetSync::Agent::Logger::Syslog;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Logger::Backend';
+use parent 'AssetSync::Agent::Logger::Backend';
 
 use Sys::Syslog qw(:standard :macros);
 
-use GLPI::Agent::Version;
+use AssetSync::Agent::Version;
 
 my %syslog_levels = (
     error   => LOG_ERR,
@@ -17,7 +17,7 @@ my %syslog_levels = (
     debug2  => LOG_DEBUG
 );
 
-my $syslog_name = lc($GLPI::Agent::Version::PROVIDER)."-agent";
+my $syslog_name = lc($AssetSync::Agent::Version::PROVIDER)."-agent";
 
 sub new {
     my ($class, %params) = @_;
@@ -57,7 +57,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Logger::Syslog - A syslog backend for the logger
+AssetSync::Agent::Logger::Syslog - A syslog backend for the logger
 
 =head1 DESCRIPTION
 

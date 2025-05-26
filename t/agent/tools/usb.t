@@ -12,10 +12,10 @@ use Test::More;
 use Test::NoWarnings;
 use Test::MockModule;
 
-use GLPI::Test::Utils;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::USB;
-use GLPI::Agent::Tools::USB::Gertec;
+use AssetSync::Test::Utils;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::USB;
+use AssetSync::Agent::Tools::USB::Gertec;
 
 BEGIN {
     # use mock modules for non-available ones
@@ -187,7 +187,7 @@ my %tests = (
             SERIAL          => "1234XYZ"
         },
     },
-    # Test GLPI::Agent::Tools::USB::Gertec module
+    # Test AssetSync::Agent::Tools::USB::Gertec module
     # This test can fail on usb.ids update. Update name & caption in expected test dump if they are changed by update_by_ids() method.
     "20-gertec-on-mswin32" => {
         setup   => sub {
@@ -203,7 +203,7 @@ my %tests = (
         },
         code    => sub {
             my ($dev) = shift;
-            ref($dev) eq 'GLPI::Agent::Tools::USB::Gertec'
+            ref($dev) eq 'AssetSync::Agent::Tools::USB::Gertec'
                 or die "Wrong device class\n";
             $dev->update_by_ids();
             $dev->update();
@@ -239,7 +239,7 @@ foreach my $test (sort keys %tests) {
     # Create object
     my $device;
     lives_ok {
-        $device = GLPI::Agent::Tools::USB->new(@opts);
+        $device = AssetSync::Agent::Tools::USB->new(@opts);
     } "$test: instantiation";
 
     lives_ok {

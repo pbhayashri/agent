@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::Standards::MobileCountryCode;
+package AssetSync::Agent::Tools::Standards::MobileCountryCode;
 
 use strict;
 use warnings;

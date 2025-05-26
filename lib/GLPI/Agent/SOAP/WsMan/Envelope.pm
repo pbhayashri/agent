@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::Envelope;
+package AssetSync::Agent::SOAP::WsMan::Envelope;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package
@@ -14,9 +14,9 @@ use parent
 
 use constant    xmlns   => 's';
 
-use GLPI::Agent::SOAP::WsMan::Attribute;
-use GLPI::Agent::SOAP::WsMan::Header;
-use GLPI::Agent::SOAP::WsMan::Body;
+use AssetSync::Agent::SOAP::WsMan::Attribute;
+use AssetSync::Agent::SOAP::WsMan::Header;
+use AssetSync::Agent::SOAP::WsMan::Body;
 
 my %ns = (
     s   => "http://www.w3.org/2003/05/soap-envelope",

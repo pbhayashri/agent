@@ -9,17 +9,17 @@
 # [Service]
 # Environment="OPTIONS=--no-category=software"
 
-# But it is advised to create a dedicated ".cfg" file under /etc/glpi-agent/conf.d
-# and reload the service with "systemctl reload glpi-agent.service".
-# Config files under /etc/glpi-agent/conf.d won't be erased/disabled during upgrades.
+# But it is advised to create a dedicated ".cfg" file under /etc/assetsync-agent/conf.d
+# and reload the service with "systemctl reload assetsync-agent.service".
+# Config files under /etc/assetsync-agent/conf.d won't be erased/disabled during upgrades.
 
 [Unit]
-Description=GLPI agent
-Documentation=man:glpi-agent
+Description=AssetSync agent
+Documentation=man:assetsync-agent
 After=syslog.target network.target
 
 [Service]
-ExecStart=/usr/bin/glpi-agent --daemon --no-fork $OPTIONS
+ExecStart=/usr/bin/assetsync-agent --daemon --no-fork $OPTIONS
 ExecReload=/bin/kill -HUP $MAINPID
 CapabilityBoundingSet=~CAP_SYS_PTRACE
 

@@ -9,17 +9,17 @@ use Test::Exception;
 use Test::More;
 use Test::MockModule;
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Task::Collect;
-use GLPI::Agent::Target::Server;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Task::Collect;
+use AssetSync::Agent::Target::Server;
 
 # Setup a target with a Fatal logger and no debug
-my $logger = GLPI::Agent::Logger->new(
+my $logger = AssetSync::Agent::Logger->new(
     logger => [ 'Fatal' ]
 );
 
-my $target = GLPI::Agent::Target::Server->new(
-    url    => 'http://localhost/glpi-any',
+my $target = AssetSync::Agent::Target::Server->new(
+    url    => 'http://localhost/assetsync-any',
     logger => $logger,
     basevardir => tempdir(CLEANUP => 1)
 );
@@ -105,20 +105,20 @@ sub _send {
     };
 }
 
-my $module = Test::MockModule->new('GLPI::Agent::HTTP::Client::Fusion');
+my $module = Test::MockModule->new('AssetSync::Agent::HTTP::Client::Fusion');
 $module->mock('send',\&_send);
 
 lives_ok {
-    $task = GLPI::Agent::Task::Collect->new(
+    $task = AssetSync::Agent::Task::Collect->new(
         target => $target,
         # Still use Collect logger with Fatal logger, but now using debug level
-        logger => GLPI::Agent::Logger->new( 'debug' => 1 ),
+        logger => AssetSync::Agent::Logger->new( 'debug' => 1 ),
         config => {
             jobs => []
         }
     );
 } "Collect object instanciation" ;
-is( $target->getUrl(), 'http://localhost/glpi-any' );
+is( $target->getUrl(), 'http://localhost/assetsync-any' );
 
 # We will directly update client config before run() to configure test to run
 my $test_config = $task->{config};

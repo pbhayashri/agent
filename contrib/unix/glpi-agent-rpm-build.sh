@@ -35,13 +35,13 @@ done
 DIST=${DIST#.}
 
 if [ ! -e lib -a ! -e tools/make-release.sh ]; then
-    echo "This script MUST be run from the root of glpi-agent sources" >&2
+    echo "This script MUST be run from the root of assetsync-agent sources" >&2
     exit 1
 fi
 
 VER=${GITHUB_REF#refs/tags/}
 if [ -n "${GITHUB_REF%refs/tags/*}" -o -z "$VER" ]; then
-    VER=$(perl -Ilib -MGLPI::Agent::Version -e '$v = $GLPI::Agent::Version::VERSION; $v =~ s/-.*//; print $v')
+    VER=$(perl -Ilib -MAssetSync::Agent::Version -e '$v = $AssetSync::Agent::Version::VERSION; $v =~ s/-.*//; print $v')
 fi
 if [ -z "$REV" ]; then
     if [ -z "${VER%%*-*}" ]; then
@@ -56,8 +56,8 @@ if [ -z "$REV" ]; then
 fi
 
 [ -z "$DIST" ] && unset DISTRO || DISTRO=".$DIST"
-rm -f glpi-agent-$VER-$REV$DISTRO.tar.gz
-echo "Preparing glpi-agent-$VER-$REV$DISTRO ..."
+rm -f assetsync-agent-$VER-$REV$DISTRO.tar.gz
+echo "Preparing assetsync-agent-$VER-$REV$DISTRO ..."
 tools/make-release.sh --no-git $VER-$REV$DISTRO
 
 echo "Checking if a dedicated dist script exists..."
@@ -66,20 +66,20 @@ echo "Checking if a dedicated dist script exists..."
 perl Makefile.PL
 rm -f MANIFEST
 make manifest
-make dist DISTVNAME=glpi-agent-$VER-$REV$DISTRO
+make dist DISTVNAME=assetsync-agent-$VER-$REV$DISTRO
 
 SRCDIR=`rpm --eval "%{_sourcedir}"`
 [ -d "$SRCDIR" ] || mkdir -p "$SRCDIR"
 rm -f $SRCDIR/*.tar.gz
-cp glpi-agent-$VER-$REV$DISTRO.tar.gz "$SRCDIR"
+cp assetsync-agent-$VER-$REV$DISTRO.tar.gz "$SRCDIR"
 
 # Prepare rpmbuild options
 BUILD_OPTS="-D 'rev $REV'"
 [ -n "$DISTRO" ]     && BUILD_OPTS="$BUILD_OPTS -D 'dist $DISTRO'"
 [ -n "$UNITDIR" ]    && BUILD_OPTS="$BUILD_OPTS -D '_unitdir $UNITDIR'"
 
-echo "Running '$RPMBUILD -ba $BUILD_OPTS $OTHER_OPTS contrib/unix/glpi-agent.spec' ..."
-eval "$RPMBUILD -ba $BUILD_OPTS $OTHER_OPTS contrib/unix/glpi-agent.spec"
+echo "Running '$RPMBUILD -ba $BUILD_OPTS $OTHER_OPTS contrib/unix/assetsync-agent.spec' ..."
+eval "$RPMBUILD -ba $BUILD_OPTS $OTHER_OPTS contrib/unix/assetsync-agent.spec"
 
 # Output rpms path for GH Actions uploads
 RPMDIR=$(rpm --eval "%{_rpmdir}")
@@ -90,7 +90,7 @@ if [ -n "$GITHUB_OUTPUT" ]; then
     echo "srcdir=$SRCDIR" >>$GITHUB_OUTPUT
     echo "srpmdir=$SRPMDIR" >>$GITHUB_OUTPUT
 fi
-for rpm in $(eval "rpmspec -q $BUILD_OPTS contrib/unix/glpi-agent.spec")
+for rpm in $(eval "rpmspec -q $BUILD_OPTS contrib/unix/assetsync-agent.spec")
 do
     BASE=${rpm%-$VER-$REV*}
     RPM="$RPMDIR/noarch/${rpm%.*}.noarch.rpm"

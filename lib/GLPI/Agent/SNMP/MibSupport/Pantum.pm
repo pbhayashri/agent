@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Pantum;
+package AssetSync::Agent::SNMP::MibSupport::Pantum;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 use constant    mib2        => '.1.3.6.1.2.1' ;
 use constant    enterprises => '.1.3.6.1.4.1' ;
@@ -61,7 +61,7 @@ sub run {
     # Consumable level: most manufacturers reports trees under .1.3.6.1.2.1.43.11.1.1.x.1 oids
     # where Pantum manufacturer decided to use directly each oids when they are using only one consumable
 
-    # Same as in GLPI::Agent::Tools::Hardware
+    # Same as in AssetSync::Agent::Tools::Hardware
     my %consumable_types = (
          3 => 'TONER',
          4 => 'WASTETONER',
@@ -203,7 +203,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Pantum - Inventory module for Pantum Printers
+AssetSync::Agent::SNMP::MibSupport::Pantum - Inventory module for Pantum Printers
 
 =head1 DESCRIPTION
 

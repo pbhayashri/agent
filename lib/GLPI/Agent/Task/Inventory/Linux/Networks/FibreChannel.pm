@@ -1,11 +1,11 @@
-package GLPI::Agent::Task::Inventory::Linux::Networks::FibreChannel;
+package AssetSync::Agent::Task::Inventory::Linux::Networks::FibreChannel;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub isEnabled {
     return canRun('systool');

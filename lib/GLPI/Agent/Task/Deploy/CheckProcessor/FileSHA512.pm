@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Deploy::CheckProcessor::FileSHA512;
+package AssetSync::Agent::Task::Deploy::CheckProcessor::FileSHA512;
 
 use strict;
 use warnings;
@@ -7,7 +7,7 @@ use Digest::SHA;
 
 use English qw(-no_match_vars);
 
-use parent "GLPI::Agent::Task::Deploy::CheckProcessor";
+use parent "AssetSync::Agent::Task::Deploy::CheckProcessor";
 
 sub prepare {
     my ($self) = @_;

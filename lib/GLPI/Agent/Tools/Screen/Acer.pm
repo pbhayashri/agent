@@ -1,9 +1,9 @@
-package GLPI::Agent::Tools::Screen::Acer;
+package AssetSync::Agent::Tools::Screen::Acer;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Tools::Screen';
+use parent 'AssetSync::Agent::Tools::Screen';
 
 # Well-known eisa_id for which we need to revert serial and altserial
 my $eisa_id_match;

@@ -1,9 +1,9 @@
-package GLPI::Agent::Logger::File;
+package AssetSync::Agent::Logger::File;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Logger::Backend';
+use parent 'AssetSync::Agent::Logger::Backend';
 
 use English qw(-no_match_vars);
 use Fcntl qw(:flock);
@@ -70,7 +70,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Logger::File - A file backend for the logger
+AssetSync::Agent::Logger::File - A file backend for the logger
 
 =head1 DESCRIPTION
 

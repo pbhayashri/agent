@@ -1,11 +1,11 @@
-package GLPI::Agent::Task::Deploy::Maintenance;
+package AssetSync::Agent::Task::Deploy::Maintenance;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Storage;
-use GLPI::Agent::Task::Deploy::Datastore;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Storage;
+use AssetSync::Agent::Task::Deploy::Datastore;
 
 sub new {
     my ($class, %params) = @_;
@@ -15,7 +15,7 @@ sub new {
 
     my $self = {
         logger       => $params{logger} ||
-                        GLPI::Agent::Logger->new(),
+                        AssetSync::Agent::Logger->new(),
         config       => $params{config},
         target       => $params{target},
     };
@@ -33,7 +33,7 @@ sub doMaintenance {
     $folder .= '/deploy';
     return unless -d $folder;
 
-    my $datastore = GLPI::Agent::Task::Deploy::Datastore->new(
+    my $datastore = AssetSync::Agent::Task::Deploy::Datastore->new(
         config => $self->{config},
         path   => $folder,
         logger => $self->{logger}
@@ -48,7 +48,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Task::Deploy::Maintenance - Maintenance for Deploy task
+AssetSync::Agent::Task::Deploy::Maintenance - Maintenance for Deploy task
 
 =head1 DESCRIPTION
 

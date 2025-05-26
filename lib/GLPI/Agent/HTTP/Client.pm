@@ -1,4 +1,4 @@
-package GLPI::Agent::HTTP::Client;
+package AssetSync::Agent::HTTP::Client;
 
 use strict;
 use warnings;
@@ -12,11 +12,11 @@ use UNIVERSAL::require;
 use Digest::SHA qw(sha256_hex);
 use Cpanel::JSON::XS;
 
-use GLPI::Agent;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Expiration;
-use GLPI::Agent::Protocol::Message;
+use AssetSync::Agent;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Expiration;
+use AssetSync::Agent::Protocol::Message;
 
 use constant    _log_prefix => "[http client] ";
 
@@ -49,7 +49,7 @@ sub new {
         if $_SSL_ca && $_SSL_ca->{_expiration} && getExpirationTime();
 
     my $self = {
-        logger          => $params{logger} || GLPI::Agent::Logger->new(),
+        logger          => $params{logger} || AssetSync::Agent::Logger->new(),
         user            => $params{user}     || $config->{'user'},
         password        => $params{password} || $config->{'password'},
         oauth_client    => $params{oauth_client} || $config->{'oauth-client-id'},
@@ -69,7 +69,7 @@ sub new {
     # create user agent
     $self->{ua} = LWP::UserAgent->new(
         requests_redirectable => ['POST', 'GET', 'HEAD'],
-        agent                 => $GLPI::Agent::AGENT_STRING,
+        agent                 => $AssetSync::Agent::AGENT_STRING,
         timeout               => $params{timeout} || $config->{'timeout'} || 180,
         parse_head            => 0, # No need to parse HTML
         keep_alive            => 1,
@@ -246,7 +246,7 @@ sub request {
                             my $contentType = $result->header('content-type');
                             $message = $self->uncompress($message, $contentType) if $contentType && $contentType =~ /x-compress/;
                             if ($message && $message =~ /^{/) {
-                                my $content = GLPI::Agent::Protocol::Message->new(message => $message);
+                                my $content = AssetSync::Agent::Protocol::Message->new(message => $message);
                                 if ($content->status eq 'error' && $content->get('message')) {
                                     $error = $content->get('message');
                                 }
@@ -314,13 +314,13 @@ sub request {
                     my $message = $result->content();
                     $message = $self->uncompress($message, $contentType) if $contentType && $contentType =~ /x-compress/;
                     if ($message && $message =~ /^{/) {
-                        my $content = GLPI::Agent::Protocol::Message->new(message => $message);
+                        my $content = AssetSync::Agent::Protocol::Message->new(message => $message);
                         if ($content->status eq 'error' && $content->get('message')) {
                             $error = $content->get('message');
                         }
                     } elsif ($message && $message =~ /^</) {
-                        if (GLPI::Agent::XML->require()) {
-                            my $xml = GLPI::Agent::XML->new(string => $message);
+                        if (AssetSync::Agent::XML->require()) {
+                            my $xml = AssetSync::Agent::XML->new(string => $message);
                             my $tree = $xml->dump_as_hash();
                             ($error) = grep { $_ } split("\n", $tree->{REPLY}->{ERROR})
                                 if $tree && ref($tree->{REPLY}) eq 'HASH' && exists($tree->{REPLY}->{ERROR});
@@ -347,15 +347,15 @@ sub request {
             my $message = $result->content();
             $message = $self->uncompress($message, $contentType) if $contentType && $contentType =~ /x-compress/;
             if ($message && $message =~ /^{/) {
-                if (GLPI::Agent::Protocol::Message->require()) {
-                    my $content = GLPI::Agent::Protocol::Message->new(message => $message);
+                if (AssetSync::Agent::Protocol::Message->require()) {
+                    my $content = AssetSync::Agent::Protocol::Message->new(message => $message);
                     if ($content->status eq 'error' && $content->get('message')) {
                         push @message, $content->get('message');
                     }
                 }
             } elsif ($message && $message =~ /^</) {
-                if (GLPI::Agent::XML->require()) {
-                    my $xml = GLPI::Agent::XML->new(string => $message);
+                if (AssetSync::Agent::XML->require()) {
+                    my $xml = AssetSync::Agent::XML->new(string => $message);
                     my $tree = $xml->dump_as_hash();
                     push @message, grep { $_ } split("\n", $tree->{REPLY}->{ERROR})
                         if $tree && ref($tree->{REPLY}) eq 'HASH' && exists($tree->{REPLY}->{ERROR});
@@ -415,7 +415,7 @@ sub _getOauthAccessToken {
     );
 
     my $request = HTTP::Request->new(POST => $url);
-    my $json = GLPI::Agent::Protocol::Message->new(
+    my $json = AssetSync::Agent::Protocol::Message->new(
         message => {
             grant_type      => "client_credentials",
             client_id       => $self->{oauth_client},
@@ -456,7 +456,7 @@ sub _getOauthAccessToken {
 
     if ($result->is_success()) {
         if (length($message) && $contentType =~ m{application/json}i) {
-            my $content = GLPI::Agent::Protocol::Message->new(message => $message);
+            my $content = AssetSync::Agent::Protocol::Message->new(message => $message);
             my $token = $content->converted();
             if ($token->{token_type} && $token->{token_type} eq 'Bearer' && !empty($token->{access_token})) {
                 $oauth2->{$key} = {
@@ -530,7 +530,7 @@ sub _setSSLOptions {
                 if $IO::Socket::SSL::VERSION < 1.14;
 
             # use a custom HTTPS handler to workaround default LWP5 behaviour
-            GLPI::Agent::HTTP::Protocol::https->use(
+            AssetSync::Agent::HTTP::Protocol::https->use(
                 ca_cert_file => $self->{ca_cert_file},
                 ca_cert_dir  => $self->{ca_cert_dir},
                 ssl_cert_file => $self->{ssl_cert_file},
@@ -539,7 +539,7 @@ sub _setSSLOptions {
             );
 
             LWP::Protocol::implementor(
-                'https', 'GLPI::Agent::HTTP::Protocol::https'
+                'https', 'AssetSync::Agent::HTTP::Protocol::https'
             );
 
             # abuse user agent internal to pass values to the handler, so
@@ -564,7 +564,7 @@ sub _KeyChain_or_KeyStore_Export {
     my $vardir = $self->{_vardir};
     my $basename = $OSNAME eq 'darwin'  ? "keychain" : "keystore";
     unless (defined($_SSL_ca)) {
-        # Just clean up file that could have been created by glpi-agent v1.3
+        # Just clean up file that could have been created by assetsync-agent v1.3
         if ($vardir && -d $vardir) {
             my $obsolete = "$vardir/$basename-export.pem";
             unlink $obsolete if -e $obsolete;
@@ -807,7 +807,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::HTTP::Client - An abstract HTTP client
+AssetSync::Agent::HTTP::Client - An abstract HTTP client
 
 =head1 DESCRIPTION
 
@@ -829,7 +829,7 @@ the logger object to use (default: a new stderr logger)
 
 =item I<config>
 
-the GLPI::Agent::Config object where to find agent SSL related options
+the AssetSync::Agent::Config object where to find agent SSL related options
 
 =back
 

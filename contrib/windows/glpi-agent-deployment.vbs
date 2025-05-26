@@ -1,13 +1,13 @@
 '
 '  ------------------------------------------------------------------------
-'  glpi-agent-deployment.vbs
+'  assetsync-agent-deployment.vbs
 '  Copyright (C) 2010-2017 by the FusionInventory Development Team.
 '  Copyright (C) 2021-2024 by the Teclib SAS
 '  ------------------------------------------------------------------------
 '
 '  LICENSE
 '
-'  This file is part of GLPI Agent project.
+'  This file is part of AssetSync Agent project.
 '
 '  This file is free software; you can redistribute it and/or modify it
 '  under the terms of the GNU General Public License as published by the
@@ -27,9 +27,9 @@
 '
 '  ------------------------------------------------------------------------
 '
-'  @package   GLPI Agent
+'  @package   AssetSync Agent
 '  @version   1.14
-'  @file      contrib/windows/glpi-agent-deployment.vbs
+'  @file      contrib/windows/assetsync-agent-deployment.vbs
 '  @author(s) Benjamin Accary <meldrone@orange.fr>
 '             Christophe Pujol <chpujol@gmail.com>
 '             Marc Caissial <marc.caissial@zenitique.fr>
@@ -39,7 +39,7 @@
 '             Copyright (c) 2021-2024 Teclib SAS
 '  @license   GNU GPL version 2 or (at your option) any later version
 '             http://www.gnu.org/licenses/old-licenses/gpl-2.0-standalone.html
-'  @link      http://www.glpi-project.org/
+'  @link      http://www.assetsync-project.org/
 '  @since     2021
 '
 '  ------------------------------------------------------------------------
@@ -48,7 +48,7 @@
 '
 '
 ' Purpose:
-'     GLPI Agent Unattended Deployment.
+'     AssetSync Agent Unattended Deployment.
 '
 '
 
@@ -92,7 +92,7 @@ SetupVersion = "1.14"
 SetupLocation = "https://github.com/glpi-project/glpi-agent/releases/download/" & SetupVersion
 
 ' Location for Nightly Builds
-SetupNightlyLocation = "https://nightly.glpi-project.org/glpi-agent"
+SetupNightlyLocation = "https://nightly.assetsync-project.org/assetsync-agent"
 
 
 ' SetupArchitecture
@@ -105,18 +105,18 @@ SetupArchitecture = "Auto"
 
 ' SetupOptions
 '    Consult the online installer documentation to know its list of options.
-'    See: https://glpi-agent.readthedocs.io/en/latest/installation/windows-command-line.html#command-line-parameters
+'    See: https://assetsync-agent.readthedocs.io/en/latest/installation/windows-command-line.html#command-line-parameters
 '
 '    You should use simple quotes (') to set between quotation marks those values
 '    that require it; double quotes (") doesn't work with UNCs.
 '
-SetupOptions = "/quiet RUNNOW=1 SERVER='http://glpi.yourcompany.com/'"
-'SetupOptions = "/quiet RUNNOW=1 SERVER='http://glpi.yourcompany.com/plugins/fusioninventory'"
+SetupOptions = "/quiet RUNNOW=1 SERVER='http://assetsync.yourcompany.com/'"
+'SetupOptions = "/quiet RUNNOW=1 SERVER='http://assetsync.yourcompany.com/plugins/fusioninventory'"
 
 ' Setup
 '    The installer file name. You should not have to modify this variable ever.
 '
-Setup = "GLPI-Agent-" & SetupVersion & "-" & SetupArchitecture & ".msi"
+Setup = "AssetSync-Agent-" & SetupVersion & "-" & SetupArchitecture & ".msi"
 
 ' Reconfigure
 '    Just reconfigure the current installation if installed agent has the same version
@@ -351,49 +351,49 @@ Function IsInstallationNeeded(strSetupVersion, strSetupArchitecture, strSystemAr
    ' Compare the current version, whether it exists, with strSetupVersion
    If strSystemArchitecture = "x86" Then
       ' The system architecture is 32-bit
-      ' Check if the subkey 'SOFTWARE\GLPI-Agent\Installer' exists
+      ' Check if the subkey 'SOFTWARE\AssetSync-Agent\Installer' exists
       On error resume next
-      strCurrentSetupVersion = WshShell.RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\GLPI-Agent\Installer\Version")
+      strCurrentSetupVersion = WshShell.RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\AssetSync-Agent\Installer\Version")
       If Err.Number = 0 Then
-      ' The subkey 'SOFTWARE\GLPI-Agent\Installer' exists
+      ' The subkey 'SOFTWARE\AssetSync-Agent\Installer' exists
          If strCurrentSetupVersion <> strSetupVersion Then
             ShowMessage("Installation needed: " & strCurrentSetupVersion & " -> " & strSetupVersion)
             IsInstallationNeeded = True
          End If
          Exit Function
       Else
-      ' The subkey 'SOFTWARE\GLPI-Agent\Installer' doesn't exist
+      ' The subkey 'SOFTWARE\AssetSync-Agent\Installer' doesn't exist
          Err.Clear
          ShowMessage("Installation needed: " & strSetupVersion)
          IsInstallationNeeded = True
       End If
    Else
       ' The system architecture is 64-bit
-      ' Check if the subkey 'SOFTWARE\Wow6432Node\GLPI-Agent\Installer' exists
+      ' Check if the subkey 'SOFTWARE\Wow6432Node\AssetSync-Agent\Installer' exists
       On error resume next
-      strCurrentSetupVersion = WshShell.RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\GLPI-Agent\Installer\Version")
+      strCurrentSetupVersion = WshShell.RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\AssetSync-Agent\Installer\Version")
       If Err.Number = 0 Then
-      ' The subkey 'SOFTWARE\Wow6432Node\GLPI-Agent\Installer' exists
+      ' The subkey 'SOFTWARE\Wow6432Node\AssetSync-Agent\Installer' exists
          If strCurrentSetupVersion <> strSetupVersion Then
             ShowMessage("Installation needed: " & strCurrentSetupVersion & " -> " & strSetupVersion)
             IsInstallationNeeded = True
          End If
          Exit Function
       Else
-         ' The subkey 'SOFTWARE\Wow6432Node\GLPI-Agent\Installer' doesn't exist
+         ' The subkey 'SOFTWARE\Wow6432Node\AssetSync-Agent\Installer' doesn't exist
          Err.Clear
-         ' Check if the subkey 'SOFTWARE\GLPI-Agent\Installer' exists
+         ' Check if the subkey 'SOFTWARE\AssetSync-Agent\Installer' exists
          On error resume next
-         strCurrentSetupVersion = WshShell.RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\GLPI-Agent\Installer\Version")
+         strCurrentSetupVersion = WshShell.RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\AssetSync-Agent\Installer\Version")
          If Err.Number = 0 Then
-         ' The subkey 'SOFTWARE\GLPI-Agent\Installer' exists
+         ' The subkey 'SOFTWARE\AssetSync-Agent\Installer' exists
             If strCurrentSetupVersion <> strSetupVersion Then
                ShowMessage("Installation needed: " & strCurrentSetupVersion & " -> " & strSetupVersion)
                IsInstallationNeeded = True
             End If
             Exit Function
          Else
-            ' The subkey 'SOFTWARE\GLPI-Agent\Installer' doesn't exist
+            ' The subkey 'SOFTWARE\AssetSync-Agent\Installer' doesn't exist
             Err.Clear
             ShowMessage("Installation needed: " & strSetupVersion)
             IsInstallationNeeded = True
@@ -598,7 +598,7 @@ End If
 ' Check if we are trying to installed version not supporting x86
 If (SetupArchitecture = "x86") And doesNotSupportX86(SetupVersion) Then
    ' Support of 32-bit operative system has since discontinued since 1.8
-   ShowMessage("GLPI-Agent v" & SetupVersion & " doesn't support installation on a 32-bit operative system.")
+   ShowMessage("AssetSync-Agent v" & SetupVersion & " doesn't support installation on a 32-bit operative system.")
    ShowMessage("Deployment aborted!")
    WScript.Quit 4
 End If

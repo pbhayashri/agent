@@ -1,22 +1,22 @@
-package GLPI::Agent::Task::Inventory::Generic::Dmidecode::Memory;
+package AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Memory;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Generic;
-use GLPI::Agent::Tools::PartNumber;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Generic;
+use AssetSync::Agent::Tools::PartNumber;
 
 use constant    category    => "memory";
 
 # Run after virtualization to decide if found component is virtual
 our $runAfterIfEnabled = [ qw(
-    GLPI::Agent::Task::Inventory::Vmsystem
-    GLPI::Agent::Task::Inventory::Win32::Hardware
-    GLPI::Agent::Task::Inventory::Linux::Memory
-    GLPI::Agent::Task::Inventory::BSD::Memory
+    AssetSync::Agent::Task::Inventory::Vmsystem
+    AssetSync::Agent::Task::Inventory::Win32::Hardware
+    AssetSync::Agent::Task::Inventory::Linux::Memory
+    AssetSync::Agent::Task::Inventory::BSD::Memory
 )];
 
 sub isEnabled {
@@ -134,7 +134,7 @@ sub _getMemories {
                     getSanitizedString( hex2char($info->{'Part Number'}) )
                 );
                 $memory->{MODEL} =~ s/-+$//;
-                my $partnumber_factory = GLPI::Agent::Tools::PartNumber->new(@_);
+                my $partnumber_factory = AssetSync::Agent::Tools::PartNumber->new(@_);
                 my $partnumber = $partnumber_factory->match(
                     partnumber  => $memory->{MODEL},
                     category    => "memory",

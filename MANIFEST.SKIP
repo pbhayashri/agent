@@ -32,7 +32,7 @@ CVS/
 \.swp
 
 
-^GLPI-Agent.*
+^AssetSync-Agent.*
 /tarballs/
 ^setup.sh
 

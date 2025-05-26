@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::Inventory::Generic::Softwares;
+package AssetSync::Agent::Task::Inventory::Generic::Softwares;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use constant    category    => "software";
 

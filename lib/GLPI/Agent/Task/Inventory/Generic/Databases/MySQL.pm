@@ -1,14 +1,14 @@
-package GLPI::Agent::Task::Inventory::Generic::Databases::MySQL;
+package AssetSync::Agent::Task::Inventory::Generic::Databases::MySQL;
 
 use English qw(-no_match_vars);
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Generic::Databases';
+use parent 'AssetSync::Agent::Task::Inventory::Generic::Databases';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Inventory::DatabaseService;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Inventory::DatabaseService;
 
 sub isEnabled {
     return canRun('mysql');
@@ -20,7 +20,7 @@ sub doInventory {
     my $inventory = $params{inventory};
 
     # Try to retrieve credentials updating params
-    GLPI::Agent::Task::Inventory::Generic::Databases::_credentials(\%params, "mysql");
+    AssetSync::Agent::Task::Inventory::Generic::Databases::_credentials(\%params, "mysql");
 
     my $dbservices = _getDatabaseService(%params);
 
@@ -41,7 +41,7 @@ sub _getDatabaseService {
     my @dbs = ();
 
     foreach my $credential (@{$credentials}) {
-        GLPI::Agent::Task::Inventory::Generic::Databases::trying_credentials($params{logger}, $credential);
+        AssetSync::Agent::Task::Inventory::Generic::Databases::trying_credentials($params{logger}, $credential);
         # Be sure to forget previous credential option between loops
         delete $params{extra};
         my $extra_file = _mysqlOptionsFile($credential);
@@ -70,7 +70,7 @@ sub _getDatabaseService {
             %params
         )) unless $lastboot;
 
-        my $dbs = GLPI::Agent::Inventory::DatabaseService->new(
+        my $dbs = AssetSync::Agent::Inventory::DatabaseService->new(
             type            => "mysql",
             name            => $name,
             version         => $version,

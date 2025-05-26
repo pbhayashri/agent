@@ -9,16 +9,16 @@ use Test::Deep;
 use Test::Exception;
 use Test::More;
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::HTTP::Client::Fusion;
-use GLPI::Agent::XML::Query;
-use GLPI::Test::Server;
-use GLPI::Test::Utils;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::HTTP::Client::Fusion;
+use AssetSync::Agent::XML::Query;
+use AssetSync::Test::Server;
+use AssetSync::Test::Utils;
 
 unsetProxyEnvVar();
 
 # find an available port
-my $port = GLPI::Agent::Tools::first { test_port($_) } 8080 .. 8180;
+my $port = AssetSync::Agent::Tools::first { test_port($_) } 8080 .. 8180;
 
 if (!$port) {
     plan skip_all => 'no available port';
@@ -26,11 +26,11 @@ if (!$port) {
     plan tests => 6;
 }
 
-my $logger = GLPI::Agent::Logger->new(
+my $logger = AssetSync::Agent::Logger->new(
     logger => [ 'Test' ]
 );
 
-my $message = GLPI::Agent::XML::Query->new(
+my $message = AssetSync::Agent::XML::Query->new(
     deviceid => 'foo',
     query => 'foo',
     msg => {
@@ -39,14 +39,14 @@ my $message = GLPI::Agent::XML::Query->new(
     },
 );
 
-my $client = GLPI::Agent::HTTP::Client::Fusion->new(
+my $client = AssetSync::Agent::HTTP::Client::Fusion->new(
     logger => $logger
 );
 
 # http connection tests
 my ($server, $response);
 
-$server = GLPI::Test::Server->new(
+$server = AssetSync::Test::Server->new(
     port => $port,
 );
 my $header  = "HTTP/1.0 200 OK\r\n\r\n";

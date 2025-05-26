@@ -1,11 +1,11 @@
-package GLPI::Agent::Task::Inventory::Generic::Softwares::Deb;
+package AssetSync::Agent::Task::Inventory::Generic::Softwares::Deb;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub isEnabled {
     return canRun('dpkg-query');
@@ -32,7 +32,7 @@ sub doInventory {
     );
     return unless $packages;
 
-    # mimic RPM inventory behaviour, as GLPI aggregates software
+    # mimic RPM inventory behaviour, as AssetSync aggregates software
     # based on name and publisher
     my $publisher = getFirstMatch(
         logger  => $logger,

@@ -16,17 +16,17 @@ use Test::Exception;
 use Test::MockObject::Extends;
 use Test::MockModule;
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Inventory;
-use GLPI::Agent::XML;
-use GLPI::Agent::Target::Server;
-use GLPI::Agent::Task::ESX;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Inventory;
+use AssetSync::Agent::XML;
+use AssetSync::Agent::Target::Server;
+use AssetSync::Agent::Task::ESX;
+use AssetSync::Agent::Tools::Virtualization;
 
 my %tests = (
     'esx-4.1.0-1' => {
         # same as json "versionclient" property to avoid false error testing as agent version evolves
-        client      => "GLPI-Agent_v1.1",
+        client      => "AssetSync-Agent_v1.1",
         # deviceid matching the expected one
         deviceid    => "esx-test.teclib.local-2022-01-10-11-13-28"
     },
@@ -35,19 +35,19 @@ my %tests = (
 plan tests => (scalar keys %tests) * 7;
 
 # Setup a target with a Test logger and debug
-my $logger = GLPI::Agent::Logger->new(
+my $logger = AssetSync::Agent::Logger->new(
     logger  => [ 'Test' ],
     debug   => 1
 );
 
-my $target = GLPI::Agent::Target::Server->new(
-    url    => 'http://localhost/glpi-any',
+my $target = AssetSync::Agent::Target::Server->new(
+    url    => 'http://localhost/assetsync-any',
     logger => $logger,
     basevardir => tempdir(CLEANUP => 1)
 );
 
 my $module   = Test::MockModule->new('LWP::UserAgent');
-my $invlib   = Test::MockModule->new('GLPI::Agent::Inventory');
+my $invlib   = Test::MockModule->new('AssetSync::Agent::Inventory');
 
 foreach my $test (keys %tests) {
     my $resource = "resources/esx/$test";
@@ -67,7 +67,7 @@ foreach my $test (keys %tests) {
             my ($action) =
                 $request->header('soapaction') =~ /"urn:vim25#(\S+)"/;
 
-            my $tree = GLPI::Agent::XML->new(string => $request->content())->dump_as_hash();
+            my $tree = AssetSync::Agent::XML->new(string => $request->content())->dump_as_hash();
             my $body = $tree->{'soapenv:Envelope'}->{'soapenv:Body'};
             if ($body->{RetrieveProperties}) {
                 my $obj = $body->{RetrieveProperties}->{specSet}->{objectSet}->{obj};
@@ -96,7 +96,7 @@ foreach my $test (keys %tests) {
     # Tests start from here
     my $esx;
     lives_ok {
-        $esx = GLPI::Agent::Task::ESX->new(
+        $esx = AssetSync::Agent::Task::ESX->new(
             logger  => $logger,
             target  => $target,
             config      => {},
@@ -168,7 +168,7 @@ foreach my $test (keys %tests) {
     }
 
     die "$resource.json missing\n" unless -e "$resource.json";
-    my $expected = GLPI::Agent::Protocol::Message->new(
+    my $expected = AssetSync::Agent::Protocol::Message->new(
         logger  => $logger,
         file    => "$resource.json"
     );

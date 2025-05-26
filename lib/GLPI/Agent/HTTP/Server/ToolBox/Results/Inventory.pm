@@ -1,9 +1,9 @@
-package GLPI::Agent::HTTP::Server::ToolBox::Results::Inventory;
+package AssetSync::Agent::HTTP::Server::ToolBox::Results::Inventory;
 
 use strict;
 use warnings;
 
-use parent "GLPI::Agent::HTTP::Server::ToolBox::Results::Fields";
+use parent "AssetSync::Agent::HTTP::Server::ToolBox::Results::Fields";
 
 sub new {
     my ($class, %params) = @_;
@@ -186,7 +186,7 @@ sub analyze {
     }
 
     # Don't permit any standard fields edition
-    my @netinventory_fields = GLPI::Agent::HTTP::Server::ToolBox::Results::NetInventory->fields();
+    my @netinventory_fields = AssetSync::Agent::HTTP::Server::ToolBox::Results::NetInventory->fields();
     $device->{_noedit} = { map { $_->{name} => 1 } $self->fields(), @netinventory_fields };
 
     return $device;

@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        You have an idea or feature request for GLPI Agent or related to glpi-agent github project.
+        You have an idea or feature request for AssetSync Agent or related to assetsync-agent github project.
   - type: textarea
     id: description
     attributes:

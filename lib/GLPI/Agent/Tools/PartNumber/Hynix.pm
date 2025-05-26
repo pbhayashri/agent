@@ -1,9 +1,9 @@
-package GLPI::Agent::Tools::PartNumber::Hynix;
+package AssetSync::Agent::Tools::PartNumber::Hynix;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Tools::PartNumber';
+use parent 'AssetSync::Agent::Tools::PartNumber';
 
 # See https://www.skhynix.com/eng/support/technicalSupport.jsp
 

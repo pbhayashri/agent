@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::HPUX::Networks;
+package AssetSync::Agent::Task::Inventory::HPUX::Networks;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Unix;
-use GLPI::Agent::Tools::Network;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Unix;
+use AssetSync::Agent::Tools::Network;
 
 use constant    category    => "network";
 

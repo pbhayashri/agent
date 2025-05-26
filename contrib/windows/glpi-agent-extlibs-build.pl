@@ -12,7 +12,7 @@ use constant {
 };
 
 use lib 'lib';
-use GLPI::Agent::Version;
+use AssetSync::Agent::Version;
 
 use lib abs_path(File::Spec->rel2abs('../packaging', __FILE__));
 
@@ -24,8 +24,8 @@ BEGIN {
     map { $INC{"Perl/Dist/Strawberry/Step/$_.pm"} = __FILE__ } qw(Control BuildLibrary ToolChain ToolChainUpdate Msys2 Msys2Package BuildPackage PackageZIP);
 }
 
-my $provider = $GLPI::Agent::Version::PROVIDER;
-my $version = $GLPI::Agent::Version::VERSION;
+my $provider = $AssetSync::Agent::Version::PROVIDER;
+my $version = $AssetSync::Agent::Version::VERSION;
 
 sub toolchain_builder {
     my ($arch, $notest, $clean, $cpus, $cadll) = @_;
@@ -425,9 +425,9 @@ sub _extract {
 sub run {
     my ($self) = @_;
 
-    if ($self->{config}->{version} eq "__GLPI_AGENT_VERSION__") {
-        $self->{config}->{version} = $GLPI::Agent::Version::VERSION;
-        $self->{config}->{use_glpi_version} = 1;
+    if ($self->{config}->{version} eq "__AssetSync_AGENT_VERSION__") {
+        $self->{config}->{version} = $AssetSync::Agent::Version::VERSION;
+        $self->{config}->{use_AssetSync_version} = 1;
     }
 
     $self->boss->message(2, "#### $self->{config}->{name} v$self->{config}->{version}");
@@ -471,7 +471,7 @@ sub run {
 
     # Updates for _resolve method
     $self->{config}->{src} = "../$folder";
-    $self->{config}->{absolute_src} = "/c/Strawberry-perl-for-GLPI-Agent_build/build/$folder";
+    $self->{config}->{absolute_src} = "/c/Strawberry-perl-for-AssetSync-Agent_build/build/$folder";
     $self->{config}->{dllsuffix} = $self->global->{_dllsuffix} unless $self->{config}->{dllsuffix};
     $self->{config}->{install_prefix} = catdir($self->global->{image_dir}, "c");
     $self->{config}->{prefix} = $self->{config}->{install_prefix};
@@ -502,7 +502,7 @@ sub run {
 
     $self->boss->message(2, "* make/build stage");
 
-    if ($self->{config}->{use_glpi_version}) {
+    if ($self->{config}->{use_AssetSync_version}) {
         my ($MAJOR, $MINOR, $REV) = $self->{config}->{version} =~ /^(\d+)\.(\d+)\.?(\d+)?/;
         push @{$self->{config}->{make_opts}}, "MAJOR=$MAJOR", "MINOR=$MINOR";
         push @{$self->{config}->{make_opts}}, "REV=$REV" if $REV;

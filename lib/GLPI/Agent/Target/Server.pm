@@ -1,14 +1,14 @@
-package GLPI::Agent::Target::Server;
+package AssetSync::Agent::Target::Server;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Target';
+use parent 'AssetSync::Agent::Target';
 
 use English qw(-no_match_vars);
 use URI;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 my $count = 0;
 
@@ -98,18 +98,18 @@ sub getType {
     return 'server';
 }
 
-sub isGlpiServer {
+sub isAssetSyncServer {
     my ($self, $bool) = @_;
 
     if (defined($bool)) {
         if ($bool =~ /^1|true|yes$/i) {
-            $self->{_is_glpi_server} = 1;
+            $self->{_is_AssetSync_server} = 1;
         } else {
-            delete $self->{_is_glpi_server};
+            delete $self->{_is_AssetSync_server};
         }
     }
 
-    return $self->{_is_glpi_server} // 0;
+    return $self->{_is_AssetSync_server} // 0;
 }
 
 sub plannedTasks {
@@ -140,7 +140,7 @@ sub doProlog {
     my $task_support = $self->{_server_task_support}
         or return 1;
 
-    return any { $task_support->{$_}->{server} eq 'glpiinventory' } keys(%{$task_support});
+    return any { $task_support->{$_}->{server} eq 'AssetSyncinventory' } keys(%{$task_support});
 }
 
 sub getTaskServer {
@@ -157,8 +157,8 @@ sub getTaskVersion {
 
     $task = lc($task);
 
-    return $self->{_glpi} unless $task && $self->{_server_task_support} && $self->{_server_task_support}->{$task};
-    return $self->{_server_task_support}->{$task}->{version} // $self->{_glpi} // '';
+    return $self->{_AssetSync} unless $task && $self->{_server_task_support} && $self->{_server_task_support}->{$task};
+    return $self->{_server_task_support}->{$task}->{version} // $self->{_AssetSync} // '';
 }
 
 1;
@@ -167,7 +167,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Target::Server - Server target
+AssetSync::Agent::Target::Server - Server target
 
 =head1 DESCRIPTION
 
@@ -178,7 +178,7 @@ This is a target for sending execution result to a server.
 =head2 new(%params)
 
 The constructor. The following parameters are allowed, in addition to those
-from the base class C<GLPI::Agent::Target>, as keys of the %params
+from the base class C<AssetSync::Agent::Target>, as keys of the %params
 hash:
 
 =over

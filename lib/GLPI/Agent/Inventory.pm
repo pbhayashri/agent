@@ -1,4 +1,4 @@
-package GLPI::Agent::Inventory;
+package AssetSync::Agent::Inventory;
 
 use strict;
 use warnings;
@@ -10,12 +10,12 @@ use UNIVERSAL::require;
 use File::Glob;
 use File::stat;
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools;
-use GLPI::Agent::XML;
-use GLPI::Agent::Version;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::XML;
+use AssetSync::Agent::Version;
 
-use GLPI::Agent::Protocol::Message;
+use AssetSync::Agent::Protocol::Message;
 
 my %fields = (
     BIOS             => [ qw/SMODEL SMANUFACTURER SSN BDATE BVERSION
@@ -114,8 +114,8 @@ my %checks = (
     STORAGES => {
         STATUS    => qr/^(up|down)$/,
         INTERFACE => {
-            # Check can be ignored since GLPI 10.0.4
-            not_since   => glpiVersion('10.0.4'),
+            # Check can be ignored since AssetSync 10.0.4
+            not_since   => AssetSyncVersion('10.0.4'),
             regexp      => qr/^(SCSI|HDC|IDE|USB|1394|SATA|SAS|ATAPI)$/
         }
     },
@@ -156,7 +156,7 @@ my %categoryMap = (
     printer         => [ "PRINTERS" ],
     process         => [ "PROCESSES" ],
     slot            => [ "SLOTS" ],
-    software        => [ "SOFTWARES", "OPERATINGSYSTEM" ], # Softwares require operatingsystem in GLPI
+    software        => [ "SOFTWARES", "OPERATINGSYSTEM" ], # Softwares require operatingsystem in AssetSync
     sound           => [ "SOUNDS" ],
     storage         => [ "STORAGES" ],
     video           => [ "VIDEOS" ],
@@ -178,24 +178,24 @@ sub new {
         deviceid       => $params{deviceid},
         datadir        => $params{datadir},
         statedir       => $params{statedir} // '',
-        logger         => $params{logger} || GLPI::Agent::Logger->new(),
+        logger         => $params{logger} || AssetSync::Agent::Logger->new(),
         fields         => \%fields,
         _format        => '',
-        _glpi_version  => glpiVersion('v10'),
+        _AssetSync_version  => AssetSyncVersion('v10'),
         _required      => $params{required} // [],
         _itemtype      => empty($params{itemtype}) ? "Computer" : $params{itemtype},
         content        => {
             HARDWARE => {
                 VMSYSTEM => "Physical" # Default value
             },
-            VERSIONCLIENT => $GLPI::Agent::AGENT_STRING ||
-                $GLPI::Agent::Version::PROVIDER."-Inventory_v".$GLPI::Agent::Version::VERSION
+            VERSIONCLIENT => $AssetSync::Agent::AGENT_STRING ||
+                $AssetSync::Agent::Version::PROVIDER."-Inventory_v".$AssetSync::Agent::Version::VERSION
         }
     };
     bless $self, $class;
 
-    $self->{_glpi_version} = glpiVersion($params{glpi})
-        if $params{glpi};
+    $self->{_AssetSync_version} = AssetSyncVersion($params{assetsync})
+        if $params{assetsync};
 
     $self->setTag($params{tag});
     $self->{last_state_file} = $params{statedir} . '/last_state.json'
@@ -258,15 +258,15 @@ sub getDeviceId {
         my $workgroup = $self->{content}->{HARDWARE}->{WORKGROUP};
         $hostname .= "." . $workgroup if $workgroup;
     } else {
-        GLPI::Agent::Tools::Hostname->require();
+        AssetSync::Agent::Tools::Hostname->require();
 
         eval {
-            $hostname = GLPI::Agent::Tools::Hostname::getHostname();
+            $hostname = AssetSync::Agent::Tools::Hostname::getHostname();
         };
     }
 
     # Fake hostname if no default found
-    $hostname = 'device-by-' . lc($GLPI::Agent::Version::PROVIDER) . '-agent'
+    $hostname = 'device-by-' . lc($AssetSync::Agent::Version::PROVIDER) . '-agent'
         unless $hostname;
 
     my ($year, $month , $day, $hour, $min, $sec) =
@@ -286,10 +286,10 @@ sub getContent {
     my ($self, %params) = @_;
 
     if ($self->{_format} eq 'json') {
-        die "Can't load GLPI Protocol Inventory library\n"
-            unless GLPI::Agent::Protocol::Inventory->require();
+        die "Can't load AssetSync Protocol Inventory library\n"
+            unless AssetSync::Agent::Protocol::Inventory->require();
 
-        my $content = GLPI::Agent::Protocol::Inventory->new(
+        my $content = AssetSync::Agent::Protocol::Inventory->new(
             logger      => $self->{logger},
             deviceid    => $self->getDeviceId(),
             content     => $self->{content},
@@ -400,7 +400,7 @@ sub addEntry {
         my $value = getSanitizedString($entry->{$field});
         # check value if appliable
         if (ref($checks->{$field}) eq 'HASH') {
-            if ($checks->{$field}->{regexp} && $checks->{$field}->{not_since} && $checks->{$field}->{not_since} > $self->{_glpi_version}) {
+            if ($checks->{$field}->{regexp} && $checks->{$field}->{not_since} && $checks->{$field}->{not_since} > $self->{_AssetSync_version}) {
                 $self->{logger}->debug(
                     "invalid value $value for field $field for section $section"
                 ) unless $value =~ $checks->{$field}->{regexp};
@@ -557,7 +557,7 @@ sub computeChecksum {
     if ($self->{last_state_file} && !$self->{last_state_content}) {
         if (-f $self->{last_state_file}) {
             eval {
-                $last_state = GLPI::Agent::Protocol::Message->new(
+                $last_state = AssetSync::Agent::Protocol::Message->new(
                     file    => $self->{last_state_file},
                 );
             };
@@ -572,7 +572,7 @@ sub computeChecksum {
     } else {
         $last_state = $self->{last_state_content};
     }
-    $last_state = GLPI::Agent::Protocol::Message->new() unless $last_state;
+    $last_state = AssetSync::Agent::Protocol::Message->new() unless $last_state;
 
     # Prepare to postpone full inventory when required
     my $postpone = 0;
@@ -631,7 +631,7 @@ sub computeChecksum {
             next;
         }
 
-        # For software category, GLPI requires we also keep os category
+        # For software category, AssetSync requires we also keep os category
         $keep_os = 1 if $section eq 'SOFTWARES';
 
         $logger->debug("Section $section has changed since last inventory");
@@ -653,7 +653,7 @@ sub computeChecksum {
     # If we can postpone full inventory, remove section and set inventory as partial
     if ($postpone && @delete_sections) {
         foreach my $section (@delete_sections) {
-            # For software category, GLPI requires we also keep os category
+            # For software category, AssetSync requires we also keep os category
             next if $section eq 'OPERATINGSYSTEM' && $keep_os;
             delete $self->{content}->{$section};
             # For user category, we must also clean up LASTLOGGEDUSER & DATELASTLOGGEDUSER
@@ -821,7 +821,7 @@ sub save {
 
     } elsif ($format eq 'xml') {
 
-        my $xml = GLPI::Agent::XML->new();
+        my $xml = AssetSync::Agent::XML->new();
 
         print $handle $xml->write({
             REQUEST => {
@@ -841,7 +841,7 @@ sub save {
         );
 
         my $hash = {
-            version  => $GLPI::Agent::Version::VERSION,
+            version  => $AssetSync::Agent::Version::VERSION,
             deviceid => $self->getDeviceId(),
             data     => $self->getContent(),
             fields   => $self->getFields()
@@ -862,7 +862,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Inventory - Inventory data structure
+AssetSync::Agent::Inventory - Inventory data structure
 
 =head1 DESCRIPTION
 

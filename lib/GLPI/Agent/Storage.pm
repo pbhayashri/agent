@@ -1,4 +1,4 @@
-package GLPI::Agent::Storage;
+package AssetSync::Agent::Storage;
 
 use strict;
 use warnings;
@@ -10,7 +10,7 @@ use File::Path qw(mkpath);
 use File::stat;
 use Storable;
 
-use GLPI::Agent::Logger;
+use AssetSync::Agent::Logger;
 
 {
     no warnings;
@@ -43,7 +43,7 @@ sub new {
 
     my $self = {
         logger    => $params{logger} ||
-                     GLPI::Agent::Logger->new(),
+                     AssetSync::Agent::Logger->new(),
         _mtime    => {},
         directory => $params{directory}
     };
@@ -193,11 +193,11 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Storage - A data serializer/deserializer
+AssetSync::Agent::Storage - A data serializer/deserializer
 
 =head1 SYNOPSIS
 
-  my $storage = GLPI::Agent::Storage->new(
+  my $storage = AssetSync::Agent::Storage->new(
       directory => '/tmp'
   );
   my $data = $storage->restore(

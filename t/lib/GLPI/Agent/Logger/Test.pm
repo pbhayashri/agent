@@ -1,9 +1,9 @@
-package GLPI::Agent::Logger::Test;
+package AssetSync::Agent::Logger::Test;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Logger::Backend';
+use parent 'AssetSync::Agent::Logger::Backend';
 
 use English qw(-no_match_vars);
 

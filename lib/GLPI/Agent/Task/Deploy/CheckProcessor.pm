@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Deploy::CheckProcessor;
+package AssetSync::Agent::Task::Deploy::CheckProcessor;
 
 use strict;
 use warnings;

@@ -6,10 +6,10 @@ use warnings;
 use Test::Deep;
 use Test::More;
 
-use GLPI::Agent::SNMP::Device;
-use GLPI::Agent::SNMP::Mock;
-use GLPI::Agent::Tools::Hardware;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::SNMP::Device;
+use AssetSync::Agent::SNMP::Mock;
+use AssetSync::Agent::Tools::Hardware;
+use AssetSync::Agent::Tools::SNMP;
 
 my @mac_tests = (
     [ '\TmGnn'            , '5c:54:6d:47:6e:6e' ],
@@ -223,13 +223,13 @@ plan tests =>
 
 foreach my $test (@mac_tests) {
     is(
-        GLPI::Agent::Tools::SNMP::getCanonicalMacAddress($test->[0]),
+        AssetSync::Agent::Tools::SNMP::getCanonicalMacAddress($test->[0]),
         $test->[1],
         "$test->[0] normalisation"
     );
 }
 
-my $snmp1 = GLPI::Agent::SNMP::Mock->new(
+my $snmp1 = AssetSync::Agent::SNMP::Mock->new(
     hash => {
         '.1.3.6.1.2.1.1.1.0'        => [ 'STRING', 'foo' ],
     }
@@ -242,7 +242,7 @@ cmp_deeply(
     'getDeviceInfo() with no sysobjectid'
 );
 
-my $snmp2 = GLPI::Agent::SNMP::Mock->new(
+my $snmp2 = AssetSync::Agent::SNMP::Mock->new(
     hash => {
         '.1.3.6.1.2.1.1.1.0'        => [ 'STRING', 'foo' ],
         '.1.3.6.1.2.1.1.2.0'        => [ 'STRING', '.1.3.6.1.4.1.45.1' ],
@@ -269,7 +269,7 @@ cmp_deeply(
     'getDeviceInfo() with sysobjectid'
 );
 
-my $snmp3 = GLPI::Agent::SNMP::Mock->new(
+my $snmp3 = AssetSync::Agent::SNMP::Mock->new(
     hash => {
         '.1.3.6.1.2.1.1.2.0'        => [ 'STRING', '.1.3.6.1.4.1.1663.1.1.1.1.24' ],
     }
@@ -286,11 +286,11 @@ cmp_deeply(
 );
 
 foreach my $test (@cdp_info_extraction_tests) {
-    my $device = GLPI::Agent::SNMP::Device->new(
-        snmp => GLPI::Agent::SNMP::Mock->new(hash => $test->[0])
+    my $device = AssetSync::Agent::SNMP::Device->new(
+        snmp => AssetSync::Agent::SNMP::Mock->new(hash => $test->[0])
     );
 
-    my $cdp_info = GLPI::Agent::Tools::Hardware::_getCDPInfo(
+    my $cdp_info = AssetSync::Agent::Tools::Hardware::_getCDPInfo(
         device => $device,
     );
 
@@ -302,11 +302,11 @@ foreach my $test (@cdp_info_extraction_tests) {
 }
 
 foreach my $test (@mac_addresses_extraction_tests) {
-    my $device = GLPI::Agent::SNMP::Device->new(
-        snmp => GLPI::Agent::SNMP::Mock->new(hash => $test->[0])
+    my $device = AssetSync::Agent::SNMP::Device->new(
+        snmp => AssetSync::Agent::SNMP::Mock->new(hash => $test->[0])
     );
 
-    my $mac_addresses = GLPI::Agent::Tools::Hardware::_getKnownMacAddresses(
+    my $mac_addresses = AssetSync::Agent::Tools::Hardware::_getKnownMacAddresses(
         device         => $device,
         address2port   => '.1.3.6.1.2.1.17.4.3.1.2',
         port2interface => '.1.3.6.1.2.1.17.1.4.1.2',
@@ -320,11 +320,11 @@ foreach my $test (@mac_addresses_extraction_tests) {
 }
 
 foreach my $test (@mac_addresses_addition_tests) {
-    my $device = GLPI::Agent::SNMP::Device->new(
-        snmp => GLPI::Agent::SNMP::Mock->new(hash => $test->[0])
+    my $device = AssetSync::Agent::SNMP::Device->new(
+        snmp => AssetSync::Agent::SNMP::Mock->new(hash => $test->[0])
     );
 
-    GLPI::Agent::Tools::Hardware::_setKnownMacAddresses(
+    AssetSync::Agent::Tools::Hardware::_setKnownMacAddresses(
         device => $device,
         ports  => $test->[1],
     );
@@ -337,11 +337,11 @@ foreach my $test (@mac_addresses_addition_tests) {
 }
 
 foreach my $test (@trunk_ports_extraction_tests) {
-    my $device = GLPI::Agent::SNMP::Device->new(
-        snmp => GLPI::Agent::SNMP::Mock->new(hash => $test->[0])
+    my $device = AssetSync::Agent::SNMP::Device->new(
+        snmp => AssetSync::Agent::SNMP::Mock->new(hash => $test->[0])
     );
 
-    my $trunk_ports = GLPI::Agent::Tools::Hardware::_getTrunkPorts(
+    my $trunk_ports = AssetSync::Agent::Tools::Hardware::_getTrunkPorts(
         device => $device,
     );
 
@@ -354,27 +354,27 @@ foreach my $test (@trunk_ports_extraction_tests) {
 
 my $oid = '0.1.2.3.4.5.6.7.8.9';
 is(
-    GLPI::Agent::Tools::Hardware::_getElement($oid, 0),
+    AssetSync::Agent::Tools::Hardware::_getElement($oid, 0),
     0,
     'index 0'
 );
 is(
-    GLPI::Agent::Tools::Hardware::_getElement($oid, -1),
+    AssetSync::Agent::Tools::Hardware::_getElement($oid, -1),
     9,
     'index -1'
 );
 is(
-    GLPI::Agent::Tools::Hardware::_getElement($oid, -2),
+    AssetSync::Agent::Tools::Hardware::_getElement($oid, -2),
     8,
     'index -2'
 );
 cmp_deeply(
-    [ GLPI::Agent::Tools::Hardware::_getElements($oid, 0, 3) ],
+    [ AssetSync::Agent::Tools::Hardware::_getElements($oid, 0, 3) ],
     [ qw/0 1 2 3/ ],
     'getElements with index 0 to 3'
 );
 cmp_deeply(
-    [ GLPI::Agent::Tools::Hardware::_getElements($oid, -4, -1) ],
+    [ AssetSync::Agent::Tools::Hardware::_getElements($oid, -4, -1) ],
     [ qw/6 7 8 9/ ],
     'getElements with index -4 to -1'
 );

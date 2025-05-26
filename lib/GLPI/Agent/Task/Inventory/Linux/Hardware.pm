@@ -1,17 +1,17 @@
-package GLPI::Agent::Task::Inventory::Linux::Hardware;
+package AssetSync::Agent::Task::Inventory::Linux::Hardware;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use UNIVERSAL::require;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant    category    => "hardware";
 
-our $runAfterIfEnabled = ["GLPI::Agent::Task::Inventory::Generic::Dmidecode::Hardware"];
+our $runAfterIfEnabled = ["AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Hardware"];
 
 # Follow dmidecode dmi_chassis_type() API:
 # See https://github.com/mirror/dmidecode/blob/master/dmidecode.c#L593
@@ -84,8 +84,8 @@ sub _getRHNSystemId {
     my ($file) = @_;
 
     return unless has_file($file);
-    return unless GLPI::Agent::XML->require();
-    my $xml = GLPI::Agent::XML->new(file => $file)
+    return unless AssetSync::Agent::XML->require();
+    my $xml = AssetSync::Agent::XML->new(file => $file)
         or return;
     my $h = $xml->dump_as_hash();
     foreach (@{$h->{params}{param}{value}{struct}{member}}) {

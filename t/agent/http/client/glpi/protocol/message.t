@@ -9,13 +9,13 @@ use Test::Deep;
 use Test::Exception;
 use Test::More;
 
-use GLPI::Agent::Logger;
+use AssetSync::Agent::Logger;
 
-use GLPI::Agent::Protocol::Message;
+use AssetSync::Agent::Protocol::Message;
 
 plan tests => 32;
 
-my $logger = GLPI::Agent::Logger->new(
+my $logger = AssetSync::Agent::Logger->new(
     logger => [ 'Test' ]
 );
 
@@ -23,12 +23,12 @@ my $message;
 
 # Simple message
 lives_ok {
-    $message = GLPI::Agent::Protocol::Message->new(
+    $message = AssetSync::Agent::Protocol::Message->new(
         logger  => $logger,
         message => qq({}),
     );
 } "Simple empty message";
-isa_ok($message, "GLPI::Agent::Protocol::Message");
+isa_ok($message, "AssetSync::Agent::Protocol::Message");
 
 my $set;
 lives_ok {
@@ -58,24 +58,24 @@ is($content, qq({
 
 # Message as hash
 lives_ok {
-    $message = GLPI::Agent::Protocol::Message->new(
+    $message = AssetSync::Agent::Protocol::Message->new(
         logger  => $logger,
         message => {},
     );
 } "Simple message as hash";
-isa_ok($message, "GLPI::Agent::Protocol::Message");
+isa_ok($message, "AssetSync::Agent::Protocol::Message");
 
 # Expiration in message
 is($message->expiration, 0, "No expiration");
 lives_ok {
-    $message = GLPI::Agent::Protocol::Message->new(
+    $message = AssetSync::Agent::Protocol::Message->new(
         logger  => $logger,
         message => {
             expiration  => 24,
         },
     );
 } "Expiration 24";
-isa_ok($message, "GLPI::Agent::Protocol::Message");
+isa_ok($message, "AssetSync::Agent::Protocol::Message");
 is($message->expiration, 86400, "Expiration 24 in seconds");
 $message->set('{"expiration": "3600s"}');
 is($message->expiration, 3600, "Expiration 3600 seconds");
@@ -92,7 +92,7 @@ is($message->status, "", "No status");
 is($message->action, "inventory", "No action");
 
 lives_ok {
-    $message = GLPI::Agent::Protocol::Message->new(
+    $message = AssetSync::Agent::Protocol::Message->new(
         logger  => $logger,
         message => qq({
             "expiration": 24,
@@ -105,7 +105,7 @@ is($message->status, "ok", "Ok status");
 is($message->action, "test", "Test action");
 
 lives_ok {
-    $message = GLPI::Agent::Protocol::Message->new(
+    $message = AssetSync::Agent::Protocol::Message->new(
         logger              => $logger,
         supported_params    => [ "action", "expiration" ],
         action              => "test",

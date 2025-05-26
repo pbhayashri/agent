@@ -1,11 +1,11 @@
-package GLPI::Agent::SNMP::MibSupportTemplate;
+package AssetSync::Agent::SNMP::MibSupportTemplate;
 
 use strict;
 use warnings;
 
-#use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+#use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-#use GLPI::Agent::Tools::SNMP;
+#use AssetSync::Agent::Tools::SNMP;
 
 # Default priority to permit to priorize a MibSupport module other another
 # A lower priority means use it before the other
@@ -176,7 +176,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupportTemplate - Parent/Template class for inventory module
+AssetSync::Agent::SNMP::MibSupportTemplate - Parent/Template class for inventory module
 
 =head1 DESCRIPTION
 

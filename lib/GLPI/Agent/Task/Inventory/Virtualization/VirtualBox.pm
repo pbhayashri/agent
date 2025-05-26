@@ -1,14 +1,14 @@
-package GLPI::Agent::Task::Inventory::Virtualization::VirtualBox;
+package AssetSync::Agent::Task::Inventory::Virtualization::VirtualBox;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Virtualization;
 
 sub isEnabled {
     return unless canRun('VBoxManage');

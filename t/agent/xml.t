@@ -16,8 +16,8 @@ use Encode qw(decode);
 use XML::LibXML;
 use Data::Dumper;
 
-use GLPI::Agent::XML;
-use GLPI::Agent::Tools;
+use AssetSync::Agent::XML;
+use AssetSync::Agent::Tools;
 
 my %xmls = (
     empty => {
@@ -329,7 +329,7 @@ my @xml_files = qw(
     resources/linux/rhn-systemid/ID-1232324425
     resources/walks/sample4.result
     resources/walks/sample6.result
-    contrib/windows/GLPI-Agent.adml
+    contrib/windows/AssetSync-Agent.adml
     resources/virtualization/virsh/dumpxml1
     resources/virtualization/virsh/dumpxml2
     resources/virtualization/virsh/dumpxml3
@@ -536,10 +536,10 @@ foreach my $test (sort keys %xmls) {
     my $options = $xmls{$test}->{options} // {};
     lives_ok {
         # API expects an UTF-8 encoded string
-        $xml = GLPI::Agent::XML->new(string => $xmls{$test}->{content}, %{$options});
+        $xml = AssetSync::Agent::XML->new(string => $xmls{$test}->{content}, %{$options});
     } "<$test> xml object instanciation with string parsing";
 
-    isa_ok($xml, "GLPI::Agent::XML");
+    isa_ok($xml, "AssetSync::Agent::XML");
 
     ok($xmls{$test}->{has_xml} // 1 ? $xml->has_xml : !$xml->has_xml, "<$test> xml object has xml");
 
@@ -609,7 +609,7 @@ foreach my $file (sort @xml_files) {
     my %options = $file_cases{$file} ? %{$file_cases{$file}->{options} // {}} : ();
 
     lives_ok {
-        $xml = GLPI::Agent::XML->new(file => $file, %options);
+        $xml = AssetSync::Agent::XML->new(file => $file, %options);
     } "<$file> xml object instanciation with file parsing";
 
     lives_ok {

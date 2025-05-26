@@ -7,9 +7,9 @@ use ToolchainBuildJob;
 
 use constant {
     PERL_VERSION       => "5.40.2",
-    # Tag for dmidecode release on glpi-project/dmidecode
+    # Tag for dmidecode release on assetsync-project/dmidecode
     DMIDECODE_VERSION  => "3.6",
-    # Tag for Glpi-AgentMonitor release on glpi-project/glpi-agentmonitor
+    # Tag for AssetSync-AgentMonitor release on assetsync-project/assetsync-agentmonitor
     GAMONITOR_VERSION  => "1.4.0",
     PERL_BUILD_STEPS   => 10,
 };
@@ -18,12 +18,12 @@ our @EXPORT = qw(build_job PERL_VERSION PERL_BUILD_STEPS);
 
 sub build_job {
     my ($arch, $rev, $notest, $dllsuffix) = @_;
-### job description for building GLPI Agent
+### job description for building AssetSync Agent
 
 #Available '<..>' macros:
 # <package_url>   is placeholder for https://strawberryperl.com/package
 # <dist_sharedir> is placeholder for Perl::Dist::Strawberry's distribution sharedir
-# <image_dir>     is placeholder for C:\Strawberry-perl-for-GLPI-Agent
+# <image_dir>     is placeholder for C:\Strawberry-perl-for-AssetSync-Agent
 
     my ($MAJOR, $MINOR) = PERL_VERSION =~ /^(\d+)\.(\d+)\./;
 
@@ -37,7 +37,7 @@ sub build_job {
 
         ### FIRST STEP 0 : Binaries donwloads ##################################
         {
-            plugin  => 'Perl::Dist::GLPI::Agent::Step::ToolChain',
+            plugin  => 'Perl::Dist::AssetSync::Agent::Step::ToolChain',
             packages => [
                 {
                     name        => 'winlibs-x86_64',
@@ -61,7 +61,7 @@ sub build_job {
         },
         ### NEXT STEP 2 Build perl #############################################
         {
-            plugin     => 'Perl::Dist::GLPI::Agent::Step::InstallPerlCore',
+            plugin     => 'Perl::Dist::AssetSync::Agent::Step::InstallPerlCore',
             url        => 'https://www.cpan.org/src/5.0/perl-'.PERL_VERSION.'.tar.gz',
             cf_email   => 'strawberry-perl@project', #IMPORTANT: keep 'strawberry-perl' before @
             perl_debug => 0,    # can be overridden by --perl_debug=N option
@@ -99,7 +99,7 @@ sub build_job {
         },
         ### NEXT STEP 4 Install needed modules with agent dependencies #########
         {
-            plugin => 'Perl::Dist::GLPI::Agent::Step::InstallModules',
+            plugin => 'Perl::Dist::AssetSync::Agent::Step::InstallModules',
             modules => [
                 # IPC related
                 qw/ IPC-Run /,
@@ -130,7 +130,7 @@ sub build_job {
                 # date/time
                 qw/ DateTime DateTime::TimeZone::Local::Win32 /,
 
-                # GLPI-Agent deps
+                # AssetSync-Agent deps
                 qw/ Text::Template UNIVERSAL::require UNIVERSAL::isa Net::SSH2
                     XML::LibXML Memoize Time::HiRes Compress::Zlib
                     Parse::EDID Cpanel::JSON::XS YAML::Tiny Parallel::ForkManager
@@ -167,7 +167,7 @@ sub build_job {
         },
         ### NEXT STEP 7 Install modules for test ###############################
         {
-            plugin => 'Perl::Dist::GLPI::Agent::Step::InstallModules',
+            plugin => 'Perl::Dist::AssetSync::Agent::Step::InstallModules',
             modules => [ map {
                     {
                         module => $_,
@@ -218,27 +218,27 @@ sub build_job {
         },
         ### NEXT STEP 9 Installation with direct github download ###############
         {
-            plugin      => 'Perl::Dist::GLPI::Agent::Step::Github',
+            plugin      => 'Perl::Dist::AssetSync::Agent::Step::Github',
             downloads   => [
                 {
                     name    => 'dmidecode',
-                    project	=> 'glpi-project/dmidecode',
+                    project	=> 'assetsync-project/dmidecode',
                     release => DMIDECODE_VERSION,
                     file    => 'dmidecode.exe',
                     folder  => '<image_dir>/perl/bin',
                 },
                 {
-                    name    => 'GLPI-AgentMonitor',
-                    project	=> 'glpi-project/glpi-agentmonitor',
+                    name    => 'AssetSync-AgentMonitor',
+                    project	=> 'assetsync-project/assetsync-agentmonitor',
                     release => GAMONITOR_VERSION,
-                    file    => 'GLPI-AgentMonitor-'.$arch.'.exe',
+                    file    => 'AssetSync-AgentMonitor-'.$arch.'.exe',
                     folder  => '<image_dir>/perl/bin',
                 },
             ],
         },
-        ### NEXT STEP 10 Run GLPI Agent test suite #############################
+        ### NEXT STEP 10 Run AssetSync Agent test suite #############################
         {
-            plugin      => 'Perl::Dist::GLPI::Agent::Step::Test',
+            plugin      => 'Perl::Dist::AssetSync::Agent::Step::Test',
             disable     => $notest,
             # By default only t/01compile.t is run
             test_files  => [
@@ -257,13 +257,13 @@ sub build_job {
                 { do=>'removedir', args=>[ '<image_dir>/perl/site/lib' ] },
                 { do=>'createdir', args=>[ '<image_dir>/perl/site/lib' ] },
                 { do=>'removefile', args=>[ '<image_dir>/perl/bin/gmake.exe' ] },
-                # updates for glpi-agent
+                # updates for assetsync-agent
                 { do=>'createdir', args=>[ '<image_dir>/perl/agent' ] },
                 { do=>'createdir', args=>[ '<image_dir>/var' ] },
                 { do=>'createdir', args=>[ '<image_dir>/logs' ] },
-                { do=>'movefile', args=>[ '<image_dir>/perl/bin/perl.exe', '<image_dir>/perl/bin/glpi-agent.exe' ] },
-                { do=>'copydir', args=>[ 'lib/GLPI', '<image_dir>/perl/agent/GLPI' ] },
-                { do=>'copydir', args=>[ 'lib/GLPI', '<image_dir>/perl/agent/GLPI' ] },
+                { do=>'movefile', args=>[ '<image_dir>/perl/bin/perl.exe', '<image_dir>/perl/bin/assetsync-agent.exe' ] },
+                { do=>'copydir', args=>[ 'lib/AssetSync', '<image_dir>/perl/agent/AssetSync' ] },
+                { do=>'copydir', args=>[ 'lib/AssetSync', '<image_dir>/perl/agent/AssetSync' ] },
                 { do=>'copydir', args=>[ 'etc', '<image_dir>/etc' ] },
                 { do=>'createdir', args=>[ '<image_dir>/etc/conf.d' ] },
                 { do=>'copydir', args=>[ 'bin', '<image_dir>/perl/bin' ] },
@@ -273,7 +273,7 @@ sub build_job {
         },
         ### NEXT STEP 12 Finalize release ######################################
         {
-            plugin => 'Perl::Dist::GLPI::Agent::Step::Update',
+            plugin => 'Perl::Dist::AssetSync::Agent::Step::Update',
         },
         ### NEXT STEP 13 Generate Portable Archive #############################
         {
@@ -281,18 +281,18 @@ sub build_job {
         },
         ### NEXT STEP 14 Generate MSI Package ##################################
         {
-            plugin => 'Perl::Dist::GLPI::Agent::Step::OutputMSI',
+            plugin => 'Perl::Dist::AssetSync::Agent::Step::OutputMSI',
             exclude  => [],
             #BEWARE: msi_upgrade_code is a fixed value for all same arch releases (for ever)
             msi_upgrade_code    => $arch eq 'x64' ? '0DEF72A8-E5EE-4116-97DC-753718E19CD5' : '7F25A9A4-BCAE-4C15-822D-EAFBD752CFEC',
             app_publisher       => "Teclib'",
-            url_about           => 'https://glpi-project.org/',
-            url_help            => 'https://glpi-project.org/discussions/',
-            msi_root_dir        => 'GLPI-Agent',
-            msi_main_icon       => 'contrib/windows/packaging/glpi-agent.ico',
+            url_about           => 'https://assetsync-project.org/',
+            url_help            => 'https://assetsync-project.org/discussions/',
+            msi_root_dir        => 'AssetSync-Agent',
+            msi_main_icon       => 'contrib/windows/packaging/assetsync-agent.ico',
             msi_license_rtf     => 'contrib/windows/packaging/gpl-2.0.rtf',
-            msi_dialog_bmp      => 'contrib/windows/packaging/GLPI-Agent_Dialog.bmp',
-            msi_banner_bmp      => 'contrib/windows/packaging/GLPI-Agent_Banner.bmp',
+            msi_dialog_bmp      => 'contrib/windows/packaging/AssetSync-Agent_Dialog.bmp',
+            msi_banner_bmp      => 'contrib/windows/packaging/AssetSync-Agent_Banner.bmp',
             msi_debug           => 0,
         }
         ],

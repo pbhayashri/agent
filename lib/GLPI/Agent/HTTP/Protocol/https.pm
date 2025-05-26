@@ -1,4 +1,4 @@
-package GLPI::Agent::HTTP::Protocol::https;
+package AssetSync::Agent::HTTP::Protocol::https;
 
 use strict;
 use warnings;
@@ -34,7 +34,7 @@ sub _extra_sock_opts {
 }
 
 ## no critic (ProhibitMultiplePackages)
-package GLPI::Agent::HTTP::Protocol::https::Socket;
+package AssetSync::Agent::HTTP::Protocol::https::Socket;
 
 use parent qw(Net::HTTPS);
 use parent -norequire, qw(LWP::Protocol::http::SocketMethods);
@@ -44,7 +44,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::HTTP::Protocol::https - HTTPS protocol handler for LWP
+AssetSync::Agent::HTTP::Protocol::https - HTTPS protocol handler for LWP
 
 =head1 DESCRIPTION
 

@@ -1,4 +1,4 @@
-package GLPI::Agent::HTTP::Server::SSL;
+package AssetSync::Agent::HTTP::Server::SSL;
 
 use strict;
 use warnings;
@@ -6,9 +6,9 @@ use warnings;
 use English qw(-no_match_vars);
 use File::Spec;
 
-use base "GLPI::Agent::HTTP::Server::Plugin";
+use base "AssetSync::Agent::HTTP::Server::Plugin";
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 our $VERSION = "1.2";
 
@@ -28,7 +28,7 @@ sub defaults {
         ssl_cert_file       => undef,
         ssl_key_file        => undef,
         ssl_cipher          => undef,
-        # Supported by class GLPI::Agent::HTTP::Server::Plugin
+        # Supported by class AssetSync::Agent::HTTP::Server::Plugin
         forbid_not_trusted => "no",
     };
 }
@@ -175,7 +175,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::HTTP::Server::SSL - An embedded HTTP server plugin
+AssetSync::Agent::HTTP::Server::SSL - An embedded HTTP server plugin
 providing SSL support on configured port
 
 =head1 DESCRIPTION
@@ -203,7 +203,7 @@ This is a server plugin to enable SSL support on listening ports.
 
 =item ssl_cipher       No default
                        The cipher or SSL version to use or a list of cipher to
-                       disable. GLPI agent use the system default if not set.
+                       disable. AssetSync agent use the system default if not set.
 
 =back
 

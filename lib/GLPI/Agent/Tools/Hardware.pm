@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::Hardware;
+package AssetSync::Agent::Tools::Hardware;
 
 use strict;
 use warnings;
@@ -6,10 +6,10 @@ use parent 'Exporter';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Network;
-use GLPI::Agent::Tools::SNMP;
-use GLPI::Agent::SNMP::Device;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Network;
+use AssetSync::Agent::Tools::SNMP;
+use AssetSync::Agent::SNMP::Device;
 
 our @EXPORT = qw(
     getDeviceInfo
@@ -244,9 +244,9 @@ sub _getDevice {
     my $logger  = $params{logger};
     my $config  = $params{config};
 
-    my $device = GLPI::Agent::SNMP::Device->new(
+    my $device = AssetSync::Agent::SNMP::Device->new(
         snmp   => $params{snmp},
-        glpi   => $params{glpi} // '', # glpi server version if we need to check feature support
+        assetsync   => $params{assetsync} // '', # assetsync server version if we need to check feature support
         logger => $logger
     );
 
@@ -1816,7 +1816,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::Hardware - Hardware-related functions
+AssetSync::Agent::Tools::Hardware - Hardware-related functions
 
 =head1 DESCRIPTION
 

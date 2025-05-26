@@ -18,10 +18,10 @@ use lib abs_path(File::Spec->rel2abs('../packaging', __FILE__));
 use PerlBuildJob;
 
 use lib 'lib';
-use GLPI::Agent::Version;
+use AssetSync::Agent::Version;
 
-# HACK: make "use Perl::Dist::GLPI::Agent::Step::XXX" works as included plugin
-map { $INC{"Perl/Dist/GLPI/Agent/Step/$_.pm"} = __FILE__ } qw(Update OutputMSI Test ToolChain InstallPerlCore InstallModules Github);
+# HACK: make "use Perl::Dist::AssetSync::Agent::Step::XXX" works as included plugin
+map { $INC{"Perl/Dist/AssetSync/Agent/Step/$_.pm"} = __FILE__ } qw(Update OutputMSI Test ToolChain InstallPerlCore InstallModules Github);
 
 # Perl::Dist::Strawberry doesn't detect WiX 3.11 which is installed on windows github images
 # Algorithm imported from Perl::Dist::Strawberry::Step::OutputMSM_MSI::_detect_wix_dir
@@ -39,8 +39,8 @@ for my $v (qw/3.14 3.11 3.6 3.5 3.0/) {
 
 die "Can't find WiX installation root in regitry\n" unless $wixbin_dir;
 
-my $provider = $GLPI::Agent::Version::PROVIDER;
-my $version = $GLPI::Agent::Version::VERSION;
+my $provider = $AssetSync::Agent::Version::PROVIDER;
+my $version = $AssetSync::Agent::Version::VERSION;
 my ($versiontag) = $version =~ /^[0-9.]+-(.*)$/;
 my ($major,$minor,$revision) = $version =~ /^(\d+)\.(\d+)\.?(\d+)?/;
 $revision = 0 unless defined($revision);
@@ -79,7 +79,7 @@ sub build_app {
 
     my $package_rev = $ENV{PACKAGE_REVISION} || PACKAGE_REVISION;
 
-    my $app = Perl::Dist::GLPI::Agent->new(
+    my $app = Perl::Dist::AssetSync::Agent->new(
         _perl_version   => PERL_VERSION,
         _revision       => $package_rev,
         _provider       => $provider,
@@ -101,7 +101,7 @@ sub build_app {
     );
 
     $app->parse_options(
-        -job            => "glpi-agent packaging",
+        -job            => "assetsync-agent packaging",
         -image_dir      => "C:\\Strawberry-perl-for-$provider-Agent",
         -working_dir    => "C:\\Strawberry-perl-for-$provider-Agent_build",
         -wixbin_dir     => $wixbin_dir,
@@ -147,7 +147,7 @@ print "All packages building processing passed\n";
 exit(0);
 
 package
-    Perl::Dist::GLPI::Agent::Step::ToolChain;
+    Perl::Dist::AssetSync::Agent::Step::ToolChain;
 
 use parent 'Perl::Dist::Strawberry::Step::BinaryToolsAndLibs';
 
@@ -177,7 +177,7 @@ sub _install {
 }
 
 package
-    Perl::Dist::GLPI::Agent::Step::InstallPerlCore;
+    Perl::Dist::AssetSync::Agent::Step::InstallPerlCore;
 
 use parent 'Perl::Dist::Strawberry::Step::InstallPerlCore';
 
@@ -220,7 +220,7 @@ sub _patch_file {
 }
 
 package
-    Perl::Dist::GLPI::Agent::Step::Github;
+    Perl::Dist::AssetSync::Agent::Step::Github;
 
 use parent 'Perl::Dist::Strawberry::Step';
 
@@ -247,7 +247,7 @@ sub _download {
 }
 
 package
-    Perl::Dist::GLPI::Agent::Step::Test;
+    Perl::Dist::AssetSync::Agent::Step::Test;
 
 use parent 'Perl::Dist::Strawberry::Step';
 
@@ -297,7 +297,7 @@ sub test {
 }
 
 package
-    Perl::Dist::GLPI::Agent::Step::InstallModules;
+    Perl::Dist::AssetSync::Agent::Step::InstallModules;
 
 use parent 'Perl::Dist::Strawberry::Step::InstallModules';
 
@@ -310,7 +310,7 @@ sub _install_module {
 }
 
 package
-    Perl::Dist::GLPI::Agent::Step::OutputMSI;
+    Perl::Dist::AssetSync::Agent::Step::OutputMSI;
 
 use parent 'Perl::Dist::Strawberry::Step::OutputMSI';
 
@@ -326,51 +326,51 @@ use constant _dir_id_match => { qw(
     var             d_var
     logs            d_logs
     etc             d_etc
-    perl\agent\glpi\agent\task\netinventory  d_netinventory_task
-    perl\agent\glpi\agent\task\netdiscovery  d_netinv_discovery_task
-    perl\agent\glpi\agent\snmp               d_netinv_snmp
-    perl\agent\glpi\agent\snmp\device        d_netinv_device
-    perl\agent\glpi\agent\snmp\mibsupport    d_netinv_mibsupport
-    perl\agent\glpi\agent\tools\hardware     d_netinv_hardware
-    perl\agent\glpi\agent\task\deploy        d_deploy
-    perl\agent\glpi\agent\task\deploy\actionprocessor        d_deploy_ap
-    perl\agent\glpi\agent\task\deploy\actionprocessor\action d_deploy_action
-    perl\agent\glpi\agent\task\deploy\checkprocessor         d_deploy_cp
-    perl\agent\glpi\agent\task\deploy\datastore              d_deploy_ds
-    perl\agent\glpi\agent\task\deploy\usercheck              d_deploy_uc
-    perl\agent\glpi\agent\task\collect       d_collect
-    perl\agent\glpi\agent\task\esx           d_esx_task
-    perl\agent\glpi\agent\soap\vmware        d_esx_vmware
-    perl\agent\glpi\agent\task\wakeonlan     d_wol
+    perl\agent\assetsync\agent\task\netinventory  d_netinventory_task
+    perl\agent\assetsync\agent\task\netdiscovery  d_netinv_discovery_task
+    perl\agent\assetsync\agent\snmp               d_netinv_snmp
+    perl\agent\assetsync\agent\snmp\device        d_netinv_device
+    perl\agent\assetsync\agent\snmp\mibsupport    d_netinv_mibsupport
+    perl\agent\assetsync\agent\tools\hardware     d_netinv_hardware
+    perl\agent\assetsync\agent\task\deploy        d_deploy
+    perl\agent\assetsync\agent\task\deploy\actionprocessor        d_deploy_ap
+    perl\agent\assetsync\agent\task\deploy\actionprocessor\action d_deploy_action
+    perl\agent\assetsync\agent\task\deploy\checkprocessor         d_deploy_cp
+    perl\agent\assetsync\agent\task\deploy\datastore              d_deploy_ds
+    perl\agent\assetsync\agent\task\deploy\usercheck              d_deploy_uc
+    perl\agent\assetsync\agent\task\collect       d_collect
+    perl\agent\assetsync\agent\task\esx           d_esx_task
+    perl\agent\assetsync\agent\soap\vmware        d_esx_vmware
+    perl\agent\assetsync\agent\task\wakeonlan     d_wol
 )};
 
 use constant _file_feature_match => { qw(
-    perl\bin\glpi-agent.exe                                 feat_AGENT
+    perl\bin\assetsync-agent.exe                                 feat_AGENT
 
-    glpi-netdiscovery.bat                                   feat_NETINV
-    glpi-netinventory.bat                                   feat_NETINV
-    perl\bin\glpi-netdiscovery                              feat_NETINV
-    perl\bin\glpi-netinventory                              feat_NETINV
-    perl\agent\GLPI\Agent\Task\NetInventory.pm   feat_NETINV
-    perl\agent\GLPI\Agent\Task\NetDiscovery.pm   feat_NETINV
-    perl\agent\GLPI\Agent\Tools\Hardware.pm      feat_NETINV
-    perl\agent\GLPI\Agent\Tools\SNMP.pm          feat_NETINV
-    perl\agent\GLPI\Agent\SNMP.pm                feat_NETINV
+    assetsync-netdiscovery.bat                                   feat_NETINV
+    assetsync-netinventory.bat                                   feat_NETINV
+    perl\bin\assetsync-netdiscovery                              feat_NETINV
+    perl\bin\assetsync-netinventory                              feat_NETINV
+    perl\agent\AssetSync\Agent\Task\NetInventory.pm   feat_NETINV
+    perl\agent\AssetSync\Agent\Task\NetDiscovery.pm   feat_NETINV
+    perl\agent\AssetSync\Agent\Tools\Hardware.pm      feat_NETINV
+    perl\agent\AssetSync\Agent\Tools\SNMP.pm          feat_NETINV
+    perl\agent\AssetSync\Agent\SNMP.pm                feat_NETINV
 
-    perl\agent\GLPI\Agent\Task\Deploy.pm         feat_DEPLOY
-    perl\agent\GLPI\Agent\Tools\Archive.pm       feat_DEPLOY
+    perl\agent\AssetSync\Agent\Task\Deploy.pm         feat_DEPLOY
+    perl\agent\AssetSync\Agent\Tools\Archive.pm       feat_DEPLOY
     perl\bin\7z.exe                                         feat_DEPLOY
     perl\bin\7z.dll                                         feat_DEPLOY
 
-    perl\agent\GLPI\Agent\Task\Collect.pm        feat_COLLECT
+    perl\agent\AssetSync\Agent\Task\Collect.pm        feat_COLLECT
 
-    glpi-esx.bat                                            feat_ESX
-    perl\bin\glpi-esx                                       feat_ESX
-    perl\agent\GLPI\Agent\Task\ESX.pm            feat_ESX
+    assetsync-esx.bat                                            feat_ESX
+    perl\bin\assetsync-esx                                       feat_ESX
+    perl\agent\AssetSync\Agent\Task\ESX.pm            feat_ESX
 
-    glpi-wakeonlan.bat                                      feat_WOL
-    perl\bin\glpi-wakeonlan                                 feat_WOL
-    perl\agent\GLPI\Agent\Task\WakeOnLan.pm      feat_WOL
+    assetsync-wakeonlan.bat                                      feat_WOL
+    perl\bin\assetsync-wakeonlan                                 feat_WOL
+    perl\agent\AssetSync\Agent\Task\WakeOnLan.pm      feat_WOL
 )};
 
 sub run {
@@ -381,7 +381,7 @@ sub run {
 
     # Re-install dedicated bat files not using config file
     foreach my $f (qw(agent)) {
-        my $dest = catfile($self->global->{image_dir}, 'glpi-'.$f.'.bat');
+        my $dest = catfile($self->global->{image_dir}, 'assetsync-'.$f.'.bat');
         my $tag = { tag => $f, msi => 1 };
         $t->process($bat, $tag, $dest) || die $t->error();
     }
@@ -553,18 +553,18 @@ sub _tree2xml {
                 my $servicename = $self->global->{service_name};
                 $result .= $ident ."  ". qq[  <ServiceInstall Name="$servicename" Start="auto"\n];
                 $result .= $ident ."  ". qq[                  ErrorControl="normal" DisplayName="!(loc.ServiceDisplayName)" Description="!(loc.ServiceDescription)" Interactive="no"\n];
-                $result .= $ident ."  ". qq[                  Type="ownProcess" Arguments='-I"[INSTALLDIR]perl\\agent" -I"[INSTALLDIR]perl\\site\\lib" -I"[INSTALLDIR]perl\\vendor\\lib" -I"[INSTALLDIR]perl\\lib" "[INSTALLDIR]perl\\bin\\glpi-win32-service"'>\n];
+                $result .= $ident ."  ". qq[                  Type="ownProcess" Arguments='-I"[INSTALLDIR]perl\\agent" -I"[INSTALLDIR]perl\\site\\lib" -I"[INSTALLDIR]perl\\vendor\\lib" -I"[INSTALLDIR]perl\\lib" "[INSTALLDIR]perl\\bin\\assetsync-win32-service"'>\n];
                 $result .= $ident ."  ". qq[    <util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType="restart" RestartServiceDelayInSeconds="60" />\n];
                 $result .= $ident ."  ". qq[  </ServiceInstall>\n];
                 $result .= $ident ."  ". qq[  <ServiceControl Id="SetupService" Name="$servicename" Start="install" Stop="both" Remove="both" Wait="yes" />\n];
             } elsif ($file_id eq "f_agentmonitor_exe") {
                 my $regpath = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
-                # Install GLPI-AgentMonitor only when required
+                # Install AssetSync-AgentMonitor only when required
                 $result .= $ident ."  ". qq[  <Condition>AGENTMONITOR=1 AND EXECMODE=1</Condition>\n];
-                # Add registry entry dedicated to GLPI-AgentMonitor autorun
-                $result .= $ident ."  ". qq[  <RegistryValue Root="HKLM" Key="$regpath" Name="GLPI-AgentMonitor" Type="string" Value="[#f_agentmonitor_exe]" />\n];
-                # Add Start menu shortcut for GLPI-AgentMonitor
-                $result .= $ident ."  ". qq[  <Shortcut Id="AgentMonitorStartMenu" Advertise="yes" Directory="ProgramMenuFolder" Name="GLPI Agent Monitor" WorkingDirectory="d_perl_bin" Icon="agentmonitor.ico" />\n];
+                # Add registry entry dedicated to AssetSync-AgentMonitor autorun
+                $result .= $ident ."  ". qq[  <RegistryValue Root="HKLM" Key="$regpath" Name="AssetSync-AgentMonitor" Type="string" Value="[#f_agentmonitor_exe]" />\n];
+                # Add Start menu shortcut for AssetSync-AgentMonitor
+                $result .= $ident ."  ". qq[  <Shortcut Id="AgentMonitorStartMenu" Advertise="yes" Directory="ProgramMenuFolder" Name="AssetSync Agent Monitor" WorkingDirectory="d_perl_bin" Icon="agentmonitor.ico" />\n];
             }
             # Add dedicated component for registry just after feat_AGENT
             if ($this_feat eq "feat_AGENT") {
@@ -594,7 +594,7 @@ sub _tree2xml {
                 $result .= $ident ."  ". qq[    <RegistryValue Name="delaytime" Type="string" Value="[DELAYTIME]" />\n];
                 $result .= $ident ."  ". qq[    <RegistryValue Name="backend-collect-timeout" Type="string" Value="[BACKEND_COLLECT_TIMEOUT]" />\n];
                 $result .= $ident ."  ". qq[    <RegistryValue Name="full-inventory-postpone" Type="string" Value="[FULL_INVENTORY_POSTPONE]" />\n];
-                $result .= $ident ."  ". qq[    <RegistryValue Name="glpi-version" Type="string" Value="[GLPI_VERSION]" />\n];
+                $result .= $ident ."  ". qq[    <RegistryValue Name="assetsync-version" Type="string" Value="[AssetSync_VERSION]" />\n];
                 $result .= $ident ."  ". qq[    <RegistryValue Name="no-task" Type="string" Value="[NO_TASK]" />\n];
                 $result .= $ident ."  ". qq[    <RegistryValue Name="no-category" Type="string" Value="[NO_CATEGORY]" />\n];
                 $result .= $ident ."  ". qq[    <RegistryValue Name="required-category" Type="string" Value="[REQUIRED_CATEGORY]" />\n];
@@ -659,14 +659,14 @@ sub _gen_dir_id {
 sub _gen_file_id {
   my ($self, $file) = @_;
   my $r;
-  $r = "f_agent_exe"  if lc($file) eq 'perl\bin\glpi-agent.exe';
-  $r = "f_agentmonitor_exe"  if $file =~ /perl\\bin\\glpi-agentmonitor-x(86|64).exe/i;
-  $r = "f_glpiagent"  if lc($file) eq 'glpi-agent.bat';
+  $r = "f_agent_exe"  if lc($file) eq 'perl\bin\assetsync-agent.exe';
+  $r = "f_agentmonitor_exe"  if $file =~ /perl\\bin\\assetsync-agentmonitor-x(86|64).exe/i;
+  $r = "f_AssetSyncagent"  if lc($file) eq 'assetsync-agent.bat';
   return  $r // "f" . $self->{id_counter}++;
 }
 
 package
-    Perl::Dist::GLPI::Agent::Step::Update;
+    Perl::Dist::AssetSync::Agent::Step::Update;
 
 use parent 'Perl::Dist::Strawberry::Step';
 
@@ -685,7 +685,7 @@ sub run {
 
     # Install dedicated bat files
     foreach my $f (qw(agent esx injector inventory netdiscovery netinventory remote wakeonlan)) {
-        my $dest = catfile($self->global->{image_dir}, 'glpi-'.$f.'.bat');
+        my $dest = catfile($self->global->{image_dir}, 'assetsync-'.$f.'.bat');
         my $tag = { tag => $f };
         $t->process($bat, $tag, $dest) || die $t->error();
     }
@@ -705,12 +705,12 @@ sub run {
         comments => \@comments,
     };
 
-    my $dest = catfile($self->global->{image_dir}, 'perl/agent/GLPI/Agent/Version.pm');
+    my $dest = catfile($self->global->{image_dir}, 'perl/agent/AssetSync/Agent/Version.pm');
     $t->process($version, $vars, $dest) || die $t->error();
 }
 
 package
-    Perl::Dist::GLPI::Agent;
+    Perl::Dist::AssetSync::Agent;
 
 use parent qw(Perl::Dist::Strawberry);
 

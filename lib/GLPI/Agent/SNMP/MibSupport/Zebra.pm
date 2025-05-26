@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Zebra;
+package AssetSync::Agent::SNMP::MibSupport::Zebra;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 use constant    priority => 7;
 
@@ -106,7 +106,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Zebra - Inventory module for Zebra Printers
+AssetSync::Agent::SNMP::MibSupport::Zebra - Inventory module for Zebra Printers
 
 =head1 DESCRIPTION
 

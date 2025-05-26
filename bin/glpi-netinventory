@@ -10,12 +10,12 @@ use English qw(-no_match_vars);
 use Getopt::Long;
 use Pod::Usage;
 
-use GLPI::Agent::Task::NetInventory;
-use GLPI::Agent::Task::NetInventory::Job;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Config;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Version;
+use AssetSync::Agent::Task::NetInventory;
+use AssetSync::Agent::Task::NetInventory::Job;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Version;
 
 my %types = (
     1 => 'COMPUTER',
@@ -45,7 +45,7 @@ GetOptions(
     'timeout=i',
     'retries=i',
     'backend-collect-timeout=s',
-    'glpi_version=s',
+    'AssetSync_version=s',
     'v1',
     'v2c',
     'control',
@@ -55,11 +55,11 @@ GetOptions(
 ) or pod2usage(-verbose => 0);
 
 if ($options->{version}) {
-    my $PROVIDER = $GLPI::Agent::Version::PROVIDER;
+    my $PROVIDER = $AssetSync::Agent::Version::PROVIDER;
     map { print $_."\n" }
-        "NetInventory task $GLPI::Agent::Task::NetInventory::VERSION",
-        "based on $PROVIDER Agent v$GLPI::Agent::Version::VERSION",
-        @{$GLPI::Agent::Version::COMMENTS}
+        "NetInventory task $AssetSync::Agent::Task::NetInventory::VERSION",
+        "based on $PROVIDER Agent v$AssetSync::Agent::Version::VERSION",
+        @{$AssetSync::Agent::Version::COMMENTS}
         ;
     exit 0;
 }
@@ -141,22 +141,22 @@ if ($options->{community}) {
 }
 
 if ($OSNAME eq 'MSWin32' && $options->{threads} > 1) {
-    GLPI::Agent::Tools::Win32->require();
-    GLPI::Agent::Tools::Win32::start_Win32_OLE_Worker();
+    AssetSync::Agent::Tools::Win32->require();
+    AssetSync::Agent::Tools::Win32::start_Win32_OLE_Worker();
 }
 
-my $inventory = GLPI::Agent::Task::NetInventory->new(
+my $inventory = AssetSync::Agent::Task::NetInventory->new(
     %setup,
-    target => GLPI::Agent::Target::Local->new(
+    target => AssetSync::Agent::Target::Local->new(
         path       => defined($options->{save}) ? $options->{save} : '-',
         basevardir => $setup{vardir}
     ),
-    config => GLPI::Agent::Config->new(options => $options),
-    logger => GLPI::Agent::Logger->new(config => $options)
+    config => AssetSync::Agent::Config->new(options => $options),
+    logger => AssetSync::Agent::Logger->new(config => $options)
 );
 
 $inventory->{jobs} = [
-    GLPI::Agent::Task::NetInventory::Job->new(
+    AssetSync::Agent::Task::NetInventory::Job->new(
         params => {
             PID           => 1,
             THREADS_QUERY => $options->{threads},
@@ -174,11 +174,11 @@ __END__
 
 =head1 NAME
 
-glpi-netinventory - Standalone network inventory
+assetsync-netinventory - Standalone network inventory
 
 =head1 SYNOPSIS
 
-glpi-netinventory [options] [--host <host>|--file <file>]
+assetsync-netinventory [options] [--host <host>|--file <file>]
 
   Options:
     --host <HOST>          target host
@@ -191,7 +191,7 @@ glpi-netinventory [options] [--host <host>|--file <file>]
     --retries              SNMP requets maximum retries (0)
     --backend-collect-timeout <TIME>
                            base expiration timeout, in seconds (180)
-    --glpi-version VERSION set targeted glpi version to enable supported features
+    --assetsync-version VERSION set targeted assetsync version to enable supported features
     --type <TYPE>          force device type
     --threads <COUNT>      number of inventory threads (1)
     --control              output control messages
@@ -201,8 +201,8 @@ glpi-netinventory [options] [--host <host>|--file <file>]
 
 =head1 DESCRIPTION
 
-F<glpi-netinventory> can be used to run a network inventory task without
-a GLPI server.
+F<assetsync-netinventory> can be used to run a network inventory task without
+a AssetSync server.
 
 =head1 OPTIONS
 
@@ -341,10 +341,10 @@ Turn the debug mode on. Multiple usage allowed, for additional verbosity.
 
 Run an inventory against a network device, using SNMP version 2c authentication:
 
-    $> glpi-netinventory --host 192.168.0.1 --credentials version:2c,community:public
+    $> assetsync-netinventory --host 192.168.0.1 --credentials version:2c,community:public
 
 Run an inventory against a network device, using SNMP version 3 authentication
 and forcing its type:
 
-    $> glpi-netinventory --host my.device --type NETWORKING \
+    $> assetsync-netinventory --host my.device --type NETWORKING \
     --credentials version:3,username:admin,authpassword:s3cr3t,privpassword:s3cr3t

@@ -4,7 +4,7 @@
 
 PKG="$1"
 DEST="$2"
-INSTALL_PATH="${DEST%/}/Applications/GLPI-Agent"
+INSTALL_PATH="${DEST%/}/Applications/AssetSync-Agent"
 
 echo "OS version: $(uname -r)"
 echo "Copying uninstall script to $INSTALL_PATH"
@@ -28,19 +28,19 @@ sudo chmod -R 755 "$INSTALL_PATH"
 
 # Fix installed script with INSTALL_PATH
 if [ "$DEST" != "/" ]; then
-    for SCRIPT in agent/setup.pm agent/GLPI/Agent/Config.pm \
-        uninstaller.sh bin/glpi-agent bin/glpi-esx \
-        bin/glpi-injector bin/glpi-inventory \
-        bin/glpi-netdiscovery bin/glpi-netinventory \
-        bin/glpi-remote bin/glpi-wakeonlan
+    for SCRIPT in agent/setup.pm agent/AssetSync/Agent/Config.pm \
+        uninstaller.sh bin/assetsync-agent bin/assetsync-esx \
+        bin/assetsync-injector bin/assetsync-inventory \
+        bin/assetsync-netdiscovery bin/assetsync-netinventory \
+        bin/assetsync-remote bin/assetsync-wakeonlan
     do
-        sudo sed -i -e "s|/Applications/GLPI-Agent|$INSTALL_PATH|" \
+        sudo sed -i -e "s|/Applications/AssetSync-Agent|$INSTALL_PATH|" \
             "$INSTALL_PATH/$SCRIPT"
     done
 fi
 
 echo "Only Tiger or newer OS supported, using LaunchDaemons plists"
-TMPPLIST="$(touch com.teclib.glpi-agent.plist && echo com.teclib.glpi-agent.plist || mktemp -t com.teclib.glpi-agent)"
+TMPPLIST="$(touch com.teclib.assetsync-agent.plist && echo com.teclib.assetsync-agent.plist || mktemp -t com.teclib.assetsync-agent)"
 TPATH="/Library/LaunchDaemons"
 cat >"$TMPPLIST" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -48,10 +48,10 @@ cat >"$TMPPLIST" <<PLIST
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>com.teclib.glpi-agent</string>
+	<string>com.teclib.assetsync-agent</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>$INSTALL_PATH/bin/glpi-agent</string>
+		<string>$INSTALL_PATH/bin/assetsync-agent</string>
 		<string>--daemon</string>
 		<string>--no-fork</string>
 	</array>
@@ -65,17 +65,17 @@ cat >"$TMPPLIST" <<PLIST
 </plist>
 PLIST
 if [ -s "$TMPPLIST" ]; then
-    sudo rm -f $TPATH/com.teclib.glpi-agent.plist
-    sudo cp -f "$TMPPLIST" $TPATH/com.teclib.glpi-agent.plist
-    sudo chown root:wheel $TPATH/com.teclib.glpi-agent.plist
-    sudo chmod 644 $TPATH/com.teclib.glpi-agent.plist
+    sudo rm -f $TPATH/com.teclib.assetsync-agent.plist
+    sudo cp -f "$TMPPLIST" $TPATH/com.teclib.assetsync-agent.plist
+    sudo chown root:wheel $TPATH/com.teclib.assetsync-agent.plist
+    sudo chmod 644 $TPATH/com.teclib.assetsync-agent.plist
     rm -f "$TMPPLIST"
 
     echo 'Loading Service'
-    sudo launchctl load $TPATH/com.teclib.glpi-agent.plist
+    sudo launchctl load $TPATH/com.teclib.assetsync-agent.plist
 
     echo 'Starting Service'
-    sudo launchctl start com.teclib.glpi-agent
+    sudo launchctl start com.teclib.assetsync-agent
 else
     echo "Failed to create service"
 fi

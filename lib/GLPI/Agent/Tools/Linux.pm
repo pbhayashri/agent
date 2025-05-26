@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::Linux;
+package AssetSync::Agent::Tools::Linux;
 
 use strict;
 use warnings;
@@ -13,9 +13,9 @@ use English qw(-no_match_vars);
 use File::Basename qw(basename dirname);
 use Socket qw(PF_INET SOCK_DGRAM);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Unix;
-use GLPI::Agent::Tools::Network;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Unix;
+use AssetSync::Agent::Tools::Network;
 
 our @EXPORT = qw(
     getDevicesFromUdev
@@ -608,7 +608,7 @@ sub getInterfacesInfosFromIoctl {
 
     # We don't support this feature on remote inventory
     return { ERROR => "syscall not remotely supported" }
-        if $GLPI::Agent::Tools::remote;
+        if $AssetSync::Agent::Tools::remote;
 
     my $logger = $params{logger};
 
@@ -772,7 +772,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::Linux - Linux generic functions
+AssetSync::Agent::Tools::Linux - Linux generic functions
 
 =head1 DESCRIPTION
 

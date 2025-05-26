@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Deploy::Job;
+package AssetSync::Agent::Task::Deploy::Job;
 
 use strict;
 use warnings;
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Task::Deploy::UserCheck;
-use GLPI::Agent::Task::Deploy::CheckProcessor;
+use AssetSync::Agent::Task::Deploy::UserCheck;
+use AssetSync::Agent::Task::Deploy::CheckProcessor;
 
 sub new {
     my ($class, %params) = @_;
@@ -102,7 +102,7 @@ sub skip_on_check_failure {
             my $type = $check->{type} || 'unsupported';
 
             # Bless check object as CheckProcessor
-            GLPI::Agent::Task::Deploy::CheckProcessor->new(
+            AssetSync::Agent::Task::Deploy::CheckProcessor->new(
                 check  => $check,
                 logger => $logger,
             );
@@ -190,7 +190,7 @@ sub next_on_usercheck {
     }
 
     while ( @checks ) {
-        my $check = GLPI::Agent::Task::Deploy::UserCheck->new(
+        my $check = AssetSync::Agent::Task::Deploy::UserCheck->new(
             check  => shift @checks,
             logger => $logger
         );

@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::HPNetPeripheral;
+package AssetSync::Agent::SNMP::MibSupport::HPNetPeripheral;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 use constant    priority => 9;
 
@@ -171,7 +171,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::HPNetPeripheral - Inventory module for HP Printers
+AssetSync::Agent::SNMP::MibSupport::HPNetPeripheral - Inventory module for HP Printers
 
 =head1 DESCRIPTION
 

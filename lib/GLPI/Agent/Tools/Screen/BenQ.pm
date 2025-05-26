@@ -1,11 +1,11 @@
-package GLPI::Agent::Tools::Screen::BenQ;
+package AssetSync::Agent::Tools::Screen::BenQ;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Tools::Screen';
+use parent 'AssetSync::Agent::Tools::Screen';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub serial {
     my ($self) = @_;

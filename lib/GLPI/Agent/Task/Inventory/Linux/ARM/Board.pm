@@ -1,11 +1,11 @@
-package GLPI::Agent::Task::Inventory::Linux::ARM::Board;
+package AssetSync::Agent::Task::Inventory::Linux::ARM::Board;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant    category    => "bios";
 
@@ -65,7 +65,7 @@ sub _getBoardFromProc {
 
     my $infos;
 
-    # Does the inverse of GLPI::Agent::Tools::Linux::getCPUsFromProc()
+    # Does the inverse of AssetSync::Agent::Tools::Linux::getCPUsFromProc()
     foreach my $line (@lines) {
         if ($line =~ /^([^:]+\S) \s* : \s (.+)/x) {
             $infos->{lc($1)} = trimWhitespace($2);

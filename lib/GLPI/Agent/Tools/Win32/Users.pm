@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::Win32::Users;
+package AssetSync::Agent::Tools::Win32::Users;
 
 use strict;
 use warnings;
@@ -6,8 +6,8 @@ use parent 'Exporter';
 
 use Encode qw(decode encode);
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools::Win32;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools::Win32;
 
 our @EXPORT = qw(
     getSystemUserProfiles
@@ -72,7 +72,7 @@ sub getProfileUsername {
     );
     if ($ntaccount) {
         if ($ntaccount =~ /^Exception: (.+)/) {
-            my $logger = GLPI::Agent::Logger->new();
+            my $logger = AssetSync::Agent::Logger->new();
             if ($1 eq "IdentityNotMappedException") {
                 $logger->debug("Got '$1' PowerShell Exception looking for $user->{SID} profile username: domain deleted user");
                 return "Domain deleted account";

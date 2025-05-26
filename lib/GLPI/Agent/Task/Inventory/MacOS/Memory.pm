@@ -1,17 +1,17 @@
-package GLPI::Agent::Task::Inventory::MacOS::Memory;
+package AssetSync::Agent::Task::Inventory::MacOS::Memory;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::MacOS;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::MacOS;
 
 use constant    category    => "memory";
 
 our $runMeIfTheseChecksFailed =
-    ["GLPI::Agent::Task::Inventory::Generic::Dmidecode"];
+    ["AssetSync::Agent::Task::Inventory::Generic::Dmidecode"];
 
 sub isEnabled {
     return canRun('/usr/sbin/system_profiler');

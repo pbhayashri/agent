@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::RemoteInventory::Remote::Ssh;
+package AssetSync::Agent::Task::RemoteInventory::Remote::Ssh;
 
 use strict;
 use warnings;
@@ -6,9 +6,9 @@ use warnings;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
-use parent 'GLPI::Agent::Task::RemoteInventory::Remote';
+use parent 'AssetSync::Agent::Task::RemoteInventory::Remote';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant    supported => 1;
 
@@ -237,7 +237,7 @@ sub checking_error {
     return "Mode perl required but can't run perl"
         if $self->mode('perl') && ! $self->remoteCanRun("perl");
 
-    my $deviceid = $self->getRemoteFirstLine(file => ".glpi-agent-deviceid");
+    my $deviceid = $self->getRemoteFirstLine(file => ".assetsync-agent-deviceid");
     if ($deviceid) {
         $self->deviceid(deviceid => $deviceid);
     } else {
@@ -246,7 +246,7 @@ sub checking_error {
         $deviceid = $self->deviceid(hostname => $hostname)
             or return "Can't compute deviceid getting remote hostname";
 
-        my $command = "echo $deviceid >.glpi-agent-deviceid";
+        my $command = "echo $deviceid >.assetsync-agent-deviceid";
 
         # Support Net::SSH2 facilities to exec command
         my $ret = $self->_ssh2_exec_status($command);

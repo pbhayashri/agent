@@ -1,19 +1,19 @@
-package GLPI::Agent::HTTP::Client::GLPI;
+package AssetSync::Agent::HTTP::Client::AssetSync;
 
 use strict;
 use warnings;
-use parent 'GLPI::Agent::HTTP::Client';
+use parent 'AssetSync::Agent::HTTP::Client';
 
 use English qw(-no_match_vars);
 use HTTP::Request;
 use UNIVERSAL::require;
 use URI;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools::UUID;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools::UUID;
 
-use GLPI::Agent::Protocol::Message;
+use AssetSync::Agent::Protocol::Message;
 
 my $requestid;
 sub _log_prefix {
@@ -35,15 +35,15 @@ sub new {
     }
 
     $self->{ua}->default_header(
-        'GLPI-Agent-ID' => is_uuid_string($params{agentid}) ?
+        'AssetSync-Agent-ID' => is_uuid_string($params{agentid}) ?
             $params{agentid} : uuid_to_string($params{agentid})
     )
         if defined($params{agentid});
 
-    $self->{ua}->default_header('GLPI-Proxy-ID' => $params{proxyid})
+    $self->{ua}->default_header('AssetSync-Proxy-ID' => $params{proxyid})
         if defined($params{proxyid});
 
-    $self->{ua}->default_header('GLPI-Request-ID' => $requestid) if $requestid;
+    $self->{ua}->default_header('AssetSync-Request-ID' => $requestid) if $requestid;
 
     return $self;
 }
@@ -54,7 +54,7 @@ sub send { ## no critic (ProhibitBuiltinHomonyms)
     my $logger = $self->{logger};
 
     # Always check we have a valid agentid set
-    my $agentid = $self->{ua}->default_header('GLPI-Agent-ID');
+    my $agentid = $self->{ua}->default_header('AssetSync-Agent-ID');
     unless (is_uuid_string($agentid)) {
         $logger->error(_log_prefix . 'no valid agentid set on HTTP client');
         return;
@@ -62,7 +62,7 @@ sub send { ## no critic (ProhibitBuiltinHomonyms)
 
     my $url = ref($params{url}) eq 'URI' ? $params{url} : URI->new($params{url});
     my $message = ref($params{message}) eq 'HASH' ?
-        GLPI::Agent::Protocol::Message->new(
+        AssetSync::Agent::Protocol::Message->new(
             message => $params{message},
         )
         : $params{message};
@@ -82,12 +82,12 @@ sub send { ## no critic (ProhibitBuiltinHomonyms)
     my $try = 1;
     while (!defined($answer)) {
         # Initialze a new message to be updated by the answer
-        $answer = GLPI::Agent::Protocol::Message->new();
+        $answer = AssetSync::Agent::Protocol::Message->new();
         my $response = $self->request($request);
 
         return unless $response->is_success() || $response->status_line() !~ /read timeout/;
 
-        $requestid = $response->header("GLPI-Request-ID");
+        $requestid = $response->header("AssetSync-Request-ID");
         undef $requestid unless defined($requestid) && $requestid =~ /^[0-9A-F]{8}$/;
 
         my $content = $response->content();
@@ -160,7 +160,7 @@ sub send { ## no critic (ProhibitBuiltinHomonyms)
             # Next request should be a GET with expected RequestID and no content
             $request->method("GET");
             $request->content("");
-            $request->header( "GLPI-Request-ID" => $requestid ) if $requestid;
+            $request->header( "AssetSync-Request-ID" => $requestid ) if $requestid;
         }
     }
 
@@ -172,12 +172,12 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::HTTP::Client::GLPI - HTTP client supporting GLPI Agent protocol
+AssetSync::Agent::HTTP::Client::AssetSync - HTTP client supporting AssetSync Agent protocol
 
 =head1 DESCRIPTION
 
-This is the object used by the agent to send messages to GLPI servers
-using dedicated GLPI Agent protocol (JSON messages sent through POST requests).
+This is the object used by the agent to send messages to AssetSync servers
+using dedicated AssetSync Agent protocol (JSON messages sent through POST requests).
 
 =head1 METHODS
 
@@ -200,4 +200,4 @@ the message to send (mandatory)
 
 =back
 
-This method returns a GLPI:Agent::Message object.
+This method returns a AssetSync:Agent::Message object.

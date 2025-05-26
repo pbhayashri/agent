@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::PullResponse;
+package AssetSync::Agent::SOAP::WsMan::PullResponse;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::EnumerateResponse;
+use AssetSync::Agent::SOAP::WsMan::EnumerateResponse;
 
 ## no critic (ProhibitMultiplePackages)
 package

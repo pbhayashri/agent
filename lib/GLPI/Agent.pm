@@ -1,4 +1,4 @@
-package GLPI::Agent;
+package AssetSync::Agent;
 
 use strict;
 use warnings;
@@ -10,20 +10,20 @@ use IO::Handle;
 
 use constant CONTINUE_WORD  => "...";
 
-use GLPI::Agent::Version;
-use GLPI::Agent::Config;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Storage;
-use GLPI::Agent::Target::Local;
-use GLPI::Agent::Target::Server;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Hostname;
-use GLPI::Agent::Tools::UUID;
-use GLPI::Agent::Event;
+use AssetSync::Agent::Version;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Storage;
+use AssetSync::Agent::Target::Local;
+use AssetSync::Agent::Target::Server;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Hostname;
+use AssetSync::Agent::Tools::UUID;
+use AssetSync::Agent::Event;
 
-our $VERSION = $GLPI::Agent::Version::VERSION;
-my $PROVIDER = $GLPI::Agent::Version::PROVIDER;
-our $COMMENTS = $GLPI::Agent::Version::COMMENTS || [];
+our $VERSION = $AssetSync::Agent::Version::VERSION;
+my $PROVIDER = $AssetSync::Agent::Version::PROVIDER;
+our $COMMENTS = $AssetSync::Agent::Version::COMMENTS || [];
 our $VERSION_STRING = _versionString($VERSION);
 our $AGENT_STRING = "$PROVIDER-Agent_v$VERSION";
 
@@ -58,7 +58,7 @@ sub init {
     my ($self, %params) = @_;
 
     # Skip create object if still defined (re-init case)
-    my $config = $self->{config} || GLPI::Agent::Config->new(
+    my $config = $self->{config} || AssetSync::Agent::Config->new(
         options => $params{options},
         vardir  => $self->{vardir},
     );
@@ -68,7 +68,7 @@ sub init {
     $self->{vardir} = $self->{config}->{vardir}
         if $self->{config}->{vardir} && -d $self->{config}->{vardir};
 
-    my $logger = GLPI::Agent::Logger->new(config => $config);
+    my $logger = AssetSync::Agent::Logger->new(config => $config);
     $self->{logger} = $logger;
 
     $logger->debug("Configuration directory: ".$config->confdir());
@@ -96,8 +96,8 @@ sub init {
     }
 
     # Keep program name for Provider inventory as it will be reset in setStatus()
-    GLPI::Agent::Task::Inventory::Provider->require();
-    $GLPI::Agent::Task::Inventory::Provider::PROGRAM = "$PROGRAM_NAME";
+    AssetSync::Agent::Task::Inventory::Provider->require();
+    $AssetSync::Agent::Task::Inventory::Provider::PROGRAM = "$PROGRAM_NAME";
 
     # compute list of allowed tasks
     my $available = $self->getAvailableTasks();
@@ -107,7 +107,7 @@ sub init {
         exit 1;
     }
 
-    # Keep available tasks as installed tasks for GLPI Agent protocol CONTACT
+    # Keep available tasks as installed tasks for AssetSync Agent protocol CONTACT
     $self->{installed_tasks} = [ map { lc($_) } @tasks ];
 
     my @plannedTasks = $self->computeTaskExecutionPlan($available);
@@ -208,19 +208,19 @@ sub getContact {
 
     my $response;
 
-    if ($target->isGlpiServer()) {
-        GLPI::Agent::HTTP::Client::GLPI->require();
-        return $self->{logger}->error("GLPI Protocol library can't be loaded")
+    if ($target->isAssetSyncServer()) {
+        AssetSync::Agent::HTTP::Client::AssetSync->require();
+        return $self->{logger}->error("AssetSync Protocol library can't be loaded")
             if $EVAL_ERROR;
 
-        my $client = GLPI::Agent::HTTP::Client::GLPI->new(
+        my $client = AssetSync::Agent::HTTP::Client::AssetSync->new(
             logger  => $self->{logger},
             config  => $self->{config},
             agentid => uuid_to_string($self->{agentid}),
         );
 
-        return $self->{logger}->error("Can't load GLPI Protocol CONTACT library")
-            unless GLPI::Agent::Protocol::Contact->require();
+        return $self->{logger}->error("Can't load AssetSync Protocol CONTACT library")
+            unless AssetSync::Agent::Protocol::Contact->require();
 
         my %httpd_conf;
         # Add httpd-port & httpd-plugins status in contact request if possible
@@ -230,7 +230,7 @@ sub getContact {
         }
 
         my %enabled = map { lc($_) => 1 } @{$plannedTasks};
-        my $contact = GLPI::Agent::Protocol::Contact->new(
+        my $contact = AssetSync::Agent::Protocol::Contact->new(
             logger              => $self->{logger},
             deviceid            => $self->{deviceid},
             "installed-tasks"   => $self->{installed_tasks},
@@ -248,15 +248,15 @@ sub getContact {
         unless ($response) {
             $self->{logger}->error("No supported answer from server at ".$target->getUrl());
             # Always fallback on legacy XML-based protocol on error
-            $target->isGlpiServer('false');
+            $target->isAssetSyncServer('false');
             # Return true on net error
             return 1;
         }
 
-        # Check we got a GLPI message answer
-        if (ref($response) !~ /^GLPI::Agent::Protocol::/) {
-            $self->{logger}->info("$target->{id} is not understanding GLPI Agent protocol");
-            $target->isGlpiServer('false');
+        # Check we got a AssetSync message answer
+        if (ref($response) !~ /^AssetSync::Agent::Protocol::/) {
+            $self->{logger}->info("$target->{id} is not understanding AssetSync Agent protocol");
+            $target->isAssetSyncServer('false');
             # return true to soon fallback on PROLOG request
             return 1;
         }
@@ -358,24 +358,24 @@ sub getProlog {
     my $response;
 
     if ($target->isType('server')) {
-        return unless GLPI::Agent::HTTP::Client::OCS->require();
+        return unless AssetSync::Agent::HTTP::Client::OCS->require();
 
         my $agentid;
         # We may have to simulate a legacy PROLOG call if we just need to get an XML answer as
-        # we still known the server is a GLPI one. This is the case when we need to support
-        # glpiinventory plugin and then we just need to keep agentid undefined
+        # we still known the server is a AssetSync one. This is the case when we need to support
+        # AssetSyncinventory plugin and then we just need to keep agentid undefined
         $agentid = uuid_to_string($self->{agentid})
-            unless $target->isGlpiServer();
+            unless $target->isAssetSyncServer();
 
-        my $client = GLPI::Agent::HTTP::Client::OCS->new(
+        my $client = AssetSync::Agent::HTTP::Client::OCS->new(
             logger  => $self->{logger},
             config  => $self->{config},
             agentid => $agentid,
         );
 
-        return unless GLPI::Agent::XML::Query::Prolog->require();
+        return unless AssetSync::Agent::XML::Query::Prolog->require();
 
-        my $prolog = GLPI::Agent::XML::Query::Prolog->new(
+        my $prolog = AssetSync::Agent::XML::Query::Prolog->new(
             deviceid => $self->{deviceid},
         );
 
@@ -390,18 +390,18 @@ sub getProlog {
             return 1;
         }
 
-        # Check if we got a GLPI server answer
-        if (ref($response) =~ /^GLPI::Agent::Protocol::/) {
-            # Set and log server is a glpi one only if this is a new information
-            unless ($target->isGlpiServer()) {
-                $self->{logger}->info("$target->{id} answer shows it supports GLPI Agent protocol");
-                $target->isGlpiServer('true');
+        # Check if we got a AssetSync server answer
+        if (ref($response) =~ /^AssetSync::Agent::Protocol::/) {
+            # Set and log server is a assetsync one only if this is a new information
+            unless ($target->isAssetSyncServer()) {
+                $self->{logger}->info("$target->{id} answer shows it supports AssetSync Agent protocol");
+                $target->isAssetSyncServer('true');
             }
         } else {
             # update target
             my $content = $response->getContent();
-            # setMaxDelay has still been called after CONTACT request in target is a GLPI server
-            if (defined($content->{PROLOG_FREQ}) && !$target->isGlpiServer()) {
+            # setMaxDelay has still been called after CONTACT request in target is a AssetSync server
+            if (defined($content->{PROLOG_FREQ}) && !$target->isAssetSyncServer()) {
                 $target->setMaxDelay($content->{PROLOG_FREQ} * 3600);
             }
         }
@@ -422,7 +422,7 @@ sub runTarget {
     my @plannedTasks = $target->plannedTasks();
     my @requests = ();
     my $responses = {};
-    push @requests, 'CONTACT' if $target->isGlpiServer();
+    push @requests, 'CONTACT' if $target->isAssetSyncServer();
     push @requests, 'PROLOG' if !@requests && $target->isType('server');
     my %requested = qw(CONTACT 0 PROLOG 0);
 
@@ -449,8 +449,8 @@ sub runTarget {
             push @requests, 'PROLOG'
                 if ref($response) && $target->doProlog() && !$requested{PROLOG};
 
-        # By default, PROLOG request could be avoided when communicating with a GLPI server
-        # But it still may be required if we detect server supports any task due to glpiinventory plugin
+        # By default, PROLOG request could be avoided when communicating with a AssetSync server
+        # But it still may be required if we detect server supports any task due to AssetSyncinventory plugin
         } elsif ($request eq 'PROLOG') {
 
             $response = $self->getProlog($target, \@plannedTasks);
@@ -458,7 +458,7 @@ sub runTarget {
             return $response if $response && !ref($response);
 
             push @requests, 'CONTACT'
-                if ref($response) && $target->isGlpiServer() && !$requested{CONTACT};
+                if ref($response) && $target->isAssetSyncServer() && !$requested{CONTACT};
         }
 
         $responses->{$request} = $response if ref($response);
@@ -471,9 +471,9 @@ sub runTarget {
         my $server_response = $responses->{PROLOG} // $responses->{CONTACT};
         if ($responses->{CONTACT}) {
             # Be sure to use expected response for task
-            my $task_server = $target->getTaskServer($name) // 'glpi';
+            my $task_server = $target->getTaskServer($name) // 'assetsync';
             $server_response = $responses->{CONTACT}
-                if $task_server eq 'glpi';
+                if $task_server eq 'assetsync';
         }
         eval {
             $self->runTask($target, $name, $server_response);
@@ -503,7 +503,7 @@ sub runTask {
 sub runTaskReal {
     my ($self, $target, $name, $response) = @_;
 
-    my $class = "GLPI::Agent::Task::$name";
+    my $class = "AssetSync::Agent::Task::$name";
 
     if (!$class->require()) {
         $self->{logger}->debug2("$name task module does not compile: $@")
@@ -595,7 +595,7 @@ sub getAvailableTasks {
     # tasks may be located only in agent libdir
     my $directory = $self->{libdir};
     $directory =~ s,\\,/,g;
-    my $subdirectory = "GLPI/Agent/Task";
+    my $subdirectory = "AssetSync/Agent/Task";
     # look for all Version perl modules around here
     foreach my $file (File::Glob::bsd_glob("$directory/$subdirectory/*/Version.pm")) {
         next unless $file =~ m{($subdirectory/(\S+)/Version\.pm)$};
@@ -671,7 +671,7 @@ sub _handlePersistentState {
 
     # Only create storage at first call
     unless ($self->{storage}) {
-        $self->{storage} = GLPI::Agent::Storage->new(
+        $self->{storage} = AssetSync::Agent::Storage->new(
             logger    => $self->{logger},
             directory => $self->{vardir}
         );
@@ -722,7 +722,7 @@ sub _handlePersistentState {
 sub setForceRun {
     my ($self, $forcerun) = @_;
 
-    my $storage = GLPI::Agent::Storage->new(
+    my $storage = AssetSync::Agent::Storage->new(
         logger    => $self->{logger},
         directory => $self->{vardir}
     );
@@ -741,7 +741,7 @@ sub computeTaskExecutionPlan {
     my ($self, $availableTasks) = @_;
 
     my $config = $self->{config};
-    unless (defined($config) && ref($config) eq 'GLPI::Agent::Config') {
+    unless (defined($config) && ref($config) eq 'AssetSync::Agent::Config') {
         $self->{logger}->error( "no config found in agent. Can't compute tasks execution plan" )
             if $self->{logger};
         return;
@@ -786,7 +786,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent - GLPI agent
+AssetSync::Agent - AssetSync agent
 
 =head1 DESCRIPTION
 

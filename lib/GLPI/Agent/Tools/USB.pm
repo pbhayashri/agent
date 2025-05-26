@@ -1,13 +1,13 @@
-package GLPI::Agent::Tools::USB;
+package AssetSync::Agent::Tools::USB;
 
 use strict;
 use warnings;
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Generic;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Generic;
 
 my %loaded;
 
@@ -15,7 +15,7 @@ sub new {
     my ($class, %params) = @_;
 
     my $self = {
-        logger      => $params{logger} || GLPI::Agent::Logger->new(),
+        logger      => $params{logger} || AssetSync::Agent::Logger->new(),
         _vendorid   => $params{vendorid},
         _productid  => $params{productid},
         _caption    => $params{caption},
@@ -148,7 +148,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::USB - Base class for usb device object
+AssetSync::Agent::Tools::USB - Base class for usb device object
 
 =head1 DESCRIPTION
 

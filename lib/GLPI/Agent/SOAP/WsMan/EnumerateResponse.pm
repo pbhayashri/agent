@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::EnumerateResponse;
+package AssetSync::Agent::SOAP::WsMan::EnumerateResponse;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 BEGIN {
     # Needed for PullResponse class
@@ -17,9 +17,9 @@ package
 use parent
     'Node';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::SOAP::WsMan::EnumerationContext;
-use GLPI::Agent::SOAP::WsMan::EndOfSequence;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::SOAP::WsMan::EnumerationContext;
+use AssetSync::Agent::SOAP::WsMan::EndOfSequence;
 
 use constant    xmlns   => 'n';
 

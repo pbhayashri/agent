@@ -1,9 +1,9 @@
-package GLPI::Agent::HTTP::Server::ToolBox;
+package AssetSync::Agent::HTTP::Server::ToolBox;
 
 use strict;
 use warnings;
 
-use parent "GLPI::Agent::HTTP::Server::Plugin";
+use parent "AssetSync::Agent::HTTP::Server::Plugin";
 
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
@@ -14,9 +14,9 @@ use HTML::Entities;
 use Encode qw(decode encode);
 use File::stat;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Hostname;
-use GLPI::Agent::Tools::UUID;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Hostname;
+use AssetSync::Agent::Tools::UUID;
 
 our $VERSION = "1.5";
 
@@ -145,7 +145,7 @@ sub init {
     }
 
     # Always uses a dedicated Listener target for this plugin
-    $self->{target} = GLPI::Agent::Target::Listener->new(
+    $self->{target} = AssetSync::Agent::Target::Listener->new(
         logger     => $self->{logger},
         basevardir => $agent->{config}->{vardir},
     );
@@ -252,7 +252,7 @@ sub defaults {
         addnavlink  => undef,
         headercolor => undef,
         raw_edition => "no",
-        # Supported by class GLPI::Agent::HTTP::Server::Plugin
+        # Supported by class AssetSync::Agent::HTTP::Server::Plugin
         forbid_not_trusted => "no",
     };
 }
@@ -1267,7 +1267,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::HTTP::Server::ToolBox - An embedded HTTP
+AssetSync::Agent::HTTP::Server::ToolBox - An embedded HTTP
 server plugin to handle some tools
 
 =head1 DESCRIPTION

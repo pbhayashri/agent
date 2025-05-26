@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::HPUX::Memory;
+package AssetSync::Agent::Task::Inventory::HPUX::Memory;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::HPUX;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::HPUX;
 use English qw(-no_match_vars);
 
 use constant    category    => "memory";

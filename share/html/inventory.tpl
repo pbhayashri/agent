@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
-    <title>GLPI-Agent {$deviceid}</title>
+    <title>AssetSync-Agent {$deviceid}</title>
     <style type="text/css">
 <!--/* <![CDATA[ */
  tr.odd \{ 
@@ -17,7 +17,7 @@ tr.even \{
 <body>
 <div id="background">
 <h1>Inventory for {$deviceid}</h1>
-GLPI Agent {$version}<br />
+AssetSync Agent {$version}<br />
 <small>DEVICEID {$deviceid}</small>
 
 {

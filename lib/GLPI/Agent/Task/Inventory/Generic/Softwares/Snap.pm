@@ -1,14 +1,14 @@
-package GLPI::Agent::Task::Inventory::Generic::Softwares::Snap;
+package AssetSync::Agent::Task::Inventory::Generic::Softwares::Snap;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 use YAML::Tiny;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub isEnabled {
     # Snap is not supported on AIX and the command has another usage

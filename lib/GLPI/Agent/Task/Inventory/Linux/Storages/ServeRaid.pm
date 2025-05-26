@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::Linux::Storages::ServeRaid;
+package AssetSync::Agent::Task::Inventory::Linux::Storages::ServeRaid;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Task::Inventory::Linux::Storages;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Task::Inventory::Linux::Storages;
 
 # Tested on 2.6.* kernels
 #

@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Generic::Dmidecode::Battery;
+package AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Battery;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Generic;
-use GLPI::Agent::Tools::Batteries;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Generic;
+use AssetSync::Agent::Tools::Batteries;
 
 use constant    category    => "battery";
 

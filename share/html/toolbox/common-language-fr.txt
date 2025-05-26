@@ -1,8 +1,8 @@
 # Traductions en français par Teclib Edition
 
 Home: Accueil
-GLPI Agent: Agent GLPI
-ToolBox GLPI Agent plugin: Agent GLPI plugin ToolBox
+AssetSync Agent: Agent AssetSync
+ToolBox AssetSync Agent plugin: Agent AssetSync plugin ToolBox
 Inventory: Inventaire
 Results: Résultats
 Raw YAML: YAML brut

@@ -10,12 +10,12 @@ use English qw(-no_match_vars);
 use Getopt::Long;
 use Pod::Usage;
 
-use GLPI::Agent::Target::Local;
-use GLPI::Agent::Task::NetDiscovery;
-use GLPI::Agent::Task::NetDiscovery::Job;
-use GLPI::Agent::Config;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Version;
+use AssetSync::Agent::Target::Local;
+use AssetSync::Agent::Task::NetDiscovery;
+use AssetSync::Agent::Task::NetDiscovery::Job;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Version;
 
 our $options = {
     debug   => 0,
@@ -47,11 +47,11 @@ GetOptions(
 ) or pod2usage(-verbose => 0);
 
 if ($options->{version}) {
-    my $PROVIDER = $GLPI::Agent::Version::PROVIDER;
+    my $PROVIDER = $AssetSync::Agent::Version::PROVIDER;
     map { print $_."\n" }
-        "NetDiscovery task $GLPI::Agent::Task::NetDiscovery::VERSION",
-        "based on $PROVIDER Agent v$GLPI::Agent::Version::VERSION",
-        @{$GLPI::Agent::Version::COMMENTS}
+        "NetDiscovery task $AssetSync::Agent::Task::NetDiscovery::VERSION",
+        "based on $PROVIDER Agent v$AssetSync::Agent::Version::VERSION",
+        @{$AssetSync::Agent::Version::COMMENTS}
         ;
     exit 0;
 }
@@ -71,22 +71,22 @@ pod2usage(
 ) if ($options->{save} && ! -d $options->{save});
 
 if ($OSNAME eq 'MSWin32' && $options->{threads} > 1) {
-    GLPI::Agent::Tools::Win32->require();
-    GLPI::Agent::Tools::Win32::start_Win32_OLE_Worker();
+    AssetSync::Agent::Tools::Win32->require();
+    AssetSync::Agent::Tools::Win32::start_Win32_OLE_Worker();
 }
 
 # Reset retries as snmp-retries in options
 $options->{'snmp-retries'} = delete $options->{'retries'}
     if exists($options->{'retries'});
 
-my $discovery = GLPI::Agent::Task::NetDiscovery->new(
+my $discovery = AssetSync::Agent::Task::NetDiscovery->new(
     %setup,
-    target => GLPI::Agent::Target::Local->new(
+    target => AssetSync::Agent::Target::Local->new(
         path       => defined($options->{save}) ? $options->{save} : '-',
         basevardir => $setup{vardir}
     ),
-    config => GLPI::Agent::Config->new(options => $options),
-    logger => GLPI::Agent::Logger->new(config => $options)
+    config => AssetSync::Agent::Config->new(options => $options),
+    logger => AssetSync::Agent::Logger->new(config => $options)
 );
 
 my $credentials_id = 1;
@@ -127,7 +127,7 @@ if ($options->{community}) {
 }
 
 $discovery->{jobs} = [
-    GLPI::Agent::Task::NetDiscovery::Job->new(
+    AssetSync::Agent::Task::NetDiscovery::Job->new(
         logger => $discovery->{logger},
         params => {
             PID               => 1,
@@ -166,11 +166,11 @@ __END__
 
 =head1 NAME
 
-glpi-netdiscovery - Standalone network discovery
+assetsync-netdiscovery - Standalone network discovery
 
 =head1 SYNOPSIS
 
-glpi-netdiscovery [options] --first <address> --last <address>
+assetsync-netdiscovery [options] --first <address> --last <address>
 
   Options:
     --host <ADDRESS>       Host IP address to scan or IP range first address
@@ -186,7 +186,7 @@ glpi-netdiscovery [options] --first <address> --last <address>
     --retries              SNMP requets maximum retries (0)
     --backend-collect-timeout <TIME>
                            base expiration timeout, in seconds (180)
-    --entity <ENTITY>      GLPI entity
+    --entity <ENTITY>      AssetSync entity
     --threads <COUNT>      number of discovery threads (1)
     --control              output control messages
     --file <FILE>          snmpwalk input file
@@ -200,8 +200,8 @@ glpi-netdiscovery [options] --first <address> --last <address>
 
 =head1 DESCRIPTION
 
-F<glpi-netdiscovery> can be used to run a network discovery task without a
-GLPI server.
+F<assetsync-netdiscovery> can be used to run a network discovery task without a
+AssetSync server.
 
 =head1 OPTIONS
 
@@ -310,7 +310,7 @@ the number of ips.
 
 =item B<--entity> I<ENTITY>
 
-Set GLPI entity.
+Set AssetSync entity.
 
 =item B<--threads> I<COUNT>
 
@@ -330,14 +330,14 @@ Turn the debug mode on. Multiple usage allowed, for additional verbosity.
 
 Run a discovery against a network range, using SNMP version 1:
 
-    $> glpi-netdiscovery --first 192.168.0.1 --last 192.168.0.254 --community public
+    $> assetsync-netdiscovery --first 192.168.0.1 --last 192.168.0.254 --community public
 
 Run a discovery against a network range, using multiple SNMP credentials:
 
-    $> glpi-netdiscovery --first 192.168.0.1 --last 192.168.0.254 \
+    $> assetsync-netdiscovery --first 192.168.0.1 --last 192.168.0.254 \
     --credentials version:2c,community:public \
     --credentials version:3,username:admin,authpassword:s3cr3t,privpassword:s3cr3t
 
 Emulate discovery using a snmpwalk file:
 
-    $> glpi-netdiscovery --file device.walk
+    $> assetsync-netdiscovery --file device.walk

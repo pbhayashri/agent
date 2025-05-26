@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::Solaris::Slots;
+package AssetSync::Agent::Task::Inventory::Solaris::Slots;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Solaris;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Solaris;
 
 use constant    category    => "slot";
 

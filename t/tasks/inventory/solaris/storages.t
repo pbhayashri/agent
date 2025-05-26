@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Solaris::Storages;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Solaris::Storages;
 
 my %tests = (
     'sample1' => [
@@ -1777,11 +1777,11 @@ my %tests = (
 
 plan tests => (2 * scalar keys %tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %tests) {
     my $file = "resources/solaris/iostat/$test";
-    my @storages = GLPI::Agent::Task::Inventory::Solaris::Storages::_getStorages(file => $file);
+    my @storages = AssetSync::Agent::Task::Inventory::Solaris::Storages::_getStorages(file => $file);
     cmp_deeply(\@storages, $tests{$test}, "$test: parsing");
     lives_ok {
         $inventory->addEntry(section => 'STORAGES', entry => $_)

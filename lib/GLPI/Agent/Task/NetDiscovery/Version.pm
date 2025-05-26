@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::NetDiscovery::Version;
+package AssetSync::Agent::Task::NetDiscovery::Version;
 
 use strict;
 use warnings;

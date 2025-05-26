@@ -1,14 +1,14 @@
-package GLPI::Agent::HTTP::Server::ToolBox::Results::NetDiscovery;
+package AssetSync::Agent::HTTP::Server::ToolBox::Results::NetDiscovery;
 
 use strict;
 use warnings;
 
-use parent "GLPI::Agent::HTTP::Server::ToolBox::Results::Fields";
+use parent "AssetSync::Agent::HTTP::Server::ToolBox::Results::Fields";
 
 use Memoize;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Target::Local;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Target::Local;
 
 memoize('__sortable_by_ip');
 
@@ -198,7 +198,7 @@ sub _getDevices {
     # Make sure path exists as folder before accessing storage
     mkdir $path unless -d $path;
 
-    my $target = GLPI::Agent::Target::Local->new(
+    my $target = AssetSync::Agent::Target::Local->new(
         logger     => $self->{logger},
         delaytime  => 0,
         basevardir => $self->{results}->{toolbox}->{server}->{agent}->{config}->{vardir},
@@ -271,7 +271,7 @@ sub analyze {
     $device->{source} = $self->name;
 
     # Defines dynamic fields that can't be edited
-    my @netinventory_fields = GLPI::Agent::HTTP::Server::ToolBox::Results::NetInventory->fields();
+    my @netinventory_fields = AssetSync::Agent::HTTP::Server::ToolBox::Results::NetInventory->fields();
 
     $device->{_noedit} = { map { $_->{name} => 1 } $self->fields(), @netinventory_fields };
 
@@ -283,7 +283,7 @@ sub analyze {
     }
 
     # Don't include fields from local Inventory which are not in NetInventory
-    my @inventory = GLPI::Agent::HTTP::Server::ToolBox::Results::Inventory->fields();
+    my @inventory = AssetSync::Agent::HTTP::Server::ToolBox::Results::Inventory->fields();
     foreach my $field (@inventory) {
         $device->{_noedit}->{$field->{name}} = 1
             unless exists($device->{_noedit}->{$field->{name}});

@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::iLO;
+package AssetSync::Agent::SNMP::MibSupport::iLO;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 # Constants extracted from Compaq cpqsm2.mib, as said in mib:
 # Implementation of the cpqSm2Cntrl group is mandatory for all agents
@@ -108,7 +108,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::iLO - Inventory module for Digi modems and associated sim cards & firmwares
+AssetSync::Agent::SNMP::MibSupport::iLO - Inventory module for Digi modems and associated sim cards & firmwares
 
 =head1 DESCRIPTION
 

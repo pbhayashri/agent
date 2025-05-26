@@ -1,35 +1,35 @@
-# <img src="https://raw.githubusercontent.com/glpi-project/glpi-agent/develop/share/html/logo.png" alt="GLPI Agent" width="32" height="32" /> GLPI Agent
+# <img src="https://raw.githubusercontent.com/assetsync-project/assetsync-agent/develop/share/html/logo.png" alt="AssetSync Agent" width="32" height="32" /> AssetSync Agent
 
-[![GLPI Agent CI](https://github.com/glpi-project/glpi-agent/actions/workflows/glpi-agent-ci.yml/badge.svg)](https://github.com/glpi-project/glpi-agent/actions/workflows/glpi-agent-ci.yml)
-[![GLPI Agent Packaging](https://github.com/glpi-project/glpi-agent/actions/workflows/glpi-agent-packaging.yml/badge.svg)](https://github.com/glpi-project/glpi-agent/actions/workflows/glpi-agent-packaging.yml)
-[![Github All Releases](https://img.shields.io/github/downloads/glpi-project/glpi-agent/total.svg)](#download)
-[![Twitter Follow](https://img.shields.io/twitter/follow/GLPI_PROJECT.svg?style=social&label=Follow)](https://twitter.com/GLPI_PROJECT)
+[![AssetSync Agent CI](https://github.com/glpi-project/glpi-agent/actions/workflows/assetsync-agent-ci.yml/badge.svg)](https://github.com/glpi-project/glpi-agent/actions/workflows/assetsync-agent-ci.yml)
+[![AssetSync Agent Packaging](https://github.com/glpi-project/glpi-agent/actions/workflows/assetsync-agent-packaging.yml/badge.svg)](https://github.com/glpi-project/glpi-agent/actions/workflows/assetsync-agent-packaging.yml)
+[![Github All Releases](https://img.shields.io/github/downloads/assetsync-project/assetsync-agent/total.svg)](#download)
+[![Twitter Follow](https://img.shields.io/twitter/follow/AssetSync_PROJECT.svg?style=social&label=Follow)](https://twitter.com/AssetSync_PROJECT)
 
 ## Summary
 
-The GLPI Agent is a generic management agent. It can perform a
+The AssetSync Agent is a generic management agent. It can perform a
 certain number of tasks, according to its own execution plan, or on behalf of a
-GLPI server acting as a control point.
+AssetSync server acting as a control point.
 
 ## Description
 
 This agent is based on a fork of [FusionInventory agent](https://github.com/fusioninventory/fusioninventory-agent) and so works mainly like FusionInventory agent.
-It introduces new features and a new protocol to communicate directly with a GLPI server and its native inventory feature. Anyway it also keeps the compatibility with [FusionInventory for GLPI plugin](https://github.com/fusioninventory/fusioninventory-for-glpi).
+It introduces new features and a new protocol to communicate directly with a AssetSync server and its native inventory feature. Anyway it also keeps the compatibility with [FusionInventory for AssetSync plugin](https://github.com/fusioninventory/fusioninventory-for-assetsync).
 
 ## Download
 
 * Release: See [our github releases](https://github.com/glpi-project/glpi-agent/releases) for official win32, MacOSX & linux packages.
 * Development builds:
-    - nightly builds for last 'develop' branch commits: [GLPI-Agent nightly builds](http://nightly.glpi-project.org/glpi-agent)
-    - with a github account, you can also access artifacts for any other branches supporting ["GLPI Agent Packaging" workflow](https://github.com/glpi-project/glpi-agent/actions/workflows/glpi-agent-packaging.yml?query=is%3Asuccess+event%3Apush+-branch%3Adevelop)
+    - nightly builds for last 'develop' branch commits: [AssetSync-Agent nightly builds](http://nightly.assetsync-project.org/assetsync-agent)
+    - with a github account, you can also access artifacts for any other branches supporting ["AssetSync Agent Packaging" workflow](https://github.com/glpi-project/glpi-agent/actions/workflows/assetsync-agent-packaging.yml?query=is%3Asuccess+event%3Apush+-branch%3Adevelop)
 
 ## Documentation
 
-The GLPI Agent has its [dedicated documentation project](https://github.com/glpi-project/doc-agent) where any contribution will also be appreciated.
+The AssetSync Agent has its [dedicated documentation project](https://github.com/glpi-project/doc-agent) where any contribution will also be appreciated.
 
-The documentation itself is [readable online](https://glpi-agent.readthedocs.io/).
+The documentation itself is [readable online](https://assetsync-agent.readthedocs.io/).
 
-[![Documentation Status](https://readthedocs.org/projects/glpi-agent/badge/?version=latest)](https://glpi-agent.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/assetsync-agent/badge/?version=latest)](https://assetsync-agent.readthedocs.io/en/latest/?badge=latest)
 
 ## Dependencies
 
@@ -147,19 +147,19 @@ Tools:
 
 ## Related contribs
 
-See [CONTRIB](CONTRIB.md) to find references to GLPI Agent related scritps/files
+See [CONTRIB](CONTRIB.md) to find references to AssetSync Agent related scritps/files
 
 ## Contacts
 
 Project websites:
 
-* main site: <https://glpi-project.org/>
-* forum: <https://forum.glpi-project.org/>
-* github: <http://github.com/glpi-project/glpi-agent>
+* main site: <https://assetsync-project.org/>
+* forum: <https://forum.assetsync-project.org/>
+* github: <http://github.com/assetsync-project/assetsync-agent>
 
 Project Telegram channel:
 
-* https://t.me/glpien
+* https://t.me/AssetSyncen
 
 Please report any issues on project [github issue tracker](https://github.com/glpi-project/glpi-agent/issues).
 
@@ -182,12 +182,12 @@ details.
 
 ## Additional pieces of software
 
-The glpi-injector script is based on fusioninventory-injector script:
+The assetsync-injector script is based on fusioninventory-injector script:
 
 * author: Pascal Danek
 * copyright: 2005 Pascal Danek
 
-GLPI::Agent::Task::Inventory::Vmsystem
+AssetSync::Agent::Task::Inventory::Vmsystem
 contains code from imvirt:
 
 * url: <http://micky.ibh.net/~liske/imvirt.html>

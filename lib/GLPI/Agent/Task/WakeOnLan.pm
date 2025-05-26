@@ -1,19 +1,19 @@
-package GLPI::Agent::Task::WakeOnLan;
+package AssetSync::Agent::Task::WakeOnLan;
 
 use strict;
 use warnings;
-use parent 'GLPI::Agent::Task';
+use parent 'AssetSync::Agent::Task';
 
 use English qw(-no_match_vars);
 use Socket;
 use UNIVERSAL::require;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Network;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Network;
 
-use GLPI::Agent::Task::WakeOnLan::Version;
+use AssetSync::Agent::Task::WakeOnLan::Version;
 
-our $VERSION = GLPI::Agent::Task::WakeOnLan::Version::VERSION;
+our $VERSION = AssetSync::Agent::Task::WakeOnLan::Version::VERSION;
 
 sub isEnabled {
     my ($self, $contact) = @_;
@@ -23,8 +23,8 @@ sub isEnabled {
         return;
     }
 
-    # TODO Support WakeOnLan task via GLPI Agent Protocol
-    return if ref($contact) =~ /^GLPI::Agent::Protocol/;
+    # TODO Support WakeOnLan task via AssetSync Agent Protocol
+    return if ref($contact) =~ /^AssetSync::Agent::Protocol/;
 
     my @options = $contact->getOptionsInfoByName('WAKEONLAN');
     if (!@options) {
@@ -138,24 +138,24 @@ sub _getInterfaces {
 
     SWITCH: {
         if ($OSNAME eq 'linux') {
-            GLPI::Agent::Tools::Linux->require();
-            @interfaces = GLPI::Agent::Tools::Linux::getInterfacesFromIfconfig(
+            AssetSync::Agent::Tools::Linux->require();
+            @interfaces = AssetSync::Agent::Tools::Linux::getInterfacesFromIfconfig(
                 logger => $self->{logger}
             );
             last;
         }
 
         if ($OSNAME =~ /freebsd|openbsd|netbsd|gnukfreebsd|gnuknetbsd|dragonfly/) {
-            GLPI::Agent::Tools::BSD->require();
-            @interfaces = GLPI::Agent::Tools::BSD::getInterfacesFromIfconfig(
+            AssetSync::Agent::Tools::BSD->require();
+            @interfaces = AssetSync::Agent::Tools::BSD::getInterfacesFromIfconfig(
                 logger => $self->{logger}
             );
             last;
         }
 
         if ($OSNAME eq 'MSWin32') {
-            GLPI::Agent::Tools::Win32->require();
-            @interfaces = GLPI::Agent::Tools::Win32::getInterfaces(
+            AssetSync::Agent::Tools::Win32->require();
+            @interfaces = AssetSync::Agent::Tools::Win32::getInterfaces(
                 logger => $self->{logger}
             );
             # on Windows, we have to use internal device name instead of litteral name
@@ -188,9 +188,9 @@ sub _getPayload {
 sub _getWin32InterfaceId {
     my ($self, $pnpid) = @_;
 
-    GLPI::Agent::Tools::Win32->require();
+    AssetSync::Agent::Tools::Win32->require();
 
-    my $key = GLPI::Agent::Tools::Win32::getRegistryKey(
+    my $key = AssetSync::Agent::Tools::Win32::getRegistryKey(
         path => "HKEY_LOCAL_MACHINE/SYSTEM/CurrentControlSet/Control/Network",
     );
 
@@ -217,7 +217,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Task::WakeOnLan - Wake-on-lan task for GLPI
+AssetSync::Agent::Task::WakeOnLan - Wake-on-lan task for AssetSync
 
 =head1 DESCRIPTION
 

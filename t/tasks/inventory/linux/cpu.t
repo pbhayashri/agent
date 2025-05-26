@@ -9,13 +9,13 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Linux::i386::CPU;
-use GLPI::Agent::Task::Inventory::Linux::Alpha::CPU;
-use GLPI::Agent::Task::Inventory::Linux::SPARC::CPU;
-use GLPI::Agent::Task::Inventory::Linux::MIPS::CPU;
-use GLPI::Agent::Task::Inventory::Linux::ARM::CPU;
-use GLPI::Agent::Task::Inventory::Linux::PowerPC::CPU;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Linux::i386::CPU;
+use AssetSync::Agent::Task::Inventory::Linux::Alpha::CPU;
+use AssetSync::Agent::Task::Inventory::Linux::SPARC::CPU;
+use AssetSync::Agent::Task::Inventory::Linux::MIPS::CPU;
+use AssetSync::Agent::Task::Inventory::Linux::ARM::CPU;
+use AssetSync::Agent::Task::Inventory::Linux::PowerPC::CPU;
 
 my %i386 = (
     'linux-686-1' => [
@@ -329,12 +329,12 @@ plan tests =>
     (2 * scalar keys %i386)  +
     1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %i386) {
     my $cpuinfo   = "resources/linux/proc/cpuinfo/$test";
     my $dmidecode = "resources/generic/dmidecode/$test";
-    my @cpus = GLPI::Agent::Task::Inventory::Linux::i386::CPU::_getCPUs(file => $cpuinfo, dmidecode => $dmidecode);
+    my @cpus = AssetSync::Agent::Task::Inventory::Linux::i386::CPU::_getCPUs(file => $cpuinfo, dmidecode => $dmidecode);
     cmp_deeply(\@cpus, $i386{$test}, "cpus: ".$test);
     lives_ok {
         $inventory->addEntry(section => 'CPUS', entry => $_) foreach @cpus;
@@ -343,7 +343,7 @@ foreach my $test (keys %i386) {
 
 foreach my $test (keys %alpha) {
     my $file = "resources/linux/proc/cpuinfo/$test";
-    my @cpus = GLPI::Agent::Task::Inventory::Linux::Alpha::CPU::_getCPUsFromProc(file => $file);
+    my @cpus = AssetSync::Agent::Task::Inventory::Linux::Alpha::CPU::_getCPUsFromProc(file => $file);
     cmp_deeply(\@cpus, $alpha{$test}, $test);
     lives_ok {
         $inventory->addEntry(section => 'CPUS', entry => $_) foreach @cpus;
@@ -352,7 +352,7 @@ foreach my $test (keys %alpha) {
 
 foreach my $test (keys %sparc) {
     my $file = "resources/linux/proc/cpuinfo/$test";
-    my @cpus = GLPI::Agent::Task::Inventory::Linux::SPARC::CPU::_getCPUsFromProc(file => $file);
+    my @cpus = AssetSync::Agent::Task::Inventory::Linux::SPARC::CPU::_getCPUsFromProc(file => $file);
     cmp_deeply(\@cpus, $sparc{$test}, $test);
     lives_ok {
         $inventory->addEntry(section => 'CPUS', entry => $_) foreach @cpus;
@@ -361,7 +361,7 @@ foreach my $test (keys %sparc) {
 
 foreach my $test (keys %mips) {
     my $file = "resources/linux/proc/cpuinfo/$test";
-    my @cpus = GLPI::Agent::Task::Inventory::Linux::MIPS::CPU::_getCPUsFromProc(file => $file);
+    my @cpus = AssetSync::Agent::Task::Inventory::Linux::MIPS::CPU::_getCPUsFromProc(file => $file);
     cmp_deeply(\@cpus, $mips{$test}, $test);
     lives_ok {
         $inventory->addEntry(section => 'CPUS', entry => $_) foreach @cpus;
@@ -370,7 +370,7 @@ foreach my $test (keys %mips) {
 
 foreach my $test (keys %arm) {
     my $file = "resources/linux/proc/cpuinfo/$test";
-    my @cpus = GLPI::Agent::Task::Inventory::Linux::ARM::CPU::_getCPUsFromProc(file => $file);
+    my @cpus = AssetSync::Agent::Task::Inventory::Linux::ARM::CPU::_getCPUsFromProc(file => $file);
     cmp_deeply(\@cpus, $arm{$test}, $test);
     lives_ok {
         $inventory->addEntry(section => 'CPUS', entry => $_) foreach @cpus;
@@ -379,7 +379,7 @@ foreach my $test (keys %arm) {
 
 foreach my $test (keys %ppc) {
     my $file = "resources/linux/proc/cpuinfo/$test";
-    my @cpus = GLPI::Agent::Task::Inventory::Linux::PowerPC::CPU::_getCPUsFromProc(file => $file);
+    my @cpus = AssetSync::Agent::Task::Inventory::Linux::PowerPC::CPU::_getCPUsFromProc(file => $file);
     cmp_deeply(\@cpus, $ppc{$test}, $test);
     lives_ok {
         $inventory->addEntry(section => 'CPUS', entry => $_) foreach @cpus;

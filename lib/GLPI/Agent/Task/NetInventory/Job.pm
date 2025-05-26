@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::NetInventory::Job;
+package AssetSync::Agent::Task::NetInventory::Job;
 
 use strict;
 use warnings;
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools;
 
 sub new {
     my ($class, %params) = @_;
@@ -14,7 +14,7 @@ sub new {
     my $devices = ref($params{devices}) eq 'ARRAY' ? $params{devices} : [];
 
     my $self = {
-        logger          => $params{logger} || GLPI::Agent::Logger->new(),
+        logger          => $params{logger} || AssetSync::Agent::Logger->new(),
         _params         => $params{params},
         _credentials    => $params{credentials},
         _devices        => $devices,

@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Generic::Dmidecode::Memory;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Memory;
 
 my %tests = (
     'freebsd-6.2' => [
@@ -2874,11 +2874,11 @@ my %tests = (
 
 plan tests => (2 * scalar keys %tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %tests) {
     my $file = "resources/generic/dmidecode/$test";
-    my $memories = GLPI::Agent::Task::Inventory::Generic::Dmidecode::Memory::_getMemories(file => $file);
+    my $memories = AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Memory::_getMemories(file => $file);
     cmp_deeply($memories, $tests{$test}, "$test: parsing");
     lives_ok {
         $inventory->addEntry(section => 'MEMORIES', entry => $_)

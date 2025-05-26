@@ -36,15 +36,15 @@ $0 [[-v|--version] VERSION] [--config (CONF.cfg|CERT.(pem|crt)|...)] [--prepare]
 This tools can be used to prepare a linux AppImage installer environment and eventually
 build the AppImage if appimage-builder command is installed.
 
-It need to find official glpi-agent deb files in the current folder.
+It need to find official assetsync-agent deb files in the current folder.
 
-Set VERSION to the glpi-agent used version.
+Set VERSION to the assetsync-agent used version.
 
-Typical usage where X.Y is GLPI-Agent version:
+Typical usage where X.Y is AssetSync-Agent version:
 $0 --version X.Y --prepare
 
 It is possible to include configuration related files to be installed under
-/etc/glpi-agent/conf.d and have them automatically installed. Files extensions is
+/etc/assetsync-agent/conf.d and have them automatically installed. Files extensions is
 restricted to .cfg, .pem or .crt as only these kinds of file could be really useful
 for the agent.
 
@@ -67,20 +67,20 @@ fi
 [ -d build/AppDir ] || mkdir -p build/AppDir
 
 # Copy our AppImage hook
-cp -avf contrib/unix/glpi-agent-appimage-hook build/AppDir
+cp -avf contrib/unix/assetsync-agent-appimage-hook build/AppDir
 
 # Create init service file
 [ -d build/AppDir/etc/init.d ] || mkdir -p build/AppDir/etc/init.d
-cat >build/AppDir/etc/init.d/glpi-agent <<INITD_SCRIPT
+cat >build/AppDir/etc/init.d/assetsync-agent <<INITD_SCRIPT
 #!/bin/sh
 
 installpath=/usr/local/bin
-prog=glpi-agent
-pidfile=/var/run/glpi-agent.pid
+prog=assetsync-agent
+pidfile=/var/run/assetsync-agent.pid
 
 start() {
     echo -n "Starting \$prog: "
-    \$installpath/glpi-agent --daemon --pidfile \$pidfile 2>/dev/null
+    \$installpath/assetsync-agent --daemon --pidfile \$pidfile 2>/dev/null
     echo
 }
 
@@ -120,13 +120,13 @@ case "\$1" in
 esac
 INITD_SCRIPT
 
-chmod +x build/AppDir/etc/init.d/glpi-agent
+chmod +x build/AppDir/etc/init.d/assetsync-agent
 
 # Build local repository with deb packages
-[ -d build/local/glpi-agent ] || mkdir -p build/local/glpi-agent
+[ -d build/local/assetsync-agent ] || mkdir -p build/local/assetsync-agent
 for f in *.deb
 do
-    cp -avf $f build/local/glpi-agent
+    cp -avf $f build/local/assetsync-agent
 done
 
 # Create local debian repository for appimage-builder integration
@@ -166,12 +166,12 @@ version: 1
 
 AppDir:
   app_info:
-    id: org.glpi_project.glpi_agent
-    name: glpi-agent
-    icon: glpi-agent
+    id: org.AssetSync_project.AssetSync_agent
+    name: assetsync-agent
+    icon: assetsync-agent
     version: '$VERSION'
     exec: usr/bin/perl
-    exec_args: "\$APPDIR/glpi-agent-appimage-hook \$@"
+    exec_args: "\$APPDIR/assetsync-agent-appimage-hook \$@"
 
   apt:
     arch: $DISTRO_ARCH
@@ -184,16 +184,16 @@ AppDir:
 
     include:
       - perl
-      - glpi-agent
-      - glpi-agent-task-collect
-      - glpi-agent-task-deploy
-      - glpi-agent-task-esx
-      - glpi-agent-task-network
+      - assetsync-agent
+      - assetsync-agent-task-collect
+      - assetsync-agent-task-deploy
+      - assetsync-agent-task-esx
+      - assetsync-agent-task-network
       - libcrypt-rijndael-perl
 
   after_bundle:
     - find build/AppDir -type f -name '*.pod' -delete
-    - sed -ri 's|/usr/share/glpi-agent|\$ENV{APPDIR}/usr/share/glpi-agent|' build/AppDir/usr/share/glpi-agent/lib/setup.pm build/AppDir/usr/bin/glpi-*
+    - sed -ri 's|/usr/share/assetsync-agent|\$ENV{APPDIR}/usr/share/assetsync-agent|' build/AppDir/usr/share/assetsync-agent/lib/setup.pm build/AppDir/usr/bin/assetsync-*
     - rm -f build/AppDir/usr/bin/{GET,POST,HEAD}
 
   files:
@@ -232,7 +232,7 @@ AppDir:
     env:
       LANG: C
       APPDIR_LIBRARY_PATH: \$APPDIR/lib/x86_64-linux-gnu:\$APPDIR/usr/lib/x86_64-linux-gnu
-      PERL5LIB: \$APPDIR/usr/share/glpi-agent/lib:\$APPDIR/usr/lib/x86_64-linux-gnu/perl5/5.26:\$APPDIR/usr/share/perl5:\$APPDIR/usr/lib/x86_64-linux-gnu/perl/5.26:\$APPDIR/usr/share/perl/5.26:\$APPDIR/usr/lib/x86_64-linux-gnu/perl-base
+      PERL5LIB: \$APPDIR/usr/share/assetsync-agent/lib:\$APPDIR/usr/lib/x86_64-linux-gnu/perl5/5.26:\$APPDIR/usr/share/perl5:\$APPDIR/usr/lib/x86_64-linux-gnu/perl/5.26:\$APPDIR/usr/share/perl/5.26:\$APPDIR/usr/lib/x86_64-linux-gnu/perl-base
 
 AppImage:
   update-information: None
@@ -244,17 +244,17 @@ APPIMAGEBUILDER_YAML
 
 mkdir -p build/AppDir/usr/share/metainfo
 # First insert installer version definitions
-cat >build/AppDir/usr/share/metainfo/org.glpi_project.glpi_agent.appdata.xml <<METAINFO
+cat >build/AppDir/usr/share/metainfo/org.AssetSync_project.AssetSync_agent.appdata.xml <<METAINFO
 <?xml version="1.0" encoding="UTF-8"?>
 <component>
-  <id>org.glpi_project.glpi_agent</id>
-  <name>glpi-agent</name>
-  <summary>glpi-agent is an application essentially designed to keep track of computer inventory submitting it to a GLPI server.</summary>
+  <id>org.AssetSync_project.AssetSync_agent</id>
+  <name>assetsync-agent</name>
+  <summary>assetsync-agent is an application essentially designed to keep track of computer inventory submitting it to a AssetSync server.</summary>
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-2.0-or-later</project_license>
   <description>
     <p>
-      glpi-agent is an application designed to help a network  or system administrator to keep track of the hardware and software configurations of devices.
+      assetsync-agent is an application designed to help a network  or system administrator to keep track of the hardware and software configurations of devices.
       This agent can collect information from:
       <ol>
         <li>local machine (Inventory)</li>
@@ -264,8 +264,8 @@ cat >build/AppDir/usr/share/metainfo/org.glpi_project.glpi_agent.appdata.xml <<M
       </ol>
     </p>
   </description>
-  <launchable type="service">glpi-agent</launchable>
-  <icon type="local" width="144" height="144">/usr/share/icons/144x144/glpi-agent.png</icon>
+  <launchable type="service">assetsync-agent</launchable>
+  <icon type="local" width="144" height="144">/usr/share/icons/144x144/assetsync-agent.png</icon>
   <categories>
     <category>System</category>
   </categories>
@@ -273,9 +273,9 @@ cat >build/AppDir/usr/share/metainfo/org.glpi_project.glpi_agent.appdata.xml <<M
 METAINFO
 
 # Make icons and copy logo
-if [ ! -e "build/AppDir/usr/share/icons/144x144/glpi-agent.png" ]; then
+if [ ! -e "build/AppDir/usr/share/icons/144x144/assetsync-agent.png" ]; then
     mkdir -p "build/AppDir/usr/share/icons/144x144"
-    cp -a "share/html/logo.png" "build/AppDir/usr/share/icons/144x144/glpi-agent.png"
+    cp -a "share/html/logo.png" "build/AppDir/usr/share/icons/144x144/assetsync-agent.png"
 fi
 
 if [ "$PREPARE" == "yes" ]; then

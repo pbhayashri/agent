@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Generic::Softwares::RPM;
+package AssetSync::Agent::Task::Inventory::Generic::Softwares::RPM;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use Encode qw(decode);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub isEnabled {
     return canRun('rpm');

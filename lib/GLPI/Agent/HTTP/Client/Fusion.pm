@@ -1,8 +1,8 @@
-package GLPI::Agent::HTTP::Client::Fusion;
+package AssetSync::Agent::HTTP::Client::Fusion;
 
 use strict;
 use warnings;
-use parent 'GLPI::Agent::HTTP::Client';
+use parent 'AssetSync::Agent::HTTP::Client';
 
 use English qw(-no_match_vars);
 
@@ -12,7 +12,7 @@ use HTTP::Headers;
 use HTTP::Cookies;
 use URI::Escape;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant    _log_prefix => "[http client] ";
 
@@ -139,11 +139,11 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::HTTP::Client::Fusion - An HTTP client using Fusion protocol
+AssetSync::Agent::HTTP::Client::Fusion - An HTTP client using Fusion protocol
 
 =head1 DESCRIPTION
 
-This is the object used by the agent to send messages to GLPI servers,
+This is the object used by the agent to send messages to AssetSync servers,
 using new Fusion protocol (JSON messages sent through GET requests).
 
 =head1 METHODS

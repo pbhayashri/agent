@@ -5,12 +5,12 @@ set -e
 
 case "$1" in
   configure)
-    [ -d "/etc/glpi-agent" ] || mkdir "/etc/glpi-agent"
-    [ -d "/etc/glpi-agent/conf.d" ] || mkdir "/etc/glpi-agent/conf.d"
+    [ -d "/etc/assetsync-agent" ] || mkdir "/etc/assetsync-agent"
+    [ -d "/etc/assetsync-agent/conf.d" ] || mkdir "/etc/assetsync-agent/conf.d"
     for conf in toolbox-plugin snmp-advanced-support
     do
-        ucf /usr/share/glpi-agent/etc/$conf.cfg /etc/glpi-agent/$conf.cfg
-        ucfr glpi-agent /etc/glpi-agent/$conf.cfg
+        ucf /usr/share/assetsync-agent/etc/$conf.cfg /etc/assetsync-agent/$conf.cfg
+        ucfr assetsync-agent /etc/assetsync-agent/$conf.cfg
     done
     ;;
 esac

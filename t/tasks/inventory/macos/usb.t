@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::MacOS::USB;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::MacOS::USB;
 
 my %tests = (
     IOUSBDevice1 => [
@@ -109,11 +109,11 @@ my %tests = (
 
 plan tests => (2 * scalar keys %tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %tests) {
     my $file = "resources/macos/ioreg/$test";
-    my @devices = GLPI::Agent::Task::Inventory::MacOS::USB::_getDevices(file => $file);
+    my @devices = AssetSync::Agent::Task::Inventory::MacOS::USB::_getDevices(file => $file);
     cmp_deeply(\@devices, $tests{$test}, "$test: parsing");
     lives_ok {
         $inventory->addEntry(section => 'USBDEVICES', entry => $_)

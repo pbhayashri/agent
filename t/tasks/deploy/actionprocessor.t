@@ -11,10 +11,10 @@ use File::Path qw(make_path);
 use File::Temp qw(tempdir);
 use Cwd;
 
-use GLPI::Agent::Logger;
-use GLPI::Test::Utils;
+use AssetSync::Agent::Logger;
+use AssetSync::Test::Utils;
 
-use GLPI::Agent::Task::Deploy::ActionProcessor;
+use AssetSync::Agent::Task::Deploy::ActionProcessor;
 
 my @test_paths = qw(
     folder1/
@@ -52,8 +52,8 @@ foreach my $path (@test_paths) {
 
 my $processor;
 lives_ok {
-    $processor = GLPI::Agent::Task::Deploy::ActionProcessor->new(
-        logger  => GLPI::Agent::Logger->new(logger => [ 'Test' ]),
+    $processor = AssetSync::Agent::Task::Deploy::ActionProcessor->new(
+        logger  => AssetSync::Agent::Logger->new(logger => [ 'Test' ]),
         workdir => $tmp
     );
 } "Create action processor";

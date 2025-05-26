@@ -1,15 +1,15 @@
-package GLPI::Agent::HTTP::Server::Inventory;
+package AssetSync::Agent::HTTP::Server::Inventory;
 
 use strict;
 use warnings;
 
 use English qw(-no_match_vars);
 
-use base "GLPI::Agent::HTTP::Server::Plugin";
+use base "AssetSync::Agent::HTTP::Server::Plugin";
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Task::Inventory;
-use GLPI::Agent::Target::Listener;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Task::Inventory;
+use AssetSync::Agent::Target::Listener;
 
 our $VERSION = "1.1";
 
@@ -37,14 +37,14 @@ sub defaults {
         token               => undef,
         session_timeout     => 60,
         no_compress         => "no",
-        # Supported by class GLPI::Agent::HTTP::Server::Plugin
+        # Supported by class AssetSync::Agent::HTTP::Server::Plugin
         maxrate             => 30,
         maxrate_period      => 3600,
         forbid_not_trusted  => "no",
     };
 }
 
-# Don't publish an url on glpi-agent index page
+# Don't publish an url on assetsync-agent index page
 sub url {}
 
 sub init {
@@ -72,7 +72,7 @@ sub init {
 
     # Always uses a dedicated Listener target for this plugin. It will give access
     # to stored sessions
-    $self->{target} = GLPI::Agent::Target::Listener->new(
+    $self->{target} = AssetSync::Agent::Target::Listener->new(
         logger     => $self->{logger},
         basevardir => $self->{server}->{agent}->{config}->{vardir},
     ) unless $self->{target};
@@ -171,7 +171,7 @@ sub handle {
 
     my $agent = $self->{server}->{agent};
 
-    my $task = GLPI::Agent::Task::Inventory->new(
+    my $task = AssetSync::Agent::Task::Inventory->new(
         logger   => $logger,
         target   => $target,
         deviceid => $agent->{deviceid},
@@ -241,7 +241,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::HTTP::Server::Inventory - An embedded HTTP server plugin
+AssetSync::Agent::HTTP::Server::Inventory - An embedded HTTP server plugin
 providing remote inventory
 
 =head1 DESCRIPTION

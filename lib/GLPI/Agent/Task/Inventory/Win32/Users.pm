@@ -1,15 +1,15 @@
-package GLPI::Agent::Task::Inventory::Win32::Users;
+package AssetSync::Agent::Task::Inventory::Win32::Users;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Win32;
-use GLPI::Agent::Tools::Win32::Users;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Win32;
+use AssetSync::Agent::Tools::Win32::Users;
 
 use constant    other_categories
                             => qw(local_user local_group);

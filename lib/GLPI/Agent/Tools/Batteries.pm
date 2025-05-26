@@ -1,12 +1,12 @@
-package GLPI::Agent::Tools::Batteries;
+package AssetSync::Agent::Tools::Batteries;
 
 use strict;
 use warnings;
 
 use parent 'Exporter';
 
-use GLPI::Agent::Inventory;
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Inventory;
+use AssetSync::Agent::Tools;
 
 our @EXPORT = qw(
     batteryFields
@@ -21,7 +21,7 @@ sub batteryFields {
 
     unless  (@fields) {
         # Initialize Batteries expected fields from an Inventory object
-        my $inventory = GLPI::Agent::Inventory->new();
+        my $inventory = AssetSync::Agent::Inventory->new();
         @fields = keys(%{$inventory->getFields()->{'BATTERIES'}});
     }
 
@@ -92,13 +92,13 @@ sub getCanonicalCapacity {
 package
     Inventory::Batteries;
 
-use GLPI::Agent::Logger;
+use AssetSync::Agent::Logger;
 
 sub new {
     my ($class, %params) = @_;
 
     my $self = {
-        logger  => $params{logger} || GLPI::Agent::Logger->new(),
+        logger  => $params{logger} || AssetSync::Agent::Logger->new(),
         list    => {},
     };
 
@@ -163,7 +163,7 @@ sub list {
 package
     Battery;
 
-use GLPI::Agent::Logger;
+use AssetSync::Agent::Logger;
 
 sub new {
     my ($class, $battery) = @_;
@@ -172,7 +172,7 @@ sub new {
 
     return unless ref($battery) eq 'HASH';
 
-    $battery->{logger} = GLPI::Agent::Logger->new()
+    $battery->{logger} = AssetSync::Agent::Logger->new()
         unless $battery->{logger};
 
     bless $battery, $class;
@@ -203,7 +203,7 @@ sub model {
 
 sub merge {
     my ($self, $battery) = @_;
-    foreach my $key (GLPI::Agent::Tools::Batteries::batteryFields()) {
+    foreach my $key (AssetSync::Agent::Tools::Batteries::batteryFields()) {
         next unless $battery->{$key};
         # Don't replace value is they are the same, case insensitive check
         next if (defined($self->{$key}) && $battery->{$key} =~ /^$self->{$key}$/i);
@@ -220,7 +220,7 @@ sub dump {
 
     my $dump = {};
 
-    foreach my $key (GLPI::Agent::Tools::Batteries::batteryFields()) {
+    foreach my $key (AssetSync::Agent::Tools::Batteries::batteryFields()) {
         next unless exists($self->{$key});
         $dump->{$key} = $self->{$key};
     }
@@ -233,7 +233,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::Batteries
+AssetSync::Agent::Tools::Batteries
 
 =head1 DESCRIPTION
 

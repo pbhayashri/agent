@@ -7,29 +7,29 @@ use Test::Deep;
 use Test::Exception;
 use Test::More;
 
-use GLPI::Agent::XML;
-use GLPI::Agent::XML::Query::Prolog;
+use AssetSync::Agent::XML;
+use AssetSync::Agent::XML::Query::Prolog;
 
 plan tests => 5;
 
 my $message;
 
 throws_ok {
-    $message = GLPI::Agent::XML::Query::Prolog->new(
+    $message = AssetSync::Agent::XML::Query::Prolog->new(
     );
 } qr/^no deviceid/, 'no device id';
 
 lives_ok {
-    $message = GLPI::Agent::XML::Query::Prolog->new(
+    $message = AssetSync::Agent::XML::Query::Prolog->new(
         deviceid => 'foo',
     );
 } 'everything OK';
 
-isa_ok($message, 'GLPI::Agent::XML::Query::Prolog');
+isa_ok($message, 'AssetSync::Agent::XML::Query::Prolog');
 
-my $xml = GLPI::Agent::XML->new(string => $message->getContent());
+my $xml = AssetSync::Agent::XML->new(string => $message->getContent());
 
-isa_ok($xml, 'GLPI::Agent::XML');
+isa_ok($xml, 'AssetSync::Agent::XML');
 
 cmp_deeply(
     $xml->dump_as_hash(),

@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Inventory::Generic::Databases::MSSQL;
+package AssetSync::Agent::Task::Inventory::Generic::Databases::MSSQL;
 
 use English qw(-no_match_vars);
 
@@ -7,10 +7,10 @@ use warnings;
 
 use UNIVERSAL::require;
 
-use parent 'GLPI::Agent::Task::Inventory::Generic::Databases';
+use parent 'AssetSync::Agent::Task::Inventory::Generic::Databases';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Inventory::DatabaseService;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Inventory::DatabaseService;
 
 sub isEnabled {
     return canRun('sqlcmd') ||
@@ -23,7 +23,7 @@ sub doInventory {
     my $inventory = $params{inventory};
 
     # Try to retrieve credentials updating params
-    GLPI::Agent::Task::Inventory::Generic::Databases::_credentials(\%params, "mssql");
+    AssetSync::Agent::Task::Inventory::Generic::Databases::_credentials(\%params, "mssql");
 
     my $dbservices = _getDatabaseService(%params);
 
@@ -45,8 +45,8 @@ sub _getDatabaseService {
     if (@{$credentials} == 1 && !keys(%{$credentials->[0]})) {
         # On windows, we can discover instance names in registry
         if (OSNAME eq 'MSWin32') {
-            GLPI::Agent::Tools::Win32->require();
-            my $instances = GLPI::Agent::Tools::Win32::getRegistryKey(
+            AssetSync::Agent::Tools::Win32->require();
+            my $instances = AssetSync::Agent::Tools::Win32::getRegistryKey(
                 path => 'HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/Microsoft SQL Server/Instance Names/SQL',
             );
             foreach my $key (%{$instances}) {
@@ -75,7 +75,7 @@ sub _getDatabaseService {
         unless canRun('sqlcmd');
 
     foreach my $credential (@{$credentials}) {
-        GLPI::Agent::Task::Inventory::Generic::Databases::trying_credentials($params{logger}, $credential);
+        AssetSync::Agent::Task::Inventory::Generic::Databases::trying_credentials($params{logger}, $credential);
         $params{options} = _mssqlOptions($credential) // "-l 5";
 
         my $productversion = _runSql(
@@ -108,7 +108,7 @@ sub _getDatabaseService {
         );
         $starttime =~ s/\..*$//;
 
-        my $dbs = GLPI::Agent::Inventory::DatabaseService->new(
+        my $dbs = AssetSync::Agent::Inventory::DatabaseService->new(
             type            => "mssql",
             name            => $name,
             version         => $productversion,

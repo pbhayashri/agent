@@ -1,15 +1,15 @@
-package GLPI::Agent::Task::Inventory::Generic::Remote_Mgmt::RustDesk;
+package AssetSync::Agent::Task::Inventory::Generic::Remote_Mgmt::RustDesk;
 
 # Based on the work done by Ilya published on no more existing https://fusioninventory.userecho.com site
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub _get_rustdesk_config {
     return OSNAME eq 'MSWin32' ?
@@ -39,8 +39,8 @@ sub doInventory {
     unless (defined($RustDeskID) && length($RustDeskID)) {
         my $command = 'rustdesk';
         if(OSNAME eq 'MSWin32'){
-            GLPI::Agent::Tools::Win32->require();
-            my $installLocation = GLPI::Agent::Tools::Win32::getRegistryValue(
+            AssetSync::Agent::Tools::Win32->require();
+            my $installLocation = AssetSync::Agent::Tools::Win32::getRegistryValue(
                 path   => "HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/Windows/CurrentVersion/Uninstall/RustDesk/InstallLocation",
                 logger => $logger
             );

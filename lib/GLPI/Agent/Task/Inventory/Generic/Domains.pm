@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::Generic::Domains;
+package AssetSync::Agent::Task::Inventory::Generic::Domains;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Hostname;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Hostname;
 
 use constant    category    => "hardware";
 

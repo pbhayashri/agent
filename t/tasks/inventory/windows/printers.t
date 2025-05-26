@@ -9,7 +9,7 @@ use Test::More;
 use Test::MockModule;
 use UNIVERSAL::require;
 
-use GLPI::Test::Utils;
+use AssetSync::Test::Utils;
 
 BEGIN {
     # use mock modules for non-available ones
@@ -24,7 +24,7 @@ if (!$Config{usethreads} || $Config{usethreads} ne 'define') {
 
 Test::NoWarnings->use();
 
-GLPI::Agent::Task::Inventory::Win32::Printers->require();
+AssetSync::Agent::Task::Inventory::Win32::Printers->require();
 
 my %tests = (
     xppro1 => {
@@ -58,7 +58,7 @@ foreach my $test (keys %tests) {
 plan tests => $plan;
 
 my $module = Test::MockModule->new(
-    'GLPI::Agent::Task::Inventory::Win32::Printers'
+    'AssetSync::Agent::Task::Inventory::Win32::Printers'
 );
 
 foreach my $test (keys %tests) {
@@ -69,7 +69,7 @@ foreach my $test (keys %tests) {
 
     foreach my $port (keys %{$tests{$test}}) {
         is(
-            GLPI::Agent::Task::Inventory::Win32::Printers::_getUSBPrinterSerial($port),
+            AssetSync::Agent::Task::Inventory::Win32::Printers::_getUSBPrinterSerial($port),
             $tests{$test}->{$port},
             "$test sample, $port printer"
         );

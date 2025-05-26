@@ -1,19 +1,19 @@
-package GLPI::Agent::Tools::Screen;
+package AssetSync::Agent::Tools::Screen;
 
 use strict;
 use warnings;
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools::Generic;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools::Generic;
 
 sub new {
     my ($class, %params) = @_;
 
     my $self = {
         logger        => $params{logger} ||
-                         GLPI::Agent::Logger->new(),
+                         AssetSync::Agent::Logger->new(),
         edid          => $params{edid},
     };
     bless $self, $class;
@@ -120,7 +120,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Screen - Base class for screen object
+AssetSync::Agent::Screen - Base class for screen object
 
 =head1 DESCRIPTION
 

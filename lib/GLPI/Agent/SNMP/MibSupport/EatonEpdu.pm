@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::EatonEpdu;
+package AssetSync::Agent::SNMP::MibSupport::EatonEpdu;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 # See EATON-EPDU-MIB
 
@@ -46,7 +46,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::EatonEpdu - Inventory module for Eaton ePDUs
+AssetSync::Agent::SNMP::MibSupport::EatonEpdu - Inventory module for Eaton ePDUs
 
 =head1 DESCRIPTION
 

@@ -1,8 +1,8 @@
-package GLPI::Agent::Task::Collect;
+package AssetSync::Agent::Task::Collect;
 
 use strict;
 use warnings;
-use parent 'GLPI::Agent::Task';
+use parent 'AssetSync::Agent::Task';
 
 use Digest::SHA;
 use English qw(-no_match_vars);
@@ -10,14 +10,14 @@ use File::Basename;
 use File::Find;
 use File::stat;
 
-use GLPI::Agent;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools;
-use GLPI::Agent::HTTP::Client::Fusion;
+use AssetSync::Agent;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::HTTP::Client::Fusion;
 
-use GLPI::Agent::Task::Collect::Version;
+use AssetSync::Agent::Task::Collect::Version;
 
-our $VERSION = GLPI::Agent::Task::Collect::Version::VERSION;
+our $VERSION = AssetSync::Agent::Task::Collect::Version::VERSION;
 
 my %functions = (
     getFromRegistry => \&_getFromRegistry,
@@ -155,7 +155,7 @@ sub run {
     # Just reset event if run as an event to not trigger another one
     $self->resetEvent();
 
-    $self->{client} = GLPI::Agent::HTTP::Client::Fusion->new(
+    $self->{client} = AssetSync::Agent::HTTP::Client::Fusion->new(
         logger  => $self->{logger},
         config  => $self->{config},
     );
@@ -271,7 +271,7 @@ JOB:
             $result->{uuid}   = $job->{uuid};
             $result->{action} = "setAnswer";
             $result->{_cpt}   = $count;
-            $result->{_glpi_csrf_token} = $token
+            $result->{_AssetSync_csrf_token} = $token
                 if $token ;
             $result->{_sid}   = $job->{_sid}
                 if (exists($job->{_sid}));
@@ -350,14 +350,14 @@ my @RegistryType = qw/REG_NONE  REG_SZ  REG_EXPAND_SZ   REG_BINARY  REG_DWORD
 sub _getFromRegistry {
     my %params = @_;
 
-    return unless GLPI::Agent::Tools::Win32->require();
+    return unless AssetSync::Agent::Tools::Win32->require();
 
     $params{logger}->debug("Looking for '$params{path}' registry key...")
         if $params{logger};
 
     # Here we need to retrieve values with their type, getRegistryValue API
     # has been modify to support withtype flag as param
-    my $values = GLPI::Agent::Tools::Win32::getRegistryValue(
+    my $values = AssetSync::Agent::Tools::Win32::getRegistryValue(
         path     => $params{path},
         withtype => 1
     );
@@ -517,7 +517,7 @@ sub _runCommand {
 sub _getFromWMI {
     my %params = @_;
 
-    return unless GLPI::Agent::Tools::Win32->require();
+    return unless AssetSync::Agent::Tools::Win32->require();
 
     return unless $params{properties};
     return unless $params{class};
@@ -528,7 +528,7 @@ sub _getFromWMI {
 
     my @results;
 
-    my @objects = GLPI::Agent::Tools::Win32::getWMIObjects(%params);
+    my @objects = AssetSync::Agent::Tools::Win32::getWMIObjects(%params);
     foreach my $object (@objects) {
         push @results, $object;
     }

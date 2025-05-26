@@ -1,15 +1,15 @@
-package GLPI::Agent::Task::RemoteInventory;
+package AssetSync::Agent::Task::RemoteInventory;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory';
+use parent 'AssetSync::Agent::Task::Inventory';
 
 use English qw(-no_match_vars);
 use Parallel::ForkManager;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Task::RemoteInventory::Remotes;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Task::RemoteInventory::Remotes;
 
 sub isEnabled {
     my ($self) = @_;
@@ -26,7 +26,7 @@ sub isEnabled {
     # Always enable remoteinventory task if remote option is set
     return 1 if $self->{config}->{remote};
 
-    my $remotes = GLPI::Agent::Task::RemoteInventory::Remotes->new(
+    my $remotes = AssetSync::Agent::Task::RemoteInventory::Remotes->new(
         config  => $self->{config},
         storage => $self->{target}->getStorage(),
         logger  => $self->{logger},
@@ -51,7 +51,7 @@ sub run {
         my $name = $event->name;
         my $targetid = $self->{target}->id;
         $self->{logger}->debug("Inventory task $name event for $targetid target");
-        my $remoteinv = GLPI::Agent::Inventory->new(
+        my $remoteinv = AssetSync::Agent::Inventory->new(
             statedir => $self->{target}->getStorage()->getDirectory(),
             logger   => $self->{logger},
             itemtype => empty($self->{config}->{'itemtype'}) ? "Computer" : $self->{config}->{'itemtype'},
@@ -68,7 +68,7 @@ sub run {
         return;
     }
 
-    my $remotes = GLPI::Agent::Task::RemoteInventory::Remotes->new(
+    my $remotes = AssetSync::Agent::Task::RemoteInventory::Remotes->new(
         config  => $self->{config},
         storage => $self->{target}->getStorage(),
         logger  => $self->{logger},
@@ -161,7 +161,7 @@ sub run {
 sub newEvent {
     my ($self) = @_;
 
-    return GLPI::Agent::Event->new(
+    return AssetSync::Agent::Event->new(
         name        => "remoteinventory maintenance",
         task        => "remoteinventory",
         maintenance => "yes",

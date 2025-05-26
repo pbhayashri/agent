@@ -1,20 +1,20 @@
-package GLPI::Agent::Task::Inventory::Generic::Remote_Mgmt::SupRemo;
+package AssetSync::Agent::Task::Inventory::Generic::Remote_Mgmt::SupRemo;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub isEnabled {
     my (%params) = @_;
 
     if (OSNAME eq 'MSWin32') {
 
-        GLPI::Agent::Tools::Win32->use();
+        AssetSync::Agent::Tools::Win32->use();
 
         # Depending on the installation the supremo key can be in two place in X64 OS
 
@@ -67,7 +67,7 @@ sub doInventory {
 
 sub _getID_MSWin32 {
 
-    GLPI::Agent::Tools::Win32->use();
+    AssetSync::Agent::Tools::Win32->use();
 
     my $clientid = getRegistryValue(
         path => "HKEY_LOCAL_MACHINE/SOFTWARE/Supremo/ClientID",

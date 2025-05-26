@@ -1,8 +1,8 @@
 # This file is not read but should reference any string that could be translated
 
 Home:
-GLPI Agent:
-ToolBox GLPI Agent plugin:
+AssetSync Agent:
+ToolBox AssetSync Agent plugin:
 Inventory:
 Results:
 Raw YAML:

@@ -6,9 +6,9 @@ use Test::Deep;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Tools::Batteries;
-use GLPI::Agent::Task::Inventory::Generic::Batteries::Acpiconf;
-use GLPI::Agent::Task::Inventory::Generic::Dmidecode::Battery;
+use AssetSync::Agent::Tools::Batteries;
+use AssetSync::Agent::Task::Inventory::Generic::Batteries::Acpiconf;
+use AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Battery;
 
 my %testAcpiconfInfos = (
     'infos_1.txt' => {
@@ -57,7 +57,7 @@ plan tests =>
     1;
 
 foreach my $test (keys %testAcpiconfInfos) {
-    my $battery = GLPI::Agent::Task::Inventory::Generic::Batteries::Acpiconf::_getBatteryFromAcpiconf(
+    my $battery = AssetSync::Agent::Task::Inventory::Generic::Batteries::Acpiconf::_getBatteryFromAcpiconf(
         file => 'resources/generic/batteries/acpiconf/' . $test
     );
     cmp_deeply(
@@ -73,7 +73,7 @@ foreach my $test (keys %testAcpiconfMerged) {
 
     # Prepare batteries list like it should be after dmidecode passed
     map { $list->add($_) }
-        GLPI::Agent::Task::Inventory::Generic::Dmidecode::Battery::_getBatteries(
+        AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Battery::_getBatteries(
             file => 'resources/generic/batteries/acpiconf/' . $dmidecode
         );
     cmp_deeply(
@@ -83,7 +83,7 @@ foreach my $test (keys %testAcpiconfMerged) {
     );
 
     foreach my $file (@{$testAcpiconfMerged{$test}->{acpiconflist}}) {
-        my $battery = GLPI::Agent::Task::Inventory::Generic::Batteries::Acpiconf::_getBatteryFromAcpiconf(
+        my $battery = AssetSync::Agent::Task::Inventory::Generic::Batteries::Acpiconf::_getBatteryFromAcpiconf(
             file => 'resources/generic/batteries/acpiconf/' . $file
         );
         $list->merge($battery);

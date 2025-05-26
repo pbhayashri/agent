@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::Win32::WTS;
+package AssetSync::Agent::Tools::Win32::WTS;
 
 use strict;
 use warnings;
@@ -8,7 +8,7 @@ use UNIVERSAL::require();
 use English qw(-no_match_vars);
 
 use Encode;
-use GLPI::Agent::Tools::Win32;
+use AssetSync::Agent::Tools::Win32;
 
 use constant WTS_CURRENT_SERVER_HANDLE  => 0x00000000;
 

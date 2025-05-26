@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::AIX;
+package AssetSync::Agent::Tools::AIX;
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use parent 'Exporter';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 our @EXPORT = qw(
     getLsvpdInfos
@@ -106,7 +106,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::AIX - AIX generic functions
+AssetSync::Agent::Tools::AIX - AIX generic functions
 
 =head1 DESCRIPTION
 

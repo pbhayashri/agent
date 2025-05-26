@@ -1,9 +1,9 @@
-package GLPI::Agent::Tools::Hardware::Qlogic;
+package AssetSync::Agent::Tools::Hardware::Qlogic;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::Tools::SNMP qw/getCanonicalMacAddress getCanonicalSerialNumber/;
+use AssetSync::Agent::Tools::SNMP qw/getCanonicalMacAddress getCanonicalSerialNumber/;
 
 sub run {
    my (%params) = @_;
@@ -94,7 +94,7 @@ sub getConnectedWWNs {
         $wwn = getCanonicalMacAddress($wwn);
         next unless $wwn;
 
-        my $idx = GLPI::Agent::Tools::Hardware::_getElement($suffix, 0);
+        my $idx = AssetSync::Agent::Tools::Hardware::_getElement($suffix, 0);
         next unless $idx;
 
         push @{$results->{$idx}}, $wwn;
@@ -121,7 +121,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::Hardware::Qlogic - Inventory module for Qlogic fibre channel switches
+AssetSync::Agent::Tools::Hardware::Qlogic - Inventory module for Qlogic fibre channel switches
 
 =head1 DESCRIPTION
 

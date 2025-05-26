@@ -10,8 +10,8 @@ use Test::More;
 use Test::NoWarnings;
 use Test::MockModule;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::AIX::Bios;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::AIX::Bios;
 
 my %tests = (
     'aix-5.3a' => {
@@ -109,10 +109,10 @@ my %tests = (
 plan tests => (2 * scalar keys %tests) + 1;
 
 my $module = Test::MockModule->new(
-    'GLPI::Agent::Task::Inventory::AIX::Bios'
+    'AssetSync::Agent::Task::Inventory::AIX::Bios'
 );
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %tests) {
     my ($file) = $test =~ /^(\S+)/;
@@ -143,7 +143,7 @@ foreach my $test (keys %tests) {
         }
     );
 
-    my $infos = GLPI::Agent::Task::Inventory::AIX::Bios::_getInfos(file => $lsvpd_file);
+    my $infos = AssetSync::Agent::Task::Inventory::AIX::Bios::_getInfos(file => $lsvpd_file);
     cmp_deeply($infos, $tests{$test}->{infos}, "$test: parsing");
 
     lives_ok {

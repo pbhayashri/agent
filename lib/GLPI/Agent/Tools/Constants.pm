@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::Constants;
+package AssetSync::Agent::Tools::Constants;
 
 use strict;
 use warnings;

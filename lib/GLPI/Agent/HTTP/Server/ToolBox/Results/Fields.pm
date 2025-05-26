@@ -1,4 +1,4 @@
-package GLPI::Agent::HTTP::Server::ToolBox::Results::Fields;
+package AssetSync::Agent::HTTP::Server::ToolBox::Results::Fields;
 
 use strict;
 use warnings;
@@ -15,7 +15,7 @@ sub new {
 
     my $self = {
         logger  => $params{results}->{logger} ||
-                    GLPI::Agent::Logger->new(),
+                    AssetSync::Agent::Logger->new(),
         results => $params{results},
         _name   => $name,
     };

@@ -1,14 +1,14 @@
-package GLPI::Agent::Task::Inventory::HPUX::CPU;
+package AssetSync::Agent::Task::Inventory::HPUX::CPU;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::HPUX;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::HPUX;
 
 use constant    category    => "cpu";
 

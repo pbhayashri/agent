@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Deploy::CheckProcessor::WinKeyExists;
+package AssetSync::Agent::Task::Deploy::CheckProcessor::WinKeyExists;
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use warnings;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
-use parent "GLPI::Agent::Task::Deploy::CheckProcessor";
+use parent "AssetSync::Agent::Task::Deploy::CheckProcessor";
 
 sub prepare {
     my ($self) = @_;
@@ -23,7 +23,7 @@ sub success {
     $self->on_failure("check only available on windows");
     return 0 unless $OSNAME eq 'MSWin32';
 
-    GLPI::Agent::Tools::Win32->require();
+    AssetSync::Agent::Tools::Win32->require();
     if ($EVAL_ERROR) {
         $self->on_failure("failed to load Win32 tools: $EVAL_ERROR");
         return 0;
@@ -34,7 +34,7 @@ sub success {
     $self->on_failure("registry path not supported: ".$self->{path});
     return 0 unless (defined($parent));
     $self->on_failure("missing parent registry key: ".$parent.'/');
-    my $parent_key = GLPI::Agent::Tools::Win32::getRegistryKey(
+    my $parent_key = AssetSync::Agent::Tools::Win32::getRegistryKey(
         path => $parent
     );
     return 0 unless (defined($parent_key));

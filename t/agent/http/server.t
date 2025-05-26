@@ -15,27 +15,27 @@ use UNIVERSAL::require;
 use Time::HiRes qw(usleep);
 use Net::IP;
 
-use GLPI::Test::Agent;
-use GLPI::Agent::HTTP::Server;
-use GLPI::Agent::Logger;
-use GLPI::Test::Utils;
+use AssetSync::Test::Agent;
+use AssetSync::Agent::HTTP::Server;
+use AssetSync::Agent::Logger;
+use AssetSync::Test::Utils;
 
 plan skip_all => 'Not working on github action windows image'
     if $OSNAME eq 'MSWin32' && exists($ENV{GITHUB_ACTIONS});
 
 plan tests => 21;
 
-my $logger = GLPI::Agent::Logger->new(
+my $logger = AssetSync::Agent::Logger->new(
     logger => [ 'Test' ]
 );
 
 my $server;
 
-my $module = Test::MockModule->new('GLPI::Agent::HTTP::Server');
+my $module = Test::MockModule->new('AssetSync::Agent::HTTP::Server');
 
 lives_ok {
-    $server = GLPI::Agent::HTTP::Server->new(
-        agent     => GLPI::Test::Agent->new(),
+    $server = AssetSync::Agent::HTTP::Server->new(
+        agent     => AssetSync::Test::Agent->new(),
         ip        => '127.0.0.1',
         logger    => $logger,
         htmldir   => 'share/html'
@@ -64,8 +64,8 @@ if (my $pid = fork()) {
 }
 
 lives_ok {
-    $server = GLPI::Agent::HTTP::Server->new(
-        agent     => GLPI::Test::Agent->new(),
+    $server = AssetSync::Agent::HTTP::Server->new(
+        agent     => AssetSync::Test::Agent->new(),
         ip        => '127.0.0.1',
         logger    => $logger,
         htmldir   => 'share/html',
@@ -94,8 +94,8 @@ ok (
 );
 
 lives_ok {
-    $server = GLPI::Agent::HTTP::Server->new(
-        agent     => GLPI::Test::Agent->new(),
+    $server = AssetSync::Agent::HTTP::Server->new(
+        agent     => AssetSync::Test::Agent->new(),
         ip        => '127.0.0.1',
         logger    => $logger,
         htmldir   => 'share/html',
@@ -153,11 +153,11 @@ ok (
 );
 
 # find an available port
-my $port = GLPI::Agent::Tools::first { test_port($_) } 8080 .. 8180;
+my $port = AssetSync::Agent::Tools::first { test_port($_) } 8080 .. 8180;
 
 lives_ok {
-    $server = GLPI::Agent::HTTP::Server->new(
-        agent     => GLPI::Test::Agent->new(),
+    $server = AssetSync::Agent::HTTP::Server->new(
+        agent     => AssetSync::Test::Agent->new(),
         ip        => '127.0.0.1',
         logger    => $logger,
         port      => $port,

@@ -1,9 +1,9 @@
-package GLPI::Agent::Logger::Stderr;
+package AssetSync::Agent::Logger::Stderr;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Logger::Backend';
+use parent 'AssetSync::Agent::Logger::Backend';
 
 use English qw(-no_match_vars);
 
@@ -44,7 +44,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Logger::Stderr - A stderr backend for the logger
+AssetSync::Agent::Logger::Stderr - A stderr backend for the logger
 
 =head1 DESCRIPTION
 

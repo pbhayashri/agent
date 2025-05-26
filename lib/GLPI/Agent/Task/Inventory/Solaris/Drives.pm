@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::Solaris::Drives;
+package AssetSync::Agent::Task::Inventory::Solaris::Drives;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Unix;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Unix;
 
 use constant    category    => "drive";
 

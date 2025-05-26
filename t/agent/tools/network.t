@@ -5,7 +5,7 @@ use warnings;
 
 use Test::More;
 
-use GLPI::Agent::Tools::Network;
+use AssetSync::Agent::Tools::Network;
 
 my @network_ok_tests = qw(
     10.0.0.0/32

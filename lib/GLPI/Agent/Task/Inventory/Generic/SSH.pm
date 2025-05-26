@@ -1,11 +1,11 @@
-package GLPI::Agent::Task::Inventory::Generic::SSH;
+package AssetSync::Agent::Task::Inventory::Generic::SSH;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant    category    => "os";
 

@@ -1,11 +1,11 @@
-package GLPI::Agent::Task::Inventory::Linux::Distro::OSRelease;
+package AssetSync::Agent::Task::Inventory::Linux::Distro::OSRelease;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub isEnabled {
     return canRead('/etc/os-release');

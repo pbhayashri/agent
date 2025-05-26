@@ -36,7 +36,7 @@ sub build_steps {
             {
                 plugin  => 'Perl::Dist::Strawberry::Step::BuildLibrary',
                 name    => 'ca',
-                version => '__GLPI_AGENT_VERSION__',
+                version => '__AssetSync_AGENT_VERSION__',
                 folder  => 'contrib/windows/packaging/tools/ca',
                 skip_if_file    => 'tools/ca/ca.dll',
                 manifest        => 'dll/ca.dll.manifest',

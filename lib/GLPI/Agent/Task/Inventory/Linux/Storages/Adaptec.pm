@@ -1,16 +1,16 @@
-package GLPI::Agent::Task::Inventory::Linux::Storages::Adaptec;
+package AssetSync::Agent::Task::Inventory::Linux::Storages::Adaptec;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Linux;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Linux;
 
-our $runMeIfTheseChecksFailed = ['GLPI::Agent::Task::Inventory::Linux::Storages'];
+our $runMeIfTheseChecksFailed = ['AssetSync::Agent::Task::Inventory::Linux::Storages'];
 
 sub isEnabled {
     return canRead('/proc/scsi/scsi');

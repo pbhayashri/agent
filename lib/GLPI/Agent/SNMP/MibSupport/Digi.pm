@@ -1,9 +1,9 @@
-package GLPI::Agent::SNMP::MibSupport::Digi;
+package AssetSync::Agent::SNMP::MibSupport::Digi;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
 # Constants extracted from Digi Sarian-Monitor.mib
 use constant    sarianMonitor   => ".1.3.6.1.4.1.16378.10000" ;
@@ -67,7 +67,7 @@ sub run {
                 if ($mcc) {
                     $simcard->{OPERATOR_CODE} = "$mcc.$mnc" if $mnc;
                     $simcard->{COUNTRY} = getCountryMCC($mcc)
-                        if GLPI::Agent::Tools::Standards::MobileCountryCode->use();
+                        if AssetSync::Agent::Tools::Standards::MobileCountryCode->use();
                 }
             }
 
@@ -111,7 +111,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Digi - Inventory module for Digi modems and associated sim cards & firmwares
+AssetSync::Agent::SNMP::MibSupport::Digi - Inventory module for Digi modems and associated sim cards & firmwares
 
 =head1 DESCRIPTION
 

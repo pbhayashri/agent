@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::RemoteInventory::Version;
+package AssetSync::Agent::Task::RemoteInventory::Version;
 
 use strict;
 use warnings;

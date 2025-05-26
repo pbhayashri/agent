@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Raritan;
+package AssetSync::Agent::SNMP::MibSupport::Raritan;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 use constant    raritan => '.1.3.6.1.4.1.13742' ;
 use constant    pdu2    => raritan . '.6' ;
@@ -56,7 +56,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Raritan - Inventory module for Raritan Pdu devices
+AssetSync::Agent::SNMP::MibSupport::Raritan - Inventory module for Raritan Pdu devices
 
 =head1 DESCRIPTION
 

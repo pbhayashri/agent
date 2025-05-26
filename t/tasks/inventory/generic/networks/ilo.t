@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Generic::Networks::iLO;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Generic::Networks::iLO;
 
 my %tests = (
     'sample1' => {
@@ -35,11 +35,11 @@ my %tests = (
 
 plan tests => (2 * scalar keys %tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %tests) {
     my $file = "resources/linux/hponcfg/$test";
-    my $interface = GLPI::Agent::Task::Inventory::Generic::Networks::iLO::_parseHponcfg(file => $file);
+    my $interface = AssetSync::Agent::Task::Inventory::Generic::Networks::iLO::_parseHponcfg(file => $file);
     cmp_deeply($interface, $tests{$test}, $test);
     lives_ok {
         $inventory->addEntry(section => 'NETWORKS', entry => $interface);

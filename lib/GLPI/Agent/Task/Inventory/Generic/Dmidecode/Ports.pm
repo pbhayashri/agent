@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::Generic::Dmidecode::Ports;
+package AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Ports;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Generic;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Generic;
 
 use constant    category    => "port";
 

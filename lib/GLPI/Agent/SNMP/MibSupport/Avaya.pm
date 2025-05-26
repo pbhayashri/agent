@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Avaya;
+package AssetSync::Agent::SNMP::MibSupport::Avaya;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 # Constants extracted from Avaya Avaya-J100IpPhone-MIB.mib
 use constant    avaya   => ".1.3.6.1.4.1.6889" ;
@@ -129,7 +129,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Avaya - Inventory module for Avaya devices
+AssetSync::Agent::SNMP::MibSupport::Avaya - Inventory module for Avaya devices
 
 =head1 DESCRIPTION
 

@@ -1,14 +1,14 @@
-package GLPI::Agent::Task::Inventory::Virtualization::XenCitrixServer;
+package AssetSync::Agent::Task::Inventory::Virtualization::XenCitrixServer;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Virtualization;
 
-our $runMeIfTheseChecksFailed = ["GLPI::Agent::Task::Inventory::Virtualization::Libvirt"];
+our $runMeIfTheseChecksFailed = ["AssetSync::Agent::Task::Inventory::Virtualization::Libvirt"];
 
 sub isEnabled {
     return canRun('xe');

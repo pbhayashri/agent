@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Linux::Storages::Megaraid;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Linux::Storages::Megaraid;
 
 my %tests = (
     sample => [
@@ -67,11 +67,11 @@ my %tests = (
 
 plan tests => (2 * scalar keys %tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %tests) {
     my $file = "resources/linux/megasasctl/$test";
-    my @disks = GLPI::Agent::Task::Inventory::Linux::Storages::Megaraid::_parseMegasasctl(
+    my @disks = AssetSync::Agent::Task::Inventory::Linux::Storages::Megaraid::_parseMegasasctl(
         file       => $file
     );
     cmp_deeply(\@disks, $tests{$test}, "$test: parsing");

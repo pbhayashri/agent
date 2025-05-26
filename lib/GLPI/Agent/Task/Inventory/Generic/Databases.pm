@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::Inventory::Generic::Databases;
+package AssetSync::Agent::Task::Inventory::Generic::Databases;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use UNIVERSAL::require;
 use English qw(-no_match_vars);
@@ -28,23 +28,23 @@ sub _credentials {
 
     if ($params) {
         foreach my $param (@{$params}) {
-            my $url = $param->{_glpi_url}
+            my $url = $param->{_AssetSync_url}
                 or next;
-            next unless $param->{params_id} && $param->{_glpi_client};
+            next unless $param->{params_id} && $param->{_AssetSync_client};
             next unless $param->{category} && $param->{category} eq "database";
             next unless $param->{use} && grep { $_ eq $usage } @{$param->{use}};
-            GLPI::Agent::Protocol::GetParams->require();
+            AssetSync::Agent::Protocol::GetParams->require();
             if ($EVAL_ERROR) {
                 $logger->error("Can't request credentials on $url")
                     if $logger;
                 last;
             }
-            my $getparams = GLPI::Agent::Protocol::GetParams->new(
+            my $getparams = AssetSync::Agent::Protocol::GetParams->new(
                 deviceid    => $hashref->{inventory}->getDeviceId(),
                 params_id   => $param->{params_id},
                 use         => $usage,
             );
-            my $answer = $param->{_glpi_client}->send(
+            my $answer = $param->{_AssetSync_client}->send(
                 url     => $url,
                 message => $getparams
             );

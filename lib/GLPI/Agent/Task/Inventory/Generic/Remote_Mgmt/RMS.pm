@@ -1,21 +1,21 @@
-package GLPI::Agent::Task::Inventory::Generic::Remote_Mgmt::RMS;
+package AssetSync::Agent::Task::Inventory::Generic::Remote_Mgmt::RMS;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub isEnabled {
     my (%params) = @_;
 
     return 0 unless OSNAME eq 'MSWin32';
 
-    GLPI::Agent::Tools::Win32->use();
+    AssetSync::Agent::Tools::Win32->use();
 
     my $key = getRegistryKey(
         path => 'HKEY_LOCAL_MACHINE/SOFTWARE/Usoris/Remote Utilities Host/Host/Parameters',
@@ -53,8 +53,8 @@ sub doInventory {
 sub _getID {
     my (%params) = @_;
 
-    GLPI::Agent::Tools::Win32->use();
-    GLPI::Agent::XML->use();
+    AssetSync::Agent::Tools::Win32->use();
+    AssetSync::Agent::XML->use();
 
     my $internetid = getRegistryValue(
         path => 'HKEY_LOCAL_MACHINE/SOFTWARE/Usoris/Remote Utilities Host/Host/Parameters/InternetId',
@@ -63,7 +63,7 @@ sub _getID {
 
     $internetid = hex2dec($internetid);
 
-    my $tree = GLPI::Agent::XML->new(string => $internetid)->dump_as_hash();
+    my $tree = AssetSync::Agent::XML->new(string => $internetid)->dump_as_hash();
 
     return unless defined($tree) && defined($tree->{rms_internet_id_settings});
 

@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Solaris::Memory;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Solaris::Memory;
 
 my %tests = (
     sample1 => [ _gen(4,  'NUMSLOTS', { TYPE => "DIMM", CAPACITY => '1024'  }) ],
@@ -26,12 +26,12 @@ my %tests = (
 
 plan tests => (2 * scalar keys %tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %tests) {
     my $file = "resources/solaris/prtdiag/$test";
     my @memories =
-      GLPI::Agent::Task::Inventory::Solaris::Memory::_getMemoriesPrtdiag(file => $file);
+      AssetSync::Agent::Task::Inventory::Solaris::Memory::_getMemoriesPrtdiag(file => $file);
     cmp_deeply(
         \@memories,
         $tests{$test},

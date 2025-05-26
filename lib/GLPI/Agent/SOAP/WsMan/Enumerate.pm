@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::Enumerate;
+package AssetSync::Agent::SOAP::WsMan::Enumerate;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package
@@ -12,8 +12,8 @@ package
 use parent
     'Node';
 
-use GLPI::Agent::SOAP::WsMan::OptimizeEnumeration;
-use GLPI::Agent::SOAP::WsMan::MaxElements;
+use AssetSync::Agent::SOAP::WsMan::OptimizeEnumeration;
+use AssetSync::Agent::SOAP::WsMan::MaxElements;
 
 use constant    xmlns   => 'n';
 

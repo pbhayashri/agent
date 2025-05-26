@@ -1,16 +1,16 @@
-package GLPI::Agent::Task::Deploy::ActionProcessor::Action::Delete;
+package AssetSync::Agent::Task::Deploy::ActionProcessor::Action::Delete;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Deploy::ActionProcessor::Action';
+use parent 'AssetSync::Agent::Task::Deploy::ActionProcessor::Action';
 
 use Encode;
 use UNIVERSAL::require;
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Task::Deploy::DiskFree;
+use AssetSync::Agent::Task::Deploy::DiskFree;
 
 sub do {
     my ($self, $params) = @_;
@@ -28,8 +28,8 @@ sub do {
         my $loc_local = $loc;
 
         if ($OSNAME eq 'MSWin32') {
-            GLPI::Agent::Tools::Win32->require;
-            my $localCodepage = GLPI::Agent::Tools::Win32::getLocalCodepage();
+            AssetSync::Agent::Tools::Win32->require;
+            my $localCodepage = AssetSync::Agent::Tools::Win32::getLocalCodepage();
             if (Encode::is_utf8($loc)) {
                 $loc_local = encode($localCodepage, $loc);
             }

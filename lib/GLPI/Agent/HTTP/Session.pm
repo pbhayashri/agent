@@ -1,11 +1,11 @@
-package GLPI::Agent::HTTP::Session;
+package AssetSync::Agent::HTTP::Session;
 
 use strict;
 use warnings;
 
 use Digest::SHA;
 
-use GLPI::Agent::Logger;
+use AssetSync::Agent::Logger;
 
 my $log_prefix = "[http session] ";
 
@@ -14,7 +14,7 @@ sub new {
 
     my $self = {
         logger  => $params{logger} ||
-                        GLPI::Agent::Logger->new(),
+                        AssetSync::Agent::Logger->new(),
         timer   => $params{timer} || [ time, $params{timeout} || 600 ],
         nonce   => $params{nonce} || '',
         _sid    => $params{sid} || '',
@@ -180,7 +180,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::HTTP::Session - An abstract HTTP session
+AssetSync::Agent::HTTP::Session - An abstract HTTP session
 
 =head1 DESCRIPTION
 

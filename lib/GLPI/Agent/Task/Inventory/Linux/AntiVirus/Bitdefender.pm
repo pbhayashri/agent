@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Linux::AntiVirus::Bitdefender;
+package AssetSync::Agent::Task::Inventory::Linux::AntiVirus::Bitdefender;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use UNIVERSAL::require;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub isEnabled {
     return canRun('/opt/bitdefender-security-tools/bin/bduitool');

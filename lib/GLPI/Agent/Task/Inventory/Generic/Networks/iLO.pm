@@ -1,16 +1,16 @@
-package GLPI::Agent::Task::Inventory::Generic::Networks::iLO;
+package AssetSync::Agent::Task::Inventory::Generic::Networks::iLO;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Network;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Network;
 
-our $runMeIfTheseChecksFailed = ['GLPI::Agent::Task::Inventory::Generic::Ipmi::Lan'];
+our $runMeIfTheseChecksFailed = ['AssetSync::Agent::Task::Inventory::Generic::Ipmi::Lan'];
 
 sub isEnabled {
     return OSNAME eq 'MSWin32' ?

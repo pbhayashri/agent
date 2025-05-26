@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Linux::Storages::MegacliWithSmartctl;
+package AssetSync::Agent::Task::Inventory::Linux::Storages::MegacliWithSmartctl;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use File::Basename qw(basename);
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Linux qw(getInfoFromSmartctl);
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Linux qw(getInfoFromSmartctl);
 
 use constant RE => qr/^([^:]+?)\s*:\s*(.*\S)/;
 
@@ -137,7 +137,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Task::Inventory::Linux::Storages::MegacliWithSmartctl - LSI Megaraid inventory
+AssetSync::Agent::Task::Inventory::Linux::Storages::MegacliWithSmartctl - LSI Megaraid inventory
 
 =head1 DESCRIPTION
 

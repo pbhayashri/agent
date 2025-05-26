@@ -1,19 +1,19 @@
-package GLPI::Agent::Task::Inventory::Generic::Ipmi::Fru::Psu;
+package AssetSync::Agent::Task::Inventory::Generic::Ipmi::Fru::Psu;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::IpmiFru;
-use GLPI::Agent::Tools::PowerSupplies;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::IpmiFru;
+use AssetSync::Agent::Tools::PowerSupplies;
 
 use constant    category    => "psu";
 
 # Define a priority so we can update powersupplies inventory
 our $runAfterIfEnabled = [ qw(
-    GLPI::Agent::Task::Inventory::Generic::Dmidecode::Psu
+    AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Psu
 )];
 
 sub isEnabled {

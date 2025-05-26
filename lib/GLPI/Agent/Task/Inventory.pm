@@ -1,25 +1,25 @@
-package GLPI::Agent::Task::Inventory;
+package AssetSync::Agent::Task::Inventory;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task';
+use parent 'AssetSync::Agent::Task';
 
 use Config;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Inventory;
-use GLPI::Agent::XML;
-use GLPI::Agent::Event;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Inventory;
+use AssetSync::Agent::XML;
+use AssetSync::Agent::Event;
 
-use GLPI::Agent::Task::Inventory::Version;
+use AssetSync::Agent::Task::Inventory::Version;
 
 # Preload Module base class
-use GLPI::Agent::Task::Inventory::Module;
+use AssetSync::Agent::Task::Inventory::Module;
 
-our $VERSION = GLPI::Agent::Task::Inventory::Version::VERSION;
+our $VERSION = AssetSync::Agent::Task::Inventory::Version::VERSION;
 
 sub isEnabled {
     my ($self, $contact) = @_;
@@ -27,16 +27,16 @@ sub isEnabled {
     # always enabled for local target
     return 1 if $self->{target}->isType('local');
 
-    if ($self->{target}->isGlpiServer()) {
+    if ($self->{target}->isAssetSyncServer()) {
         # Store any inventory params
         my $tasks = $contact->get("tasks");
         if (ref($tasks) eq 'HASH' && ref($tasks->{inventory}) eq 'HASH' && ref($tasks->{inventory}->{params}) eq 'ARRAY') {
             if (@{$tasks->{inventory}->{params}}) {
-                # Add a GLPI client to each param with a category and a use property
+                # Add a AssetSync client to each param with a category and a use property
                 # and if related category is not disabled
                 my %disabled = map { $_ => 1 } @{$self->{config}->{'no-category'}};
                 my @params;
-                my $cant_load_glpi_client = 0;
+                my $cant_load_AssetSync_client = 0;
                 foreach my $param (@{$tasks->{inventory}->{params}}) {
                     my @validated;
                     if (!$param->{category} || $disabled{$param->{category}}) {
@@ -54,19 +54,19 @@ sub isEnabled {
                                 my $use = $param->{"use[$params_id]"};
                                 $this_param->{use} = [ map { trimWhitespace($_) } split(/,+/, $use) ] if $use;
 
-                                # Setup GLPI server client for get_params requests
+                                # Setup AssetSync server client for get_params requests
                                 if ($this_param->{use}) {
-                                    GLPI::Agent::HTTP::Client::GLPI->require();
+                                    AssetSync::Agent::HTTP::Client::AssetSync->require();
                                     if ($EVAL_ERROR) {
-                                        $self->{logger}->error("Can't load GLPI client API to handle get_params")
-                                            unless $cant_load_glpi_client++;
+                                        $self->{logger}->error("Can't load AssetSync client API to handle get_params")
+                                            unless $cant_load_AssetSync_client++;
                                     } else {
-                                        $this_param->{_glpi_client} = GLPI::Agent::HTTP::Client::GLPI->new(
+                                        $this_param->{_AssetSync_client} = AssetSync::Agent::HTTP::Client::AssetSync->new(
                                             logger  => $self->{logger},
                                             config  => $self->{config},
                                             agentid => $self->{agentid},
                                         );
-                                        $this_param->{_glpi_url} = $self->{target}->getUrl();
+                                        $this_param->{_AssetSync_url} = $self->{target}->getUrl();
                                         push @validated, $this_param;
                                     }
                                 }
@@ -86,7 +86,7 @@ sub isEnabled {
             }
         }
 
-        # If we are here, this still means the task has not been disabled in GLPI server
+        # If we are here, this still means the task has not been disabled in AssetSync server
         return 1;
     } else {
         my $content = $contact->getContent();
@@ -118,12 +118,12 @@ sub run {
 
     my $tag = $self->{config}->{'tag'};
 
-    my $inventory = GLPI::Agent::Inventory->new(
+    my $inventory = AssetSync::Agent::Inventory->new(
         statedir => $self->{target}->getStorage()->getDirectory(),
         deviceid => $self->{deviceid},
         datadir  => $self->{datadir},
         logger   => $self->{logger},
-        glpi     => $self->{target}->getTaskVersion('inventory'),
+        assetsync     => $self->{target}->getTaskVersion('inventory'),
         required => $self->{config}->{'required-category'} // [],
         itemtype => empty($self->{config}->{'itemtype'}) ? "Computer" : $self->{config}->{'itemtype'},
         tag      => $tag
@@ -165,8 +165,8 @@ sub run {
     my $format = 'json';
     if ($self->{target}->isType('local')) {
         $format = $self->{target}->{format} unless $inventory->isPartial();
-    } elsif (!$self->{target}->isGlpiServer()) {
-        # This includes server other than glpi and listener target
+    } elsif (!$self->{target}->isAssetSyncServer()) {
+        # This includes server other than assetsync and listener target
         $format = 'xml';
     }
     $inventory->setFormat($format);
@@ -174,7 +174,7 @@ sub run {
     # Always disable unsupported categories in deprecated XML format
     map { $self->{disabled}->{$_} = 1 } qw(database)
         if ($self->{target}->isType('local') && $format eq 'xml')
-            || ($self->{target}->isType('server') && !$self->{target}->isGlpiServer());
+            || ($self->{target}->isType('server') && !$self->{target}->isAssetSyncServer());
 
     $self->_initModulesList();
     $self->_feedInventory() unless $self->{aborted};
@@ -191,8 +191,8 @@ sub setupEvent {
     my ($self) = @_;
 
     my $event = $self->resetEvent();
-    if ($self->{target}->isType('server') && !$self->{target}->isGlpiServer()) {
-        $self->{logger}->debug($self->{target}->id().": server target for inventory events need to be a GLPI server");
+    if ($self->{target}->isType('server') && !$self->{target}->isAssetSyncServer()) {
+        $self->{logger}->debug($self->{target}->id().": server target for inventory events need to be a AssetSync server");
         return;
     }
 
@@ -234,7 +234,7 @@ sub setupEvent {
             # also need to get hardware and bios category to keep them in cache
             $keep{hardware} = 1;
             $keep{bios} = 1;
-            # For software category, GLPI requires we also keep os category
+            # For software category, AssetSync requires we also keep os category
             $keep{os} = 1 if $keep{software};
             $self->keepcache(1);
         }
@@ -271,12 +271,12 @@ sub submit {
         $self->{logger}->info("Inventory ".($file eq '-' ? "dumped on standard output" : "saved in $file"))
             if $file;
 
-    } elsif ($self->{target}->isGlpiServer()) {
+    } elsif ($self->{target}->isAssetSyncServer()) {
 
-        return $self->{logger}->error("Can't load GLPI client API")
-            unless GLPI::Agent::HTTP::Client::GLPI->require();
+        return $self->{logger}->error("Can't load AssetSync client API")
+            unless AssetSync::Agent::HTTP::Client::AssetSync->require();
 
-        my $client = GLPI::Agent::HTTP::Client::GLPI->new(
+        my $client = AssetSync::Agent::HTTP::Client::AssetSync->new(
             logger  => $self->{logger},
             config  => $self->{config},
             agentid => $self->{agentid},
@@ -295,18 +295,18 @@ sub submit {
     } elsif ($self->{target}->isType('server')) {
 
         return $self->{logger}->error("Can't load OCS client API")
-            unless GLPI::Agent::HTTP::Client::OCS->require();
+            unless AssetSync::Agent::HTTP::Client::OCS->require();
 
-        my $client = GLPI::Agent::HTTP::Client::OCS->new(
+        my $client = AssetSync::Agent::HTTP::Client::OCS->new(
             logger  => $self->{logger},
             config  => $self->{config},
             agentid => $self->{agentid},
         );
 
         return $self->{logger}->error("Can't load Inventory XML Query API")
-            unless GLPI::Agent::XML::Query::Inventory->require();
+            unless AssetSync::Agent::XML::Query::Inventory->require();
 
-        my $message = GLPI::Agent::XML::Query::Inventory->new(
+        my $message = AssetSync::Agent::XML::Query::Inventory->new(
             deviceid => $inventory->getDeviceId(),
             content  => $inventory->getContent()
         );
@@ -321,9 +321,9 @@ sub submit {
     } elsif ($self->{target}->isType('listener')) {
 
         return $self->{logger}->error("Can't load Inventory XML Query API")
-            unless GLPI::Agent::XML::Query::Inventory->require();
+            unless AssetSync::Agent::XML::Query::Inventory->require();
 
-        my $query = GLPI::Agent::XML::Query::Inventory->new(
+        my $query = AssetSync::Agent::XML::Query::Inventory->new(
             deviceid => $inventory->getDeviceId(),
             content  => $inventory->getContent()
         );
@@ -345,7 +345,7 @@ sub getCategories {
     foreach my $module (sort @modules) {
         # Just skip Version package as not an inventory package module
         # Also skip Module as not a real module but the base class for any module
-        next if $module =~ /GLPI::Agent::Task::Inventory::(Version|Module)$/;
+        next if $module =~ /AssetSync::Agent::Task::Inventory::(Version|Module)$/;
 
         $module->require();
         next if $EVAL_ERROR;
@@ -390,7 +390,7 @@ sub _initModulesList {
 
         # Just skip Version package as not an inventory package module
         # Also skip Module as not a real module but the base class for any module
-        if ($module =~ /GLPI::Agent::Task::Inventory::(Version|Module)$/) {
+        if ($module =~ /AssetSync::Agent::Task::Inventory::(Version|Module)$/) {
             $self->{modules}->{$module}->{enabled} = 0;
             next;
         }
@@ -424,7 +424,7 @@ sub _initModulesList {
         unless (defined(*{$module."::isEnabled"})) {
             no strict 'refs'; ## no critic (ProhibitNoStrict)
             *{$module."::isEnabled"} =
-                \&{"GLPI::Agent::Task::Inventory::Module::isEnabled"};
+                \&{"AssetSync::Agent::Task::Inventory::Module::isEnabled"};
         }
 
         my $enabled = runFunction(
@@ -568,7 +568,7 @@ sub _feedInventory {
     $versionprovider->{ETIME} = time() - $begin
         if $versionprovider;
 
-    # Don't compute checksum on partial inventory or with glpi-inventory script
+    # Don't compute checksum on partial inventory or with assetsync-inventory script
     $self->{inventory}->computeChecksum($self->{config}->{'full-inventory-postpone'} =~ /^\d+$/ ? int($self->{config}->{'full-inventory-postpone'}) : 0)
         unless $self->{nochecksum};
 }
@@ -587,12 +587,12 @@ sub _injectContent {
 
     my $content;
     if ($file =~ /\.xml$/) {
-        my $tree = GLPI::Agent::XML->new(file => $file)->dump_as_hash();
+        my $tree = AssetSync::Agent::XML->new(file => $file)->dump_as_hash();
         $content = $tree->{REQUEST}->{CONTENT};
     } elsif ($file =~ /\.json$/) {
-        die "Can't load GLPI Protocol Message library\n"
-            unless GLPI::Agent::Protocol::Message->require();
-        my $json = GLPI::Agent::Protocol::Message->new(
+        die "Can't load AssetSync Protocol Message library\n"
+            unless AssetSync::Agent::Protocol::Message->require();
+        my $json = AssetSync::Agent::Protocol::Message->new(
             file => $file,
         );
         $content = $json->get('content');
@@ -619,7 +619,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Task::Inventory - Inventory task for GLPI
+AssetSync::Agent::Task::Inventory - Inventory task for AssetSync
 
 =head1 DESCRIPTION
 

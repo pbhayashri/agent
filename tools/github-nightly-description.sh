@@ -35,29 +35,29 @@ if [ -n "$HEADER" ]; then
     cat <<HEADER
 ---
 layout: default
-title: GLPI-Agent Nightly Builds
+title: AssetSync-Agent Nightly Builds
 ---
 
 HEADER
 fi
 
 # Support x86 MSI is still available
-if [ -e "glpi-agent/GLPI-Agent-$VERSION-x86.msi" -a -e "glpi-agent/GLPI-Agent-$VERSION-x86.zip" ]; then
-    MSI_X86="32 bits | [GLPI-Agent-$VERSION-x86.msi](GLPI-Agent-$VERSION-x86.msi) | [GLPI-Agent-$VERSION-x86.zip](GLPI-Agent-$VERSION-x86.zip)"
+if [ -e "assetsync-agent/AssetSync-Agent-$VERSION-x86.msi" -a -e "assetsync-agent/AssetSync-Agent-$VERSION-x86.zip" ]; then
+    MSI_X86="32 bits | [AssetSync-Agent-$VERSION-x86.msi](AssetSync-Agent-$VERSION-x86.msi) | [AssetSync-Agent-$VERSION-x86.zip](AssetSync-Agent-$VERSION-x86.zip)"
 fi
 
 # Set size for linux installers
 LININST="~9M"
-if [ -e "glpi-agent-${VERSION}-linux-installer.pl" ]; then
-    read LININST X <<<$(LANG=C ls -sh glpi-agent-${VERSION}-linux-installer.pl)
+if [ -e "assetsync-agent-${VERSION}-linux-installer.pl" ]; then
+    read LININST X <<<$(LANG=C ls -sh assetsync-agent-${VERSION}-linux-installer.pl)
 fi
 LINBIGINST="~41M"
-if [ -e "glpi-agent-${VERSION}-with-snap-linux-installer.pl" ]; then
-    read LINBIGINST X <<<$(LANG=C ls -sh glpi-agent-${VERSION}-with-snap-linux-installer.pl)
+if [ -e "assetsync-agent-${VERSION}-with-snap-linux-installer.pl" ]; then
+    read LINBIGINST X <<<$(LANG=C ls -sh assetsync-agent-${VERSION}-with-snap-linux-installer.pl)
 fi
 
 cat <<DESCRIPTION
-# GLPI-Agent v$VERSION nightly build
+# AssetSync-Agent v$VERSION nightly build
 
 Built on $DATE
 
@@ -65,7 +65,7 @@ Built on $DATE
 
 Arch | Windows installer | Windows portable archive
 ---|:---|:---
-64 bits | [GLPI-Agent-$VERSION-x64.msi](GLPI-Agent-$VERSION-x64.msi) | [GLPI-Agent-$VERSION-x64.zip](GLPI-Agent-$VERSION-x64.zip)
+64 bits | [AssetSync-Agent-$VERSION-x64.msi](AssetSync-Agent-$VERSION-x64.msi) | [AssetSync-Agent-$VERSION-x64.zip](AssetSync-Agent-$VERSION-x64.zip)
 $MSI_X86
 
 ## MacOSX <a href="#macosx-${VERSION//./-}">#</a> {#macosx-${VERSION//./-}}
@@ -74,15 +74,15 @@ $MSI_X86
 
 Arch | Package
 ---|:---
-x86_64 | PKG: [GLPI-Agent-${VERSION}_x86_64.pkg](GLPI-Agent-${VERSION}_x86_64.pkg)
-x86_64 | DMG: [GLPI-Agent-${VERSION}_x86_64.dmg](GLPI-Agent-${VERSION}_x86_64.dmg)
+x86_64 | PKG: [AssetSync-Agent-${VERSION}_x86_64.pkg](AssetSync-Agent-${VERSION}_x86_64.pkg)
+x86_64 | DMG: [AssetSync-Agent-${VERSION}_x86_64.dmg](AssetSync-Agent-${VERSION}_x86_64.dmg)
 
 ### MacOSX - Apple Silicon
 
 Arch | Package
 ---|:---
-arm64 | PKG: [GLPI-Agent-${VERSION}_arm64.pkg](GLPI-Agent-${VERSION}_arm64.pkg)
-arm64 | DMG: [GLPI-Agent-${VERSION}_arm64.dmg](GLPI-Agent-${VERSION}_arm64.dmg)
+arm64 | PKG: [AssetSync-Agent-${VERSION}_arm64.pkg](AssetSync-Agent-${VERSION}_arm64.pkg)
+arm64 | DMG: [AssetSync-Agent-${VERSION}_arm64.dmg](AssetSync-Agent-${VERSION}_arm64.dmg)
 
 ## Linux <a href="#linux-${VERSION//./-}">#</a> {#linux-${VERSION//./-}}
 
@@ -90,54 +90,54 @@ arm64 | DMG: [GLPI-Agent-${VERSION}_arm64.dmg](GLPI-Agent-${VERSION}_arm64.dmg)
 
 Linux installer for redhat/centos/debian/ubuntu|Size
 ---|---
-[glpi-agent-${VERSION}-linux-installer.pl](glpi-agent-${VERSION}-linux-installer.pl)|${LININST}b
+[assetsync-agent-${VERSION}-linux-installer.pl](assetsync-agent-${VERSION}-linux-installer.pl)|${LININST}b
 
 <p/>
 
 Linux installer for redhat/centos/debian/ubuntu, including snap install support|Size
 ---|---
-[glpi-agent-${VERSION}-with-snap-linux-installer.pl](glpi-agent-${VERSION}-with-snap-linux-installer.pl)|${LINBIGINST}b
+[assetsync-agent-${VERSION}-with-snap-linux-installer.pl](assetsync-agent-${VERSION}-with-snap-linux-installer.pl)|${LINBIGINST}b
 
 ### Snap package for amd64
 
-[glpi-agent_${VERSION}_amd64.snap](glpi-agent_${VERSION}_amd64.snap)
+[assetsync-agent_${VERSION}_amd64.snap](assetsync-agent_${VERSION}_amd64.snap)
 
 ### AppImage Linux installer for x86-64
 
-[glpi-agent-${VERSION}-x86_64.AppImage](glpi-agent-${VERSION}-x86_64.AppImage)
+[assetsync-agent-${VERSION}-x86_64.AppImage](assetsync-agent-${VERSION}-x86_64.AppImage)
 
 ### Debian/Ubuntu packages
 
-Better use [glpi-agent-${VERSION}-linux-installer.pl](glpi-agent-${VERSION}-linux-installer.pl) when possible.
+Better use [assetsync-agent-${VERSION}-linux-installer.pl](assetsync-agent-${VERSION}-linux-installer.pl) when possible.
 
 Related agent task |Package
 ---|:---
-Inventory| [glpi-agent_${VERSION}_all.deb](glpi-agent_${VERSION}_all.deb)
-NetInventory | [glpi-agent-task-network_${VERSION}_all.deb](glpi-agent-task-network_${VERSION}_all.deb)
-ESX | [glpi-agent-task-esx_${VERSION}_all.deb](glpi-agent-task-esx_${VERSION}_all.deb)
-Collect | [glpi-agent-task-collect_${VERSION}_all.deb](glpi-agent-task-collect_${VERSION}_all.deb)
-Deploy | [glpi-agent-task-deploy_${VERSION}_all.deb](glpi-agent-task-deploy_${VERSION}_all.deb)
+Inventory| [assetsync-agent_${VERSION}_all.deb](assetsync-agent_${VERSION}_all.deb)
+NetInventory | [assetsync-agent-task-network_${VERSION}_all.deb](assetsync-agent-task-network_${VERSION}_all.deb)
+ESX | [assetsync-agent-task-esx_${VERSION}_all.deb](assetsync-agent-task-esx_${VERSION}_all.deb)
+Collect | [assetsync-agent-task-collect_${VERSION}_all.deb](assetsync-agent-task-collect_${VERSION}_all.deb)
+Deploy | [assetsync-agent-task-deploy_${VERSION}_all.deb](assetsync-agent-task-deploy_${VERSION}_all.deb)
 
 ### RPM packages
 
-RPM packages are arch independents and installation may require some repository setups, better use [glpi-agent-${VERSION}-linux-installer.pl](glpi-agent-${VERSION}-linux-installer.pl) when possible.
+RPM packages are arch independents and installation may require some repository setups, better use [assetsync-agent-${VERSION}-linux-installer.pl](assetsync-agent-${VERSION}-linux-installer.pl) when possible.
 
 Task |Packages
 ---|:---
-Inventory| [glpi-agent-${VERSION}.noarch.rpm](glpi-agent-${VERSION}.noarch.rpm)
-NetInventory | [glpi-agent-task-network-${VERSION}.noarch.rpm](glpi-agent-task-network-${VERSION}.noarch.rpm)
-ESX | [glpi-agent-task-esx-${VERSION}.noarch.rpm](glpi-agent-task-esx-${VERSION}.noarch.rpm)
-Collect | [glpi-agent-task-collect-${VERSION}.noarch.rpm](glpi-agent-task-collect-${VERSION}.noarch.rpm)
-Deploy | [glpi-agent-task-deploy-${VERSION}.noarch.rpm](glpi-agent-task-deploy-${VERSION}.noarch.rpm)
-WakeOnLan | [glpi-agent-task-wakeonlan-${VERSION}.noarch.rpm](glpi-agent-task-wakeonlan-${VERSION}.noarch.rpm)
-Cron | [glpi-agent-cron-${VERSION}.noarch.rpm](glpi-agent-cron-${VERSION}.noarch.rpm)
+Inventory| [assetsync-agent-${VERSION}.noarch.rpm](assetsync-agent-${VERSION}.noarch.rpm)
+NetInventory | [assetsync-agent-task-network-${VERSION}.noarch.rpm](assetsync-agent-task-network-${VERSION}.noarch.rpm)
+ESX | [assetsync-agent-task-esx-${VERSION}.noarch.rpm](assetsync-agent-task-esx-${VERSION}.noarch.rpm)
+Collect | [assetsync-agent-task-collect-${VERSION}.noarch.rpm](assetsync-agent-task-collect-${VERSION}.noarch.rpm)
+Deploy | [assetsync-agent-task-deploy-${VERSION}.noarch.rpm](assetsync-agent-task-deploy-${VERSION}.noarch.rpm)
+WakeOnLan | [assetsync-agent-task-wakeonlan-${VERSION}.noarch.rpm](assetsync-agent-task-wakeonlan-${VERSION}.noarch.rpm)
+Cron | [assetsync-agent-cron-${VERSION}.noarch.rpm](assetsync-agent-cron-${VERSION}.noarch.rpm)
 
 ## Sources <a href="#sources-${VERSION//./-}">#</a> {#sources-${VERSION//./-}}
 
-[GLPI-Agent-${VERSION}.tar.gz](GLPI-Agent-${VERSION}.tar.gz)
+[AssetSync-Agent-${VERSION}.tar.gz](AssetSync-Agent-${VERSION}.tar.gz)
 
 ## SHA256 sums
-All sha256 sums for released filed can be retrieved from [glpi-agent-${VERSION}.sha256](glpi-agent-${VERSION}.sha256).
+All sha256 sums for released filed can be retrieved from [assetsync-agent-${VERSION}.sha256](assetsync-agent-${VERSION}.sha256).
 
 <p><a href='#content'>Back to top</a></p>
 ---

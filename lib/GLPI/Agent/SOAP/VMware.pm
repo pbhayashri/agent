@@ -1,4 +1,4 @@
-package GLPI::Agent::SOAP::VMware;
+package AssetSync::Agent::SOAP::VMware;
 
 use strict;
 use warnings;
@@ -7,16 +7,16 @@ use English qw(-no_match_vars);
 use LWP::UserAgent;
 use HTTP::Cookies;
 
-use GLPI::Agent;
-use GLPI::Agent::XML;
-use GLPI::Agent::SOAP::VMware::Host;
+use AssetSync::Agent;
+use AssetSync::Agent::XML;
+use AssetSync::Agent::SOAP::VMware::Host;
 
 sub new {
     my ($class, %params) = @_;
 
     my $self = {
         url  => $params{url},
-        _xml => GLPI::Agent::XML->new(
+        _xml => AssetSync::Agent::XML->new(
             force_array => [ qw(returnval propSet) ],
             skip_attr   => 1, # Skip attributes while dumping as hash
         ),
@@ -26,7 +26,7 @@ sub new {
     # create user agent
     $self->{ua} = LWP::UserAgent->new(
         requests_redirectable => ['POST', 'GET', 'HEAD'],
-        agent                 => $GLPI::Agent::AGENT_STRING,
+        agent                 => $AssetSync::Agent::AGENT_STRING,
         timeout               => $params{timeout} || 180,
         ssl_opts              => { verify_hostname => 0, SSL_verify_mode => 0 },
         cookie_jar            => HTTP::Cookies->new(ignore_discard => 1),
@@ -285,7 +285,7 @@ sub getHostFullInfo {
         push @$vms, $self->_getVirtualMachineById($id);
     }
 
-    my $host = GLPI::Agent::SOAP::VMware::Host->new(
+    my $host = AssetSync::Agent::SOAP::VMware::Host->new(
         hash => $ref, vms => $vms
     );
     return $host;
@@ -324,7 +324,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SOAP::VMware - Access to VMware hypervisor
+AssetSync::Agent::SOAP::VMware - Access to VMware hypervisor
 
 =head1 DESCRIPTION
 

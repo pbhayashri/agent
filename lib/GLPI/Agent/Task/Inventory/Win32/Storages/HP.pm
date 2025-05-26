@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::Win32::Storages::HP;
+package AssetSync::Agent::Task::Inventory::Win32::Storages::HP;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools::Win32;
-use GLPI::Agent::Tools::Storages::HP;
+use AssetSync::Agent::Tools::Win32;
+use AssetSync::Agent::Tools::Storages::HP;
 
 sub isEnabled {
     return _getHpacuacliFromWinRegistry();

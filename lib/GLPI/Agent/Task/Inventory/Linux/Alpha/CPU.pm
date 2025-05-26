@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::Linux::Alpha::CPU;
+package AssetSync::Agent::Task::Inventory::Linux::Alpha::CPU;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Linux;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Linux;
 
 use constant    category    => "cpu";
 

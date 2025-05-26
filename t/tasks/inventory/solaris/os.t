@@ -8,7 +8,7 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Task::Inventory::Solaris::OS;
+use AssetSync::Agent::Task::Inventory::Solaris::OS;
 
 my %installdate_tests = (
     'oi-2021.10'    => {
@@ -25,7 +25,7 @@ plan tests => (scalar keys %installdate_tests) + 1;
 
 foreach my $test (keys %installdate_tests) {
     my $file = "resources/solaris/pkg-info/installdate-$test";
-    my $installdate = GLPI::Agent::Task::Inventory::Solaris::OS::_getInstallDate(
+    my $installdate = AssetSync::Agent::Task::Inventory::Solaris::OS::_getInstallDate(
         usepkg  => $installdate_tests{$test}->{usepkg},
         file    => $file,
     );

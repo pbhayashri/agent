@@ -1,11 +1,11 @@
-package GLPI::Agent::Task::Inventory::HPUX::Slots;
+package AssetSync::Agent::Task::Inventory::HPUX::Slots;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant    category    => "slot";
 

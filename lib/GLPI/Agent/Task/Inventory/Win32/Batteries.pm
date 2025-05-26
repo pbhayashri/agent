@@ -1,19 +1,19 @@
-package GLPI::Agent::Task::Inventory::Win32::Batteries;
+package AssetSync::Agent::Task::Inventory::Win32::Batteries;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Batteries;
-use GLPI::Agent::XML;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Batteries;
+use AssetSync::Agent::XML;
 
 use constant    category    => "battery";
 
 # Define some kind of priority so we can update batteries inventory
 our $runAfterIfEnabled = [ qw(
-    GLPI::Agent::Task::Inventory::Generic::Dmidecode::Battery
+    AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Battery
 )];
 
 sub isEnabled {
@@ -66,7 +66,7 @@ sub _getBatteriesFromPowercfg {
     $xmlfile =~ s{\\}{/}g;
     return unless has_file($xmlfile) || ($params{file} && has_file($params{file}));
 
-    my $xml = GLPI::Agent::XML->new(
+    my $xml = AssetSync::Agent::XML->new(
         force_array => [ qw(Battery) ],
         file        => $xmlfile,
         %params

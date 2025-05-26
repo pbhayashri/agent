@@ -9,7 +9,7 @@ use lib 'tools';
 use LWP::UserAgent;
 
 use Changelog;
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 # Touch pci.ids file with stored date to make mirror API works as expected
 my ($date, $time) = getFirstMatch(

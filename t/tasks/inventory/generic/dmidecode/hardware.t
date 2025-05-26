@@ -7,7 +7,7 @@ use Test::Deep;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Task::Inventory::Generic::Dmidecode::Hardware;
+use AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Hardware;
 
 my %tests = (
     'freebsd-6.2' => {
@@ -124,6 +124,6 @@ plan tests => keys(%tests) + 1;
 
 foreach my $test (keys %tests) {
     my $file = "resources/generic/dmidecode/$test";
-    my $hardware = GLPI::Agent::Task::Inventory::Generic::Dmidecode::Hardware::_getHardware(file => $file);
+    my $hardware = AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Hardware::_getHardware(file => $file);
     cmp_deeply($hardware, $tests{$test}, "hardware: $test");
 }

@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Deploy::Version;
+package AssetSync::Agent::Task::Deploy::Version;
 
 use strict;
 use warnings;

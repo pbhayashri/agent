@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Aerohive;
+package AssetSync::Agent::SNMP::MibSupport::Aerohive;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 # See AH-SMI-MIB
 use constant aerohive   => '.1.3.6.1.4.1.26928';
@@ -80,7 +80,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Aerohive - Inventory module for Aerohive Networks
+AssetSync::Agent::SNMP::MibSupport::Aerohive - Inventory module for Aerohive Networks
 
 =head1 DESCRIPTION
 

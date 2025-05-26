@@ -1,4 +1,4 @@
-package GLPI::Agent::Logger;
+package AssetSync::Agent::Logger;
 
 use strict;
 use warnings;
@@ -25,7 +25,7 @@ sub new {
 
     # Initialize or reset Logger configuration
     if ($params{config}) {
-        $config = ref($params{config}) eq 'GLPI::Agent::Config' ?
+        $config = ref($params{config}) eq 'AssetSync::Agent::Config' ?
             $params{config}->logger() : $params{config} ;
     } elsif ($first_pass) {
         $config = \%params;
@@ -52,7 +52,7 @@ sub new {
     ) {
         my $backend = ucfirst($_);
         next if $backends{$backend};
-        my $package = "GLPI::Agent::Logger::$backend";
+        my $package = "AssetSync::Agent::Logger::$backend";
         $package->require();
         if ($EVAL_ERROR) {
             print STDERR
@@ -69,7 +69,7 @@ sub new {
     }
 
     # Only log agent version string during the first object creation
-    $self->debug($GLPI::Agent::VERSION_STRING) if $first_pass;
+    $self->debug($AssetSync::Agent::VERSION_STRING) if $first_pass;
 
     return $self;
 }
@@ -185,7 +185,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Logger - GLPI logger
+AssetSync::Agent::Logger - AssetSync logger
 
 =head1 DESCRIPTION
 

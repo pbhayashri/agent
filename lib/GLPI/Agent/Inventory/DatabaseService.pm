@@ -1,4 +1,4 @@
-package GLPI::Agent::Inventory::DatabaseService;
+package AssetSync::Agent::Inventory::DatabaseService;
 
 use strict;
 use warnings;
@@ -99,7 +99,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Inventory::DatabaseService
+AssetSync::Agent::Inventory::DatabaseService
 
 =head1 DESCRIPTION
 
@@ -134,7 +134,7 @@ the database service manufacturer
 
 =head2 entry()
 
-Return the suitable entry to be inserted in GLPI::Agent::Inventory
+Return the suitable entry to be inserted in AssetSync::Agent::Inventory
 object.
 
 =head2 addDatabase(%infos)

@@ -14,9 +14,9 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Config;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools::Archive;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools::Archive;
 
 my %archives = (
     'tar' => {
@@ -66,8 +66,8 @@ my %archives = (
 
 plan tests => 4 * (scalar keys %archives) + 1;
 
-my $logger = GLPI::Agent::Logger->new(
-    config => GLPI::Agent::Config->new(
+my $logger = AssetSync::Agent::Logger->new(
+    config => AssetSync::Agent::Config->new(
         options => {
             config => 'none',
             logger => 'Test'
@@ -85,7 +85,7 @@ SKIP: {
 
         my $archive;
         lives_ok {
-            $archive = GLPI::Agent::Tools::Archive->new(
+            $archive = AssetSync::Agent::Tools::Archive->new(
                 archive => $file,
                 type    => $archives{$test}->{type} // "",
                 logger  => $logger,

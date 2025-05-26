@@ -1,20 +1,20 @@
-package GLPI::Agent::Task::Inventory::Generic::Remote_Mgmt::LiteManager;
+package AssetSync::Agent::Task::Inventory::Generic::Remote_Mgmt::LiteManager;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub isEnabled {
     return 0 unless OSNAME eq 'MSWin32';
 
-    GLPI::Agent::Tools::Win32->use();
+    AssetSync::Agent::Tools::Win32->use();
 
     my $key;
     first {
-        $key = GLPI::Agent::Tools::Win32::getRegistryKey(
+        $key = AssetSync::Agent::Tools::Win32::getRegistryKey(
             path        => $_,
             # Important for remote inventory optimization
             required    => [ 'ID (read only)' ],
@@ -70,9 +70,9 @@ sub _getID {
 sub _findID {
     my (%params) = @_;
 
-    GLPI::Agent::Tools::Win32->use();
+    AssetSync::Agent::Tools::Win32->use();
 
-    my $key = GLPI::Agent::Tools::Win32::getRegistryKey(
+    my $key = AssetSync::Agent::Tools::Win32::getRegistryKey(
         %params,
         # Important for remote inventory optimization
         required    => [ 'ID (read only)' ],

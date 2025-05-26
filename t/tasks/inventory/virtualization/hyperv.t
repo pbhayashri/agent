@@ -12,9 +12,9 @@ use Test::MockModule;
 use Test::More;
 use UNIVERSAL::require;
 
-use GLPI::Agent::Inventory;
-use GLPI::Test::Utils;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Agent::Inventory;
+use AssetSync::Test::Utils;
+use AssetSync::Agent::Tools::Virtualization;
 
 BEGIN {
     # use mock modules for non-available ones
@@ -29,7 +29,7 @@ if (!$Config{usethreads} || $Config{usethreads} ne 'define') {
 
 Test::NoWarnings->use();
 
-GLPI::Agent::Task::Inventory::Virtualization::HyperV->require();
+AssetSync::Agent::Task::Inventory::Virtualization::HyperV->require();
 
 my %tests = (
     'unknown' => [
@@ -65,7 +65,7 @@ my %tests = (
         {
             VMTYPE    => 'HyperV',
             SUBSYSTEM => 'MS HyperV',
-            NAME      => 'vm-0450-glpi',
+            NAME      => 'vm-0450-assetsync',
             STATUS    => STATUS_OFF,
             UUID      => undef,
             VCPU      => 2,
@@ -76,12 +76,12 @@ my %tests = (
 
 plan tests => (2 * scalar keys %tests) + 1;
 
-my $inventory = GLPI::Agent::Inventory->new();
+my $inventory = AssetSync::Agent::Inventory->new();
 
 # fake Tools::Win32, instead of Task::Inventory::Virtualization::HyperV, as
 # it is loaded at runtime
 my $module = Test::MockModule->new(
-    'GLPI::Agent::Tools::Win32'
+    'AssetSync::Agent::Tools::Win32'
 );
 
 foreach my $test (keys %tests) {
@@ -90,7 +90,7 @@ foreach my $test (keys %tests) {
         mockGetWMIObjects($test)
     );
 
-    my @machines = GLPI::Agent::Task::Inventory::Virtualization::HyperV::_getVirtualMachines();
+    my @machines = AssetSync::Agent::Task::Inventory::Virtualization::HyperV::_getVirtualMachines();
     cmp_deeply(
         \@machines,
         $tests{$test},

@@ -1,5 +1,5 @@
 #!/bin/bash
-NAME=glpi-agent
+NAME=assetsync-agent
 LOG=/var/log/$NAME/$NAME.log
 
 exec >>$LOG 2>&1

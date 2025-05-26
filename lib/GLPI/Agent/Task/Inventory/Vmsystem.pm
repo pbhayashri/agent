@@ -1,39 +1,39 @@
-package GLPI::Agent::Task::Inventory::Vmsystem;
+package AssetSync::Agent::Task::Inventory::Vmsystem;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use UNIVERSAL::require;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::UUID;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::UUID;
+use AssetSync::Agent::Tools::Virtualization;
 
 # We keep this module out of category as it is also mandatory for partial inventory
 
 # Be sure to run after any module which can set BIOS or HARDWARE (only setting UUID)
 our $runAfterIfEnabled = [ qw(
-    GLPI::Agent::Task::Inventory::AIX::Bios
-    GLPI::Agent::Task::Inventory::BSD::Alpha
-    GLPI::Agent::Task::Inventory::BSD::i386
-    GLPI::Agent::Task::Inventory::BSD::MIPS
-    GLPI::Agent::Task::Inventory::BSD::SPARC
-    GLPI::Agent::Task::Inventory::Generic::Dmidecode::Bios
-    GLPI::Agent::Task::Inventory::Generic::Dmidecode::Hardware
-    GLPI::Agent::Task::Inventory::HPUX::Bios
-    GLPI::Agent::Task::Inventory::HPUX::Hardware
-    GLPI::Agent::Task::Inventory::Linux::Bios
-    GLPI::Agent::Task::Inventory::Linux::PowerPC::Bios
-    GLPI::Agent::Task::Inventory::Linux::Hardware
-    GLPI::Agent::Task::Inventory::Linux::ARM::Board
-    GLPI::Agent::Task::Inventory::MacOS::Bios
-    GLPI::Agent::Task::Inventory::MacOS::Hardware
-    GLPI::Agent::Task::Inventory::Solaris::Bios
-    GLPI::Agent::Task::Inventory::Solaris::Hardware
-    GLPI::Agent::Task::Inventory::Win32::Bios
-    GLPI::Agent::Task::Inventory::Win32::Hardware
+    AssetSync::Agent::Task::Inventory::AIX::Bios
+    AssetSync::Agent::Task::Inventory::BSD::Alpha
+    AssetSync::Agent::Task::Inventory::BSD::i386
+    AssetSync::Agent::Task::Inventory::BSD::MIPS
+    AssetSync::Agent::Task::Inventory::BSD::SPARC
+    AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Bios
+    AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Hardware
+    AssetSync::Agent::Task::Inventory::HPUX::Bios
+    AssetSync::Agent::Task::Inventory::HPUX::Hardware
+    AssetSync::Agent::Task::Inventory::Linux::Bios
+    AssetSync::Agent::Task::Inventory::Linux::PowerPC::Bios
+    AssetSync::Agent::Task::Inventory::Linux::Hardware
+    AssetSync::Agent::Task::Inventory::Linux::ARM::Board
+    AssetSync::Agent::Task::Inventory::MacOS::Bios
+    AssetSync::Agent::Task::Inventory::MacOS::Hardware
+    AssetSync::Agent::Task::Inventory::Solaris::Bios
+    AssetSync::Agent::Task::Inventory::Solaris::Hardware
+    AssetSync::Agent::Task::Inventory::Win32::Bios
+    AssetSync::Agent::Task::Inventory::Win32::Hardware
 )];
 
 my @vmware_patterns = (
@@ -300,8 +300,8 @@ sub _getType {
 
     # Solaris zones
     if (OSNAME eq 'solaris' && canRun('/usr/sbin/zoneadm')) {
-        if (GLPI::Agent::Tools::Solaris->require()) {
-            my $zone = GLPI::Agent::Tools::Solaris::getZone();
+        if (AssetSync::Agent::Tools::Solaris->require()) {
+            my $zone = AssetSync::Agent::Tools::Solaris::getZone();
             return 'SolarisZone' if $zone ne 'global';
         }
     }

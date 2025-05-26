@@ -1,9 +1,9 @@
-package GLPI::Agent::HTTP::Server::Test;
+package AssetSync::Agent::HTTP::Server::Test;
 
 use strict;
 use warnings;
 
-use base "GLPI::Agent::HTTP::Server::Plugin";
+use base "AssetSync::Agent::HTTP::Server::Plugin";
 
 sub urlMatch {
     my ($self, $path) = @_;
@@ -43,7 +43,7 @@ sub defaults {
         disabled    => "yes",
         configtest  => "test",
         port        => 0,
-        # Supported by class GLPI::Agent::HTTP::Server::Plugin
+        # Supported by class AssetSync::Agent::HTTP::Server::Plugin
         forbid_not_trusted => "no",
     };
 }
@@ -53,7 +53,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::HTTP::Server::Test - An embedded HTTP server plugin as
+AssetSync::Agent::HTTP::Server::Test - An embedded HTTP server plugin as
 test and sample server plugin
 
 =head1 DESCRIPTION

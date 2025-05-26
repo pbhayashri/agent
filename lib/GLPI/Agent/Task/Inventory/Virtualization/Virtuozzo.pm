@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Virtualization::Virtuozzo;
+package AssetSync::Agent::Task::Inventory::Virtualization::Virtuozzo;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Network;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Network;
+use AssetSync::Agent::Tools::Virtualization;
 
 sub isEnabled {
     # Avoid duplicated entry with libvirt

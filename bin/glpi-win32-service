@@ -12,7 +12,7 @@ use File::Spec;
 use Getopt::Long;
 use Pod::Usage;
 
-use GLPI::Agent::Daemon::Win32;
+use AssetSync::Agent::Daemon::Win32;
 
 # Load dedicated .rc file if present. Sample one, if renamed, permits
 # to log stdout and stderr for early debugging purpose
@@ -42,7 +42,7 @@ our %setup;
 
 my $ret = 0;
 
-my $service = GLPI::Agent::Daemon::Win32->new( %setup )
+my $service = AssetSync::Agent::Daemon::Win32->new( %setup )
     or die "Can't create service object: $!";
 
 if ($options{register}) {
@@ -77,14 +77,14 @@ __END__
 
 =head1 NAME
 
-glpi-win32-service - GLPI perl Agent service for Windows
+assetsync-win32-service - AssetSync perl Agent service for Windows
 
 =head1 SYNOPSIS
 
-glpi-win32-service [--register|--delete|--help] [options]
+assetsync-win32-service [--register|--delete|--help] [options]
 
   Options are only needed to register or delete the service. They are handy
-  while using GLPI perl agent from sources.
+  while using AssetSync perl agent from sources.
 
   Register options:
     -n --name=NAME                  unique system name for the service
@@ -97,8 +97,8 @@ glpi-win32-service [--register|--delete|--help] [options]
     -n --name=NAME                  unique system name of the service to delete
 
   Samples to use from sources base:
-    perl bin/glpi-win32-service --help
-    perl bin/glpi-win32-service --register
-    perl bin/glpi-win32-service --delete
-    perl bin/glpi-win32-service --register -n glpi-agent-test -d "[TEST] GLPI Agent Service"
-    perl bin/glpi-win32-service --delete -n glpi-agent-test
+    perl bin/assetsync-win32-service --help
+    perl bin/assetsync-win32-service --register
+    perl bin/assetsync-win32-service --delete
+    perl bin/assetsync-win32-service --register -n assetsync-agent-test -d "[TEST] AssetSync Agent Service"
+    perl bin/assetsync-win32-service --delete -n assetsync-agent-test

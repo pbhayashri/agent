@@ -10,7 +10,7 @@ use Test::More;
 use Test::MockModule;
 use UNIVERSAL::require;
 
-use GLPI::Test::Utils;
+use AssetSync::Test::Utils;
 
 BEGIN {
     # use mock modules for non-available ones
@@ -25,7 +25,7 @@ if (!$Config{usethreads} || $Config{usethreads} ne 'define') {
 
 Test::NoWarnings->use();
 
-GLPI::Agent::Task::Inventory::Win32::License->require();
+AssetSync::Agent::Task::Inventory::Win32::License->require();
 
 my %tests = (
     office_2010_1 => {
@@ -64,7 +64,7 @@ plan tests => scalar (keys %tests) + scalar (keys %licensing_tests) + 11 ;
 foreach my $test (keys %tests) {
     my $key = loadRegistryDump("resources/win32/registry/$test.reg");
     my $license =
-        GLPI::Agent::Task::Inventory::Win32::License::_getOfficeLicense($key);
+        AssetSync::Agent::Task::Inventory::Win32::License::_getOfficeLicense($key);
 
     is_deeply(
         $license,
@@ -74,7 +74,7 @@ foreach my $test (keys %tests) {
 }
 
 my $module = Test::MockModule->new(
-    'GLPI::Agent::Task::Inventory::Win32::License'
+    'AssetSync::Agent::Task::Inventory::Win32::License'
 );
 
 foreach my $test (keys %licensing_tests) {
@@ -82,9 +82,9 @@ foreach my $test (keys %licensing_tests) {
         'getWMIObjects',
         mockGetWMIObjects($test)
     );
-    GLPI::Agent::Task::Inventory::Win32::License::_resetSeenProducts();
-    GLPI::Agent::Task::Inventory::Win32::License::_scanWmiSoftwareLicensingProducts();
-    my @licenses = GLPI::Agent::Task::Inventory::Win32::License::_getSeenProducts();
+    AssetSync::Agent::Task::Inventory::Win32::License::_resetSeenProducts();
+    AssetSync::Agent::Task::Inventory::Win32::License::_scanWmiSoftwareLicensingProducts();
+    my @licenses = AssetSync::Agent::Task::Inventory::Win32::License::_getSeenProducts();
 
     is_deeply(
         @licenses,
@@ -95,14 +95,14 @@ foreach my $test (keys %licensing_tests) {
 
 $module->mock( 'getWMIObjects', mockGetWMIObjects('office_2016_01') );
 my $key = loadRegistryDump("resources/win32/registry/office_2016_02.reg");
-GLPI::Agent::Task::Inventory::Win32::License::_resetSeenProducts();
-GLPI::Agent::Task::Inventory::Win32::License::_scanOfficeLicences($key);
-my @licenses = GLPI::Agent::Task::Inventory::Win32::License::_getSeenProducts();
+AssetSync::Agent::Task::Inventory::Win32::License::_resetSeenProducts();
+AssetSync::Agent::Task::Inventory::Win32::License::_scanOfficeLicences($key);
+my @licenses = AssetSync::Agent::Task::Inventory::Win32::License::_getSeenProducts();
 
 ok( @licenses == 0 );
 
-GLPI::Agent::Task::Inventory::Win32::License::_scanWmiSoftwareLicensingProducts();
-@licenses = GLPI::Agent::Task::Inventory::Win32::License::_getSeenProducts();
+AssetSync::Agent::Task::Inventory::Win32::License::_scanWmiSoftwareLicensingProducts();
+@licenses = AssetSync::Agent::Task::Inventory::Win32::License::_getSeenProducts();
 
 ok( @licenses == 1 );
 ok( $licenses[0]->{'KEY'} eq 'XXXXX-XXXXX-XXXXX-XXXXX-WE9H9' );
@@ -111,16 +111,16 @@ ok( $licenses[0]->{'PRODUCTID'} eq '00339-10000-00000-AA680' );
 ok( $licenses[0]->{'FULLNAME'} eq 'Microsoft Office Professional Plus 2016' );
 
 $key = loadRegistryDump("resources/win32/registry/office_2016_01.reg");
-GLPI::Agent::Task::Inventory::Win32::License::_resetSeenProducts();
-GLPI::Agent::Task::Inventory::Win32::License::_scanOfficeLicences($key);
-@licenses = GLPI::Agent::Task::Inventory::Win32::License::_getSeenProducts();
+AssetSync::Agent::Task::Inventory::Win32::License::_resetSeenProducts();
+AssetSync::Agent::Task::Inventory::Win32::License::_scanOfficeLicences($key);
+@licenses = AssetSync::Agent::Task::Inventory::Win32::License::_getSeenProducts();
 
 ok( @licenses == 1 );
 ok( $licenses[0]->{'KEY'} eq 'YKP6Y-3MDM7-J8F3Q-9297J-3TF27' );
 ok( $licenses[0]->{'PRODUCTID'} eq '00339-10000-00000-AA310' );
 
-GLPI::Agent::Task::Inventory::Win32::License::_scanWmiSoftwareLicensingProducts();
-@licenses = GLPI::Agent::Task::Inventory::Win32::License::_getSeenProducts();
+AssetSync::Agent::Task::Inventory::Win32::License::_scanWmiSoftwareLicensingProducts();
+@licenses = AssetSync::Agent::Task::Inventory::Win32::License::_getSeenProducts();
 
 # License was still read from registry, no license added, but replaced by WMI Information
 ok( @licenses == 1 );

@@ -10,9 +10,9 @@ use Storable;
 use UNIVERSAL;
 use Cwd qw(abs_path);
 
-use GLPI::Agent::Config;
+use AssetSync::Agent::Config;
 use lib 't/lib';
-use GLPI::Test::Utils;
+use AssetSync::Test::Utils;
 
 my $include7_logfile = "/tmp/logfile.txt";
 if ($OSNAME eq 'MSWin32') {
@@ -97,7 +97,7 @@ my %include = (
 plan tests => (scalar keys %config) * 4 + (scalar keys %include) * 2 + 40;
 
 foreach my $test (keys %config) {
-    my $c = GLPI::Agent::Config->new(options => {
+    my $c = AssetSync::Agent::Config->new(options => {
         'conf-file' => "resources/config/$test"
     });
 
@@ -129,7 +129,7 @@ foreach my $test (keys %config) {
 }
 
 foreach my $test (keys %include) {
-    my $cfg = GLPI::Agent::Config->new(
+    my $cfg = AssetSync::Agent::Config->new(
         options => {
             'conf-file' => "resources/config/$test"
         }
@@ -142,7 +142,7 @@ foreach my $test (keys %include) {
     }
 }
 
-my $c = GLPI::Agent::Config->new(options => {
+my $c = AssetSync::Agent::Config->new(options => {
         'conf-file' => "resources/config/sample1"
     });
 ok (ref($c->{'no-task'}) eq 'ARRAY');
@@ -168,12 +168,12 @@ ok (scalar(@{$c->{'httpd-trust'}}) == 4);
 SKIP: {
     skip ('test for Windows only', 7) if ($OSNAME ne 'MSWin32');
     skip ('registry access can only be tested as admin', 7) if system("net session 2>nul");
-    my $settings = GLPI::Test::Utils::openWin32Registry();
+    my $settings = AssetSync::Test::Utils::openWin32Registry();
     ok (defined $settings);
     my $testValue = time;
     $settings->{'TEST_KEY'} = $testValue;
 
-    my $settingsRead = GLPI::Test::Utils::openWin32Registry();
+    my $settingsRead = AssetSync::Test::Utils::openWin32Registry();
     ok (defined $settingsRead);
     ok (defined $settingsRead->{'TEST_KEY'});
     ok ($settingsRead->{'TEST_KEY'} eq $testValue);
@@ -186,7 +186,7 @@ SKIP: {
     ok (!(defined($settings->{'TEST_KEY'})));
 
     $settingsRead = undef;
-    $settingsRead = GLPI::Test::Utils::openWin32Registry();
+    $settingsRead = AssetSync::Test::Utils::openWin32Registry();
     ok (defined $settingsRead);
     ok (!(defined $settingsRead->{'TEST_KEY'}));
 }

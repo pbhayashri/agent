@@ -10,12 +10,12 @@ use Test::Exception;
 use Test::More;
 use Test::Deep qw(cmp_deeply);
 
-use GLPI::Agent::Logger;
+use AssetSync::Agent::Logger;
 
-GLPI::Agent::Task::NetDiscovery->use();
+AssetSync::Agent::Task::NetDiscovery->use();
 
 # Setup a target with a Test logger and debug
-my $logger = GLPI::Agent::Logger->new(
+my $logger = AssetSync::Agent::Logger->new(
     logger  => [ 'Test' ],
     debug   => 1
 );
@@ -63,7 +63,7 @@ foreach my $arp_case (keys(%arp_test)) {
         arp    => "true",
         logger => $logger
     };
-    bless $self, "GLPI::Agent::Task::NetDiscovery";
+    bless $self, "AssetSync::Agent::Task::NetDiscovery";
 
     my %device = $self->_scanAddressByArp({
         jid     => $arp_case,

@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Generic::PCI::Sounds;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Generic::PCI::Sounds;
 
 my %tests = (
     'dell-xt2' => [
@@ -31,11 +31,11 @@ my %tests = (
 
 plan tests => (2 * scalar keys %tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %tests) {
     my $file = "resources/generic/lspci/$test";
-    my @sounds = GLPI::Agent::Task::Inventory::Generic::PCI::Sounds::_getSounds(file => $file);
+    my @sounds = AssetSync::Agent::Task::Inventory::Generic::PCI::Sounds::_getSounds(file => $file);
     cmp_deeply(\@sounds, $tests{$test}, $test);
     lives_ok {
         $inventory->addEntry(section => 'SOUNDS', entry => $_)

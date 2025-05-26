@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::Virtualization::Vserver;
+package AssetSync::Agent::Task::Inventory::Virtualization::Vserver;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Virtualization;
 
 sub isEnabled {
     return canRun('vserver');

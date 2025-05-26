@@ -1,9 +1,9 @@
-package GLPI::Agent::HTTP::Server::ToolBox::Results::OtherFields;
+package AssetSync::Agent::HTTP::Server::ToolBox::Results::OtherFields;
 
 use strict;
 use warnings;
 
-use parent "GLPI::Agent::HTTP::Server::ToolBox::Results::Fields";
+use parent "AssetSync::Agent::HTTP::Server::ToolBox::Results::Fields";
 
 use Encode qw(encode);
 use HTML::Entities;

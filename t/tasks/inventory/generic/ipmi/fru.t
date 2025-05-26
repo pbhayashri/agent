@@ -9,9 +9,9 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Generic::Dmidecode::Psu;
-use GLPI::Agent::Task::Inventory::Generic::Ipmi::Fru::Psu;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Psu;
+use AssetSync::Agent::Task::Inventory::Generic::Ipmi::Fru::Psu;
 
 my %tests = (
     '1' => {
@@ -62,10 +62,10 @@ plan tests => 4 *(scalar keys %tests) + 1;
 
 foreach my $index (keys %tests) {
     my $dmidecode = "resources/generic/powersupplies/dmidecode_$index.txt";
-    my $inventory = GLPI::Test::Inventory->new();
+    my $inventory = AssetSync::Test::Inventory->new();
 
     lives_ok {
-        GLPI::Agent::Task::Inventory::Generic::Dmidecode::Psu::doInventory(
+        AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Psu::doInventory(
             inventory   => $inventory,
             file        => $dmidecode
         );
@@ -81,7 +81,7 @@ foreach my $index (keys %tests) {
 
     my $fru = "resources/generic/powersupplies/fru_$index.txt";
     lives_ok {
-        GLPI::Agent::Task::Inventory::Generic::Ipmi::Fru::Psu::doInventory(
+        AssetSync::Agent::Task::Inventory::Generic::Ipmi::Fru::Psu::doInventory(
             inventory   => $inventory,
             file        => $fru
         );

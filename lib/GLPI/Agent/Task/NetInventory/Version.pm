@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::NetInventory::Version;
+package AssetSync::Agent::Task::NetInventory::Version;
 
 use strict;
 use warnings;

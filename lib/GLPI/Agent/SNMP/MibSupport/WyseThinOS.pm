@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::WyseThinOS;
+package AssetSync::Agent::SNMP::MibSupport::WyseThinOS;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 use constant    enterprises => '.1.3.6.1.4.1' ;
 
@@ -72,7 +72,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::WyseThinOS - Inventory module for Dell ThinClient
+AssetSync::Agent::SNMP::MibSupport::WyseThinOS - Inventory module for Dell ThinClient
 
 =head1 DESCRIPTION
 

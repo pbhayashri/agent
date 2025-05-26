@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Contact: GLPI-Project Team
-Source: https://glpi-project.org/
-Upstream-Name: GLPI-Agent
+Upstream-Contact: AssetSync-Project Team
+Source: https://assetsync-project.org/
+Upstream-Name: AssetSync-Agent
 
 Files: *
 Copyright:

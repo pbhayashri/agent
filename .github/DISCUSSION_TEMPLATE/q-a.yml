@@ -4,12 +4,12 @@ body:
   - type: markdown
     attributes:
       value: |
-        You have a problem using GLPI Agent and you're not sure this is a bug. Ask your questions here.
+        You have a problem using AssetSync Agent and you're not sure this is a bug. Ask your questions here.
   - type: dropdown
     id: documentation
     attributes:
       label: Documentation & bug reporting acknowledgment
-      description: I read the [documentation](https://glpi-agent.readthedocs.io/en/latest/) and particularly the [bug reporting](https://glpi-agent.readthedocs.io/en/latest/bug-reporting.html) page before submitting my question.
+      description: I read the [documentation](https://assetsync-agent.readthedocs.io/en/latest/) and particularly the [bug reporting](https://assetsync-agent.readthedocs.io/en/latest/bug-reporting.html) page before submitting my question.
       options:
         - Yes, I read it
         - Not applicable

@@ -1,14 +1,14 @@
-package GLPI::Agent::Task::Inventory::Linux::AntiVirus::Defender;
+package AssetSync::Agent::Task::Inventory::Linux::AntiVirus::Defender;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use UNIVERSAL::require;
 use Cpanel::JSON::XS;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub isEnabled {
     return canRun('mdatp');

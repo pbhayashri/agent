@@ -9,16 +9,16 @@ use Test::More;
 use UNIVERSAL::require;
 use Config;
 
-use GLPI::Agent::Tools;
-use GLPI::Test::Utils;
+use AssetSync::Agent::Tools;
+use AssetSync::Test::Utils;
 
-GLPI::Agent::Task::NetDiscovery->use();
+AssetSync::Agent::Task::NetDiscovery->use();
 
 plan tests => 9;
 
 my ($out, $err, $rc);
 
-($out, $err, $rc) = run_executable('glpi-netdiscovery', '--help');
+($out, $err, $rc) = run_executable('assetsync-netdiscovery', '--help');
 ok($rc == 0, '--help exit status');
 like(
     $out,
@@ -27,16 +27,16 @@ like(
 );
 is($err, '', '--help stderr');
 
-($out, $err, $rc) = run_executable('glpi-netdiscovery', '--version');
+($out, $err, $rc) = run_executable('assetsync-netdiscovery', '--version');
 ok($rc == 0, '--version exit status');
 is($err, '', '--version stderr');
 like(
     $out,
-    qr/$GLPI::Agent::Task::NetDiscovery::VERSION/,
+    qr/$AssetSync::Agent::Task::NetDiscovery::VERSION/,
     '--version stdout'
 );
 
-($out, $err, $rc) = run_executable('glpi-netdiscovery', );
+($out, $err, $rc) = run_executable('assetsync-netdiscovery', );
 ok($rc == 2, 'no first address exit status');
 like(
     $err,

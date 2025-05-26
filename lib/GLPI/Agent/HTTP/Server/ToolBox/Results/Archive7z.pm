@@ -1,11 +1,11 @@
-package GLPI::Agent::HTTP::Server::ToolBox::Results::Archive7z;
+package AssetSync::Agent::HTTP::Server::ToolBox::Results::Archive7z;
 
 use strict;
 use warnings;
 
-use parent "GLPI::Agent::HTTP::Server::ToolBox::Results::Archive";
+use parent "AssetSync::Agent::HTTP::Server::ToolBox::Results::Archive";
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub new {
     my ($class, %params) = @_;

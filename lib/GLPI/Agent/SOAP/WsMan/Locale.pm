@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::Locale;
+package AssetSync::Agent::SOAP::WsMan::Locale;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package
@@ -14,7 +14,7 @@ use parent
 
 use constant    xmlns   => 'w';
 
-use GLPI::Agent::SOAP::WsMan::Attribute;
+use AssetSync::Agent::SOAP::WsMan::Attribute;
 
 sub new {
     my ($class, $locale) = @_;

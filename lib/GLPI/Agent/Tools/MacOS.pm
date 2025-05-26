@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::MacOS;
+package AssetSync::Agent::Tools::MacOS;
 
 use strict;
 use warnings;
@@ -10,8 +10,8 @@ use POSIX 'strftime';
 use Time::Local;
 use UNIVERSAL::require;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::XML;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::XML;
 
 our @EXPORT = qw(
     getSystemProfilerInfos
@@ -52,7 +52,7 @@ sub _getDict {
 
     my $dict = $params{dict} // '_items';
 
-    my $xml = GLPI::Agent::XML->new(
+    my $xml = AssetSync::Agent::XML->new(
         is_plist => 1,
         %params
     )->dump_as_hash();
@@ -399,7 +399,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::MacOS - MacOS generic functions
+AssetSync::Agent::Tools::MacOS - MacOS generic functions
 
 =head1 DESCRIPTION
 

@@ -4,7 +4,7 @@ uuid ( RO)           : a444ab5d-d1fc-f1a5-5ab4-3f0c3c07352e
 
 
 uuid ( RO)           : 7aa76a40-5e05-35eb-f275-e0f6c2c13d8f
-     name-label ( RW): GLPI
+     name-label ( RW): AssetSync
     power-state ( RO): running
 
 

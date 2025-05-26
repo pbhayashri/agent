@@ -10,11 +10,11 @@ use Test::Exception;
 use Test::More;
 use Cpanel::JSON::XS;
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Version;
-use GLPI::Agent::XML::Response;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Version;
+use AssetSync::Agent::XML::Response;
 
-use GLPI::Agent::Protocol::Inventory;
+use AssetSync::Agent::Protocol::Inventory;
 
 my $deviceid = "device-id-123456789";
 my %inventories = (
@@ -252,7 +252,7 @@ my %inventories = (
         content     => {
             VIRTUALMACHINES => {
                 VCPU    => "16",
-                NAME    => "Glpi",
+                NAME    => "AssetSync",
                 VMTYPE  => "lxc",
                 STATUS  => "Down" # Not supported status
             }
@@ -264,7 +264,7 @@ my %inventories = (
             content     => {
                 virtualmachines => {
                     vcpu    => 16,
-                    name    => "Glpi",
+                    name    => "AssetSync",
                     vmtype  => "lxc"
                 }
             }
@@ -276,12 +276,12 @@ my %inventories = (
             VIRTUALMACHINES => [
                 {
                     VCPU    => "16",
-                    NAME    => "Glpi",
+                    NAME    => "AssetSync",
                     VMTYPE  => "lxc",
                     STATUS  => "Off"
                 },{
                     VCPU    => "0032",
-                    NAME    => "Glpi32",
+                    NAME    => "AssetSync32",
                     VMTYPE  => "lxc",
                     STATUS  => "Running",
                     MEMORY  => undef
@@ -296,12 +296,12 @@ my %inventories = (
                 virtualmachines => [
                     {
                         vcpu    => 16,
-                        name    => "Glpi",
+                        name    => "AssetSync",
                         vmtype  => "lxc",
                         status  => "off",
                     },{
                         vcpu    => 32,
-                        name    => "Glpi32",
+                        name    => "AssetSync32",
                         vmtype  => "lxc",
                         status  => "running",
                     }
@@ -314,14 +314,14 @@ my %inventories = (
 
 plan tests => 7 + 3*keys(%inventories);
 
-my $logger = GLPI::Agent::Logger->new(
+my $logger = AssetSync::Agent::Logger->new(
     logger => [ 'Test' ]
 );
 
 my $inventory;
 
 lives_ok {
-    $inventory = GLPI::Agent::Protocol::Inventory->new(
+    $inventory = AssetSync::Agent::Protocol::Inventory->new(
         logger      => $logger,
         deviceid    => $deviceid,
         content     => {},
@@ -329,7 +329,7 @@ lives_ok {
     );
 } "empty inventory";
 
-isa_ok($inventory, "GLPI::Agent::Protocol::Inventory");
+isa_ok($inventory, "AssetSync::Agent::Protocol::Inventory");
 
 is($inventory->get("itemtype"), "empty", "Inventory request: get itemtype");
 is($inventory->get("deviceid"), $deviceid, "Inventory request: get deviceid");
@@ -358,7 +358,7 @@ foreach my $case (keys(%inventories)) {
     my $content  = $inventories{$case}->{content};
     my $expected = $inventories{$case}->{expected};
     lives_ok {
-        $inventory = GLPI::Agent::Protocol::Inventory->new(
+        $inventory = AssetSync::Agent::Protocol::Inventory->new(
             logger      => $logger,
             deviceid    => $deviceid,
             content     => $content,

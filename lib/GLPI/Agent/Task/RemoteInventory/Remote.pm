@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::RemoteInventory::Remote;
+package AssetSync::Agent::Task::RemoteInventory::Remote;
 
 use strict;
 use warnings;
@@ -11,7 +11,7 @@ use URI;
 use URI::Escape;
 use Socket qw(getaddrinfo getnameinfo);
 
-use GLPI::Agent::Tools::Network;
+use AssetSync::Agent::Tools::Network;
 
 use constant    supported => 0;
 

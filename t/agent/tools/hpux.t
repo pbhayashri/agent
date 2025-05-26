@@ -6,7 +6,7 @@ use warnings;
 use Test::Deep;
 use Test::More;
 
-use GLPI::Agent::Tools::HPUX;
+use AssetSync::Agent::Tools::HPUX;
 
 my %machinfo_tests = (
     'hpux_11.23.ia64' => {

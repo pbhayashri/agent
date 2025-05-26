@@ -1,11 +1,11 @@
-package GLPI::Agent::Protocol::Message;
+package AssetSync::Agent::Protocol::Message;
 
 use strict;
 use warnings;
 
 use Cpanel::JSON::XS;
 
-use GLPI::Agent::Logger;
+use AssetSync::Agent::Logger;
 
 sub new {
     my ($class, %params) = @_;
@@ -163,7 +163,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Protocol::Message - Base class for GLPI Agent messages
+AssetSync::Agent::Protocol::Message - Base class for AssetSync Agent messages
 
 =head1 DESCRIPTION
 

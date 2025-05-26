@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Win32::Storages;
+package AssetSync::Agent::Task::Inventory::Win32::Storages;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Generic;
-use GLPI::Agent::Tools::Win32;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Generic;
+use AssetSync::Agent::Tools::Win32;
 
 use constant    category    => "storage";
 

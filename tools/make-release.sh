@@ -19,7 +19,7 @@ do
 Usage:
     make-release.sh [-h|--help] [--no-merge|--devel] <VERSION>
 
-    Prepare the GLPI Agent sources for the <VERSION> release. By default, it also
+    Prepare the AssetSync Agent sources for the <VERSION> release. By default, it also
     prepare the current git repository with the necessary commits and merge. But
     you always have to push the sources to publish your repository.
 
@@ -104,14 +104,14 @@ if [ "$IDS" != "no" ]; then
 fi
 
 # 3. Update sources version
-cat >lib/GLPI/Agent/Version.pm <<VERSION
-package GLPI::Agent::Version;
+cat >lib/AssetSync/Agent/Version.pm <<VERSION
+package AssetSync::Agent::Version;
 
 use strict;
 use warnings;
 
 our \$VERSION = "$VERSION";
-our \$PROVIDER = "GLPI";
+our \$PROVIDER = "AssetSync";
 our \$COMMENTS = [];
 
 1;
@@ -120,7 +120,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Version - GLPI Agent version
+AssetSync::Agent::Version - AssetSync Agent version
 
 =head1 DESCRIPTION
 
@@ -138,7 +138,7 @@ agent issue is reported.
 One very useful information should be first defined like in that example:
 
 our \$COMMENTS = [
-    "Based on GLPI Agent $VERSION"
+    "Based on AssetSync Agent $VERSION"
 ];
 VERSION
 
@@ -153,7 +153,7 @@ NEXTMINOR=$((MINORVERSION+1))
 sed -ri -e "s/^'  \@version   .*$/'  \@version   $VERSION/" \
     -e "s/^SetupVersion = .*$/SetupVersion = \"$VERSION\"/" \
     -e "s/^'SetupVersion = .*$/'SetupVersion = \"$MAJORVERSION.$NEXTMINOR-gitABCDEFGH\"/" \
-    contrib/windows/glpi-agent-deployment.vbs
+    contrib/windows/assetsync-agent-deployment.vbs
 
 # 4. Update tasks version if required
 perl -Itools -MChangelog -e '
@@ -205,7 +205,7 @@ if [ "$GIT" = "no" ]; then
 fi
 
 # 6. Make release commit
-git commit -a -m "feat: GLPI Agent $VERSION release"
+git commit -a -m "feat: AssetSync Agent $VERSION release"
 
 if [ "$MERGE" = "no" ]; then
     echo

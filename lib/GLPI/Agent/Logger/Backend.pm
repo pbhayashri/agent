@@ -1,4 +1,4 @@
-package GLPI::Agent::Logger::Backend;
+package AssetSync::Agent::Logger::Backend;
 
 use strict;
 use warnings;
@@ -13,7 +13,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Logger::Backend - An abstract logger backend
+AssetSync::Agent::Logger::Backend - An abstract logger backend
 
 =head1 DESCRIPTION
 

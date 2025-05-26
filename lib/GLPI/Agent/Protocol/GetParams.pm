@@ -1,11 +1,11 @@
-package GLPI::Agent::Protocol::GetParams;
+package AssetSync::Agent::Protocol::GetParams;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Protocol::Message';
+use parent 'AssetSync::Agent::Protocol::Message';
 
-use GLPI::Agent::Version;
+use AssetSync::Agent::Version;
 
 sub new {
     my ($class, %params) = @_;
@@ -21,8 +21,8 @@ sub new {
     unless ($self->get('status')) {
         my $message = $self->get;
         $message->{action}   = 'get_params';
-        $message->{name}     = $GLPI::Agent::Version::PROVIDER . "-Agent";
-        $message->{version}  = $GLPI::Agent::Version::VERSION;
+        $message->{name}     = $AssetSync::Agent::Version::PROVIDER . "-Agent";
+        $message->{version}  = $AssetSync::Agent::Version::VERSION;
     }
 
     return $self;
@@ -49,7 +49,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Protocol::GetParams - GetParams GLPI Agent messages
+AssetSync::Agent::Protocol::GetParams - GetParams AssetSync Agent messages
 
 =head1 DESCRIPTION
 

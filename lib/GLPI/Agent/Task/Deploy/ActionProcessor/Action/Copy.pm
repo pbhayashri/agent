@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::Deploy::ActionProcessor::Action::Copy;
+package AssetSync::Agent::Task::Deploy::ActionProcessor::Action::Copy;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Deploy::ActionProcessor::Action';
+use parent 'AssetSync::Agent::Task::Deploy::ActionProcessor::Action';
 
 use English qw(-no_match_vars);
 use Encode;
@@ -40,8 +40,8 @@ sub do {
         my $to_local = $to;
 
         if ($OSNAME eq 'MSWin32') {
-            GLPI::Agent::Tools::Win32->require;
-            my $localCodepage = GLPI::Agent::Tools::Win32::getLocalCodepage();
+            AssetSync::Agent::Tools::Win32->require;
+            my $localCodepage = AssetSync::Agent::Tools::Win32::getLocalCodepage();
             if (Encode::is_utf8($from)) {
                 $from_local = encode($localCodepage, $from);
             }

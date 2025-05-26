@@ -1,16 +1,16 @@
-package GLPI::Agent::Task::Inventory::Win32::OS;
+package AssetSync::Agent::Task::Inventory::Win32::OS;
 
 use strict;
 use warnings;
 use integer;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Hostname;
-use GLPI::Agent::Tools::Win32;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Hostname;
+use AssetSync::Agent::Tools::Win32;
 
 use constant    category    => "os";
 

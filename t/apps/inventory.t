@@ -7,7 +7,7 @@ use English qw(-no_match_vars);
 use IPC::Run qw(run);
 use Test::More;
 
-use GLPI::Agent::Task::Inventory;
+use AssetSync::Agent::Task::Inventory;
 
 plan tests => 8;
 
@@ -27,7 +27,7 @@ ok($rc == 0, '--version exit status');
 is($err, '', '--version stderr');
 like(
     $out,
-    qr/$GLPI::Agent::Task::Inventory::VERSION/,
+    qr/$AssetSync::Agent::Task::Inventory::VERSION/,
     '--version stdout'
 );
 
@@ -43,7 +43,7 @@ sub run_inventory {
     my ($args) = @_;
     my @args = $args ? split(/\s+/, $args) : ();
     run(
-        [ $EXECUTABLE_NAME, 'bin/glpi-inventory', @args ],
+        [ $EXECUTABLE_NAME, 'bin/assetsync-inventory', @args ],
         \my ($in, $out, $err)
     );
     return ($out, $err, $CHILD_ERROR >> 8);

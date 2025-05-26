@@ -11,9 +11,9 @@ use Test::More;
 use Test::MockModule;
 use Test::NoWarnings;
 
-use GLPI::Test::Utils;
+use AssetSync::Test::Utils;
 
-use GLPI::Agent::Task::Inventory::Generic::Remote_Mgmt::RMS;
+use AssetSync::Agent::Task::Inventory::Generic::Remote_Mgmt::RMS;
 
 BEGIN {
     # use mock modules for non-available ones
@@ -21,7 +21,7 @@ BEGIN {
 }
 
 my $module = Test::MockModule->new(
-    'GLPI::Agent::Tools::Win32'
+    'AssetSync::Agent::Tools::Win32'
 );
 
 my %win32_tests = (
@@ -35,11 +35,11 @@ foreach my $test (keys(%win32_tests)) {
         '_getRegistryKey',
         _mockGetRegistryKey($test)
     );
-    my $internetID = GLPI::Agent::Task::Inventory::Generic::Remote_Mgmt::RMS::_getID();
+    my $internetID = AssetSync::Agent::Task::Inventory::Generic::Remote_Mgmt::RMS::_getID();
     is($internetID, $win32_tests{$test}, "RMS win32 getID - $test");
 }
 
-# Adapted from GLPI::Test::Utils mockGetRegistryKey()
+# Adapted from AssetSync::Test::Utils mockGetRegistryKey()
 sub _mockGetRegistryKey {
     my ($test) = @_;
 

@@ -8,27 +8,27 @@ case "$1" in
     for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist;  do
         for conf in toolbox-plugin snmp-advanced-support
         do
-            rm -f /etc/glpi-agent/$conf.cfg$ext
+            rm -f /etc/assetsync-agent/$conf.cfg$ext
         done
     done
 
     # remove the configuration file itself
     for conf in toolbox-plugin snmp-advanced-support
     do
-        rm -f /etc/glpi-agent/$conf.cfg
+        rm -f /etc/assetsync-agent/$conf.cfg
     done
 
     # and finally clear it out from the ucf database
     if which ucf >/dev/null; then
         for conf in toolbox-plugin snmp-advanced-support
         do
-            ucf --purge /etc/glpi-agent/$conf.cfg
+            ucf --purge /etc/assetsync-agent/$conf.cfg
         done
     fi
     if which ucfr >/dev/null; then
         for conf in toolbox-plugin snmp-advanced-support
         do
-            ucfr --purge glpi-agent /etc/glpi-agent/$conf.cfg
+            ucfr --purge assetsync-agent /etc/assetsync-agent/$conf.cfg
         done
     fi
 

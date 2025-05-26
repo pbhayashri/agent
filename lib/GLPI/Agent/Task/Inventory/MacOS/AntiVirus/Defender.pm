@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::MacOS::AntiVirus::Defender;
+package AssetSync::Agent::Task::Inventory::MacOS::AntiVirus::Defender;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use Cpanel::JSON::XS;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub isEnabled {
     return canRun('/usr/local/bin/mdatp');

@@ -1,18 +1,18 @@
-package GLPI::Agent::Task::Inventory::Generic::Databases::Oracle;
+package AssetSync::Agent::Task::Inventory::Generic::Databases::Oracle;
 
 use English qw(-no_match_vars);
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Generic::Databases';
+use parent 'AssetSync::Agent::Task::Inventory::Generic::Databases';
 
 use File::Temp;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::XML;
-use GLPI::Agent::Tools::Unix;
-use GLPI::Agent::Inventory::DatabaseService;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::XML;
+use AssetSync::Agent::Tools::Unix;
+use AssetSync::Agent::Inventory::DatabaseService;
 
 sub isEnabled {
     return 1 if canRun('sqlplus');
@@ -44,7 +44,7 @@ sub _oracleHome {
     if ($inventory_loc && -d $inventory_loc) {
         my $inventory_xml = $inventory_loc . "/ContentsXML/inventory.xml";
         if (-e $inventory_xml) {
-            my $xml = GLPI::Agent::XML->new(
+            my $xml = AssetSync::Agent::XML->new(
                 force_array => [ qw/HOME/ ],
                 file        => $inventory_xml
             );
@@ -72,7 +72,7 @@ sub doInventory {
     my $inventory = $params{inventory};
 
     # Try to retrieve credentials updating params
-    GLPI::Agent::Task::Inventory::Generic::Databases::_credentials(\%params, "oracle");
+    AssetSync::Agent::Task::Inventory::Generic::Databases::_credentials(\%params, "oracle");
 
     my $dbservices = _getDatabaseService(
         logger      => $params{logger},
@@ -175,7 +175,7 @@ sub _getDatabaseService {
     my @dbs = ();
 
     foreach my $credential (@{$credentials}) {
-        GLPI::Agent::Task::Inventory::Generic::Databases::trying_credentials($logger, $credential);
+        AssetSync::Agent::Task::Inventory::Generic::Databases::trying_credentials($logger, $credential);
         _oracleConnect(\%params, $credential);
 
         my %SID;
@@ -243,7 +243,7 @@ sub _getDatabaseService {
                 $state = "ERROR";
             }
 
-            my $dbs = GLPI::Agent::Inventory::DatabaseService->new(
+            my $dbs = AssetSync::Agent::Inventory::DatabaseService->new(
                 type            => "oracle",
                 name            => $instance_name,
                 version         => $fullversion,

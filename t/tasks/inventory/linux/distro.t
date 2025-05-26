@@ -9,7 +9,7 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Task::Inventory::Linux::Distro::OSRelease;
+use AssetSync::Agent::Task::Inventory::Linux::Distro::OSRelease;
 
 my %osrelease = (
     'fedora-35' => {
@@ -38,14 +38,14 @@ plan tests => (scalar keys %osrelease) + 1;
 
 foreach my $test (keys %osrelease) {
     my $file = "resources/linux/distro/os-release-$test";
-    my $os = GLPI::Agent::Task::Inventory::Linux::Distro::OSRelease::_getOSRelease(file => $file);
+    my $os = AssetSync::Agent::Task::Inventory::Linux::Distro::OSRelease::_getOSRelease(file => $file);
     $file = "resources/linux/distro/debian_version-$test";
-    GLPI::Agent::Task::Inventory::Linux::Distro::OSRelease::_fixDebianOS(file => $file, os => $os) if -e $file;
+    AssetSync::Agent::Task::Inventory::Linux::Distro::OSRelease::_fixDebianOS(file => $file, os => $os) if -e $file;
     $file = "resources/linux/distro/centos-release-$test";
-    GLPI::Agent::Task::Inventory::Linux::Distro::OSRelease::_fixCentOS(file => $file, os => $os) if -e $file;
+    AssetSync::Agent::Task::Inventory::Linux::Distro::OSRelease::_fixCentOS(file => $file, os => $os) if -e $file;
 
     my $astra_license = "resources/linux/distro/astra_license-$test";
     my $build_version = "resources/linux/distro/build_version-$test";
-    GLPI::Agent::Task::Inventory::Linux::Distro::OSRelease::_fixAstraOS(license => $astra_license, build => $build_version, os => $os) if -e $astra_license && -e $build_version;
+    AssetSync::Agent::Task::Inventory::Linux::Distro::OSRelease::_fixAstraOS(license => $astra_license, build => $build_version, os => $os) if -e $astra_license && -e $build_version;
     cmp_deeply($os, $osrelease{$test}, '$test os-release: parsing');
 }

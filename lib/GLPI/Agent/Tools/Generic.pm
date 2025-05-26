@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::Generic;
+package AssetSync::Agent::Tools::Generic;
 
 use strict;
 use warnings;
@@ -8,7 +8,7 @@ use English qw(-no_match_vars);
 use File::stat;
 use File::Basename qw(basename);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 our @EXPORT = qw(
     getDmidecodeInfos
@@ -453,7 +453,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::Generic - OS-independent generic functions
+AssetSync::Agent::Tools::Generic - OS-independent generic functions
 
 =head1 DESCRIPTION
 

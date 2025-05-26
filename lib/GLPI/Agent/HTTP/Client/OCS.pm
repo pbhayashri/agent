@@ -1,16 +1,16 @@
-package GLPI::Agent::HTTP::Client::OCS;
+package AssetSync::Agent::HTTP::Client::OCS;
 
 use strict;
 use warnings;
-use parent 'GLPI::Agent::HTTP::Client';
+use parent 'AssetSync::Agent::HTTP::Client';
 
 use English qw(-no_match_vars);
 use HTTP::Request;
 use UNIVERSAL::require;
 use URI;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::UUID;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::UUID;
 
 use constant    _log_prefix => "[http client] ";
 
@@ -25,10 +25,10 @@ sub new {
     $self->{ua}->default_header('Content-type' => 'application/xml')
         if $self->{compression} eq 'none';
 
-    # GLPI Agent will advertize it supports GLPI protocol by sending its agentid
-    # via GLPI-Agent-ID HTTP header. Legacy plugins will simply ignore it.
+    # AssetSync Agent will advertize it supports AssetSync protocol by sending its agentid
+    # via AssetSync-Agent-ID HTTP header. Legacy plugins will simply ignore it.
     $self->{ua}->default_header(
-        'GLPI-Agent-ID' => is_uuid_string($params{agentid}) ?
+        'AssetSync-Agent-ID' => is_uuid_string($params{agentid}) ?
             $params{agentid} : uuid_to_string($params{agentid})
     )
         if defined($params{agentid});
@@ -81,32 +81,32 @@ sub send { ## no critic (ProhibitBuiltinHomonyms)
 
     my $result;
     eval {
-        # Load GLPI::Agent::XML::Response as late as possible
-        GLPI::Agent::XML::Response->require();
+        # Load AssetSync::Agent::XML::Response as late as possible
+        AssetSync::Agent::XML::Response->require();
 
-        $result = GLPI::Agent::XML::Response->new(
+        $result = AssetSync::Agent::XML::Response->new(
             content => $uncompressed_response_content
         );
     };
     if ($EVAL_ERROR && $uncompressed_response_content =~ /^\{.*\}$/s) {
-        # When the GLPI Agent first contact a GLPI server with the legacy OCS protocol
+        # When the AssetSync Agent first contact a AssetSync server with the legacy OCS protocol
         # it can receive directly a CONTACT JSON answer
-        GLPI::Agent::Protocol::Contact->require();
+        AssetSync::Agent::Protocol::Contact->require();
         if ($EVAL_ERROR) {
-            $logger->error("Can't load GLPI CONTACT Protocol support, you probably miss a perl library dependency");
+            $logger->error("Can't load AssetSync CONTACT Protocol support, you probably miss a perl library dependency");
         } else {
             my $contact;
             eval {
-                $contact = GLPI::Agent::Protocol::Contact->new(
+                $contact = AssetSync::Agent::Protocol::Contact->new(
                     message => $uncompressed_response_content,
                 );
             };
             return $contact if defined($contact) && $contact->is_valid_message;
             if ($contact->status eq 'pending') {
-                $logger->debug("Got GLPI CONTACT pending answer");
+                $logger->debug("Got AssetSync CONTACT pending answer");
                 return $contact;
             } else {
-                $logger->debug("Not a GLPI CONTACT message");
+                $logger->debug("Not a AssetSync CONTACT message");
             }
         }
     }
@@ -132,18 +132,18 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::HTTP::Client::OCS - An HTTP client using OCS protocol
+AssetSync::Agent::HTTP::Client::OCS - An HTTP client using OCS protocol
 
 =head1 DESCRIPTION
 
-This is the object used by the agent to send messages to OCS or GLPI servers,
+This is the object used by the agent to send messages to OCS or AssetSync servers,
 using original OCS protocol (XML messages sent through POST requests).
 
 =head1 METHODS
 
 =head2 send(%params)
 
-Send an instance of C<GLPI::Agent::XML::Query> to the target (the
+Send an instance of C<AssetSync::Agent::XML::Query> to the target (the
 server).
 
 The following parameters are allowed, as keys of the %params
@@ -161,4 +161,4 @@ the message to send (mandatory)
 
 =back
 
-This method returns an C<GLPI::Agent::XML::Response> instance.
+This method returns an C<AssetSync::Agent::XML::Response> instance.

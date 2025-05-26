@@ -134,7 +134,7 @@
                 "-c",
                 "/opt/start.sh"
             ],
-            "Image": "driket54/glpi",
+            "Image": "driket54/assetsync",
             "Volumes": null,
             "WorkingDir": "/var/www/html",
             "Entrypoint": null,
@@ -314,7 +314,7 @@
                 "-c",
                 "/opt/start.sh"
             ],
-            "Image": "driket54/glpi",
+            "Image": "driket54/assetsync",
             "Volumes": null,
             "WorkingDir": "/var/www/html",
             "Entrypoint": null,
@@ -494,7 +494,7 @@
                 "-c",
                 "/opt/start.sh"
             ],
-            "Image": "driket54/glpi",
+            "Image": "driket54/assetsync",
             "Volumes": null,
             "WorkingDir": "/var/www/html",
             "Entrypoint": null,
@@ -673,7 +673,7 @@
                 "-c",
                 "/opt/start.sh"
             ],
-            "Image": "driket54/glpi",
+            "Image": "driket54/assetsync",
             "Volumes": null,
             "WorkingDir": "/var/www/html",
             "Entrypoint": null,
@@ -742,7 +742,7 @@
         "HostnamePath": "/var/lib/docker/containers/982fe8008bbf76282d4a861b7a379f78d74cb0be5b4f9476ca7824da69ed7a1c/hostname",
         "HostsPath": "/var/lib/docker/containers/982fe8008bbf76282d4a861b7a379f78d74cb0be5b4f9476ca7824da69ed7a1c/hosts",
         "LogPath": "/var/lib/docker/containers/982fe8008bbf76282d4a861b7a379f78d74cb0be5b4f9476ca7824da69ed7a1c/982fe8008bbf76282d4a861b7a379f78d74cb0be5b4f9476ca7824da69ed7a1c-json.log",
-        "Name": "/maraidb-5.5-glpi",
+        "Name": "/maraidb-5.5-assetsync",
         "RestartCount": 0,
         "Driver": "aufs",
         "MountLabel": "",
@@ -930,7 +930,7 @@
         "HostnamePath": "/var/lib/docker/containers/5cc66341f6bc1631a2ed858583e7d21a1060b5fb66b16321e328cbe1112fbd66/hostname",
         "HostsPath": "/var/lib/docker/containers/5cc66341f6bc1631a2ed858583e7d21a1060b5fb66b16321e328cbe1112fbd66/hosts",
         "LogPath": "/var/lib/docker/containers/5cc66341f6bc1631a2ed858583e7d21a1060b5fb66b16321e328cbe1112fbd66/5cc66341f6bc1631a2ed858583e7d21a1060b5fb66b16321e328cbe1112fbd66-json.log",
-        "Name": "/glpiall_glpi_1",
+        "Name": "/AssetSyncall_AssetSync_1",
         "RestartCount": 0,
         "Driver": "aufs",
         "MountLabel": "",
@@ -970,9 +970,9 @@
             "IpcMode": "",
             "Cgroup": "",
             "Links": [
-                "/glpiall_mysql_1:/glpiall_glpi_1/db",
-                "/glpiall_mysql_1:/glpiall_glpi_1/glpiall_mysql_1",
-                "/glpiall_mysql_1:/glpiall_glpi_1/mysql_1"
+                "/AssetSyncall_mysql_1:/AssetSyncall_AssetSync_1/db",
+                "/AssetSyncall_mysql_1:/AssetSyncall_AssetSync_1/AssetSyncall_mysql_1",
+                "/AssetSyncall_mysql_1:/AssetSyncall_AssetSync_1/mysql_1"
             ],
             "OomScoreAdj": 0,
             "PidMode": "",
@@ -1036,12 +1036,12 @@
             "OpenStdin": false,
             "StdinOnce": false,
             "Env": [
-                "MYSQL_PASSWORD=glpi",
+                "MYSQL_PASSWORD=assetsync",
                 "affinity:container==800a18f1661ab33d5a4aea0bb5b71c629b05f66baf060c507b82ab0f97f09579",
                 "MYSQL_ROOT_PASSWORD=root",
-                "MYSQL_USER=glpi",
-                "MYSQL_DATABASE=glpi",
-                "GLPI_SOURCE_URL=https://github.com/glpi-project/glpi/releases/download/9.1/glpi-9.1.tar.gz",
+                "MYSQL_USER=assetsync",
+                "MYSQL_DATABASE=assetsync",
+                "AssetSync_SOURCE_URL=https://github.com/glpi-project/assetsync/releases/download/9.1/assetsync-9.1.tar.gz",
                 "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
             ],
             "Cmd": [
@@ -1049,7 +1049,7 @@
                 "-c",
                 "/opt/start.sh"
             ],
-            "Image": "driket54/glpi",
+            "Image": "driket54/assetsync",
             "Volumes": null,
             "WorkingDir": "/var/www/html",
             "Entrypoint": null,
@@ -1058,8 +1058,8 @@
                 "com.docker.compose.config-hash": "81c6add09a352b25f2d034fb1426b6dc9904a3de6114f96459bec8de72342da3",
                 "com.docker.compose.container-number": "1",
                 "com.docker.compose.oneoff": "False",
-                "com.docker.compose.project": "glpiall",
-                "com.docker.compose.service": "glpi",
+                "com.docker.compose.project": "AssetSyncall",
+                "com.docker.compose.service": "assetsync",
                 "com.docker.compose.version": "1.5.2"
             }
         },
@@ -1124,7 +1124,7 @@
         "HostnamePath": "/var/lib/docker/containers/cdd54d47e9397f19575d7dcfad61d759b0e426e6521d0364328f4e38d10b427a/hostname",
         "HostsPath": "/var/lib/docker/containers/cdd54d47e9397f19575d7dcfad61d759b0e426e6521d0364328f4e38d10b427a/hosts",
         "LogPath": "/var/lib/docker/containers/cdd54d47e9397f19575d7dcfad61d759b0e426e6521d0364328f4e38d10b427a/cdd54d47e9397f19575d7dcfad61d759b0e426e6521d0364328f4e38d10b427a-json.log",
-        "Name": "/glpiall_mysql_1",
+        "Name": "/AssetSyncall_mysql_1",
         "RestartCount": 0,
         "Driver": "aufs",
         "MountLabel": "",
@@ -1229,12 +1229,12 @@
             "OpenStdin": false,
             "StdinOnce": false,
             "Env": [
-                "MYSQL_PASSWORD=glpi",
+                "MYSQL_PASSWORD=assetsync",
                 "affinity:container==dcd94b6bcc0d4a1b8c39ab509836556377b090eede76545545c5fdb9d3cf0d18",
                 "MYSQL_ROOT_PASSWORD=root",
-                "MYSQL_USER=glpi",
-                "MYSQL_DATABASE=glpi",
-                "GLPI_SOURCE_URL=https://github.com/glpi-project/glpi/releases/download/9.1/glpi-9.1.tar.gz",
+                "MYSQL_USER=assetsync",
+                "MYSQL_DATABASE=assetsync",
+                "AssetSync_SOURCE_URL=https://github.com/glpi-project/assetsync/releases/download/9.1/assetsync-9.1.tar.gz",
                 "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
                 "GOSU_VERSION=1.7",
                 "MARIADB_MAJOR=10.1",
@@ -1256,7 +1256,7 @@
                 "com.docker.compose.config-hash": "e5e230a603f36a7988eba69b786d8796aace5337cd3677e1074b6f400d84b92a",
                 "com.docker.compose.container-number": "1",
                 "com.docker.compose.oneoff": "False",
-                "com.docker.compose.project": "glpiall",
+                "com.docker.compose.project": "AssetSyncall",
                 "com.docker.compose.service": "mysql",
                 "com.docker.compose.version": "1.5.2"
             }
@@ -2161,7 +2161,7 @@
         "HostnamePath": "/var/lib/docker/containers/b9882923559276159813ce35d5df252d8e81d1c906593b50a145cc60153ab252/hostname",
         "HostsPath": "/var/lib/docker/containers/b9882923559276159813ce35d5df252d8e81d1c906593b50a145cc60153ab252/hosts",
         "LogPath": "/var/lib/docker/containers/b9882923559276159813ce35d5df252d8e81d1c906593b50a145cc60153ab252/b9882923559276159813ce35d5df252d8e81d1c906593b50a145cc60153ab252-json.log",
-        "Name": "/glpi_http",
+        "Name": "/AssetSync_http",
         "RestartCount": 0,
         "Driver": "aufs",
         "MountLabel": "",
@@ -2270,7 +2270,7 @@
                 "-c",
                 "/opt/start.sh"
             ],
-            "Image": "driket54/glpi",
+            "Image": "driket54/assetsync",
             "Volumes": null,
             "WorkingDir": "/var/www/html",
             "Entrypoint": null,
@@ -2346,7 +2346,7 @@
         "HostnamePath": "/var/lib/docker/containers/f8700da0f53ca47ad9a9f28cc903fd7078e67b953abb6b267f4cff29668f6f57/hostname",
         "HostsPath": "/var/lib/docker/containers/f8700da0f53ca47ad9a9f28cc903fd7078e67b953abb6b267f4cff29668f6f57/hosts",
         "LogPath": "/var/lib/docker/containers/f8700da0f53ca47ad9a9f28cc903fd7078e67b953abb6b267f4cff29668f6f57/f8700da0f53ca47ad9a9f28cc903fd7078e67b953abb6b267f4cff29668f6f57-json.log",
-        "Name": "/mariadb-glpi",
+        "Name": "/mariadb-assetsync",
         "RestartCount": 0,
         "Driver": "aufs",
         "MountLabel": "",

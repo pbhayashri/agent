@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Ubnt;
+package AssetSync::Agent::SNMP::MibSupport::Ubnt;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 # See UBNT-MIB
 
@@ -120,7 +120,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Ubnt - Inventory module for Ubnt
+AssetSync::Agent::SNMP::MibSupport::Ubnt - Inventory module for Ubnt
 
 =head1 DESCRIPTION
 

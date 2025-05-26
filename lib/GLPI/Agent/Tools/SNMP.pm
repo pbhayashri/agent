@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::SNMP;
+package AssetSync::Agent::Tools::SNMP;
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use base 'Exporter';
 
 use Encode qw(decode);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 our @EXPORT = qw(
     getCanonicalSerialNumber
@@ -213,7 +213,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::SNMP - SNMP Hardware-related functions
+AssetSync::Agent::Tools::SNMP - SNMP Hardware-related functions
 
 =head1 DESCRIPTION
 

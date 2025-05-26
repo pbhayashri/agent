@@ -1,11 +1,11 @@
-package GLPI::Agent::Task::Deploy::CheckProcessor::FreeSpaceGreater;
+package AssetSync::Agent::Task::Deploy::CheckProcessor::FreeSpaceGreater;
 
 use strict;
 use warnings;
 
-use parent "GLPI::Agent::Task::Deploy::CheckProcessor";
+use parent "AssetSync::Agent::Task::Deploy::CheckProcessor";
 
-use GLPI::Agent::Task::Deploy::DiskFree;
+use AssetSync::Agent::Task::Deploy::DiskFree;
 
 sub prepare {
 }

@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::Inventory::Virtualization;
+package AssetSync::Agent::Task::Inventory::Virtualization;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use constant    category    => "virtualmachine";
 

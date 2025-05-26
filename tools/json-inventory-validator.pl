@@ -8,7 +8,7 @@ use Cpanel::JSON::XS;
 use Data::Dumper;
 
 use constant    inventory_schema => qw(
-    https://raw.githubusercontent.com/glpi-project/inventory_format/master/inventory.schema.json
+    https://raw.githubusercontent.com/assetsync-project/inventory_format/master/inventory.schema.json
 );
 
 $Data::Dumper::Pad   = "     ";
@@ -30,7 +30,7 @@ if ($ARGV[0] && $ARGV[0] eq "--schema" ) {
 } elsif ($ARGV[0] && $ARGV[0] eq "--help" ) {
     print "$0 [--schema FILE] JSON FILES
         --schema FILE   use given file as JSON schema\n";
-    print "\nValidate given json files against GLPI inventory schema or given schema file\n\n";
+    print "\nValidate given json files against AssetSync inventory schema or given schema file\n\n";
     exit(0);
 } else {
     print "Loading inventory schema from url...\n";

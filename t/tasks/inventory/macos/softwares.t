@@ -11,9 +11,9 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Tools qw(getAllLines);
-use GLPI::Agent::Task::Inventory::MacOS::Softwares;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Tools qw(getAllLines);
+use AssetSync::Agent::Task::Inventory::MacOS::Softwares;
 
 use English;
 
@@ -32,7 +32,7 @@ my $localTimeOffset = 7200;
 plan tests => 3 * scalar (keys %tests)
     + 7;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (sort keys %tests) {
     my $results;
@@ -43,7 +43,7 @@ foreach my $test (sort keys %tests) {
         $format = "xml";
     }
     my $dump = $file.".results.txt";
-    my $softwares = GLPI::Agent::Task::Inventory::MacOS::Softwares::_getSoftwaresList(
+    my $softwares = AssetSync::Agent::Task::Inventory::MacOS::Softwares::_getSoftwaresList(
         file            => $file,
         format          => $format,
         localTimeOffset => $localTimeOffset
@@ -84,7 +84,7 @@ foreach my $test (sort keys %tests) {
 
 SKIP: {
     skip "Only if OS is darwin (Mac OS X) and command 'system_profiler' is available", 6
-        unless $OSNAME eq 'darwin' && GLPI::Agent::Task::Inventory::MacOS::Softwares::isEnabled();
+        unless $OSNAME eq 'darwin' && AssetSync::Agent::Task::Inventory::MacOS::Softwares::isEnabled();
 
     my @hasSoftwareOutput = getAllLines(
         command => "/usr/sbin/system_profiler SPApplicationsDataType"
@@ -93,23 +93,23 @@ SKIP: {
     skip "No installed software seen on this system", 6
         if @hasSoftwareOutput == 0;
 
-    my $softs = GLPI::Agent::Tools::MacOS::_getSystemProfilerInfosXML(
+    my $softs = AssetSync::Agent::Tools::MacOS::_getSystemProfilerInfosXML(
         type            => 'SPApplicationsDataType',
-        localTimeOffset => GLPI::Agent::Tools::MacOS::detectLocalTimeOffset(),
+        localTimeOffset => AssetSync::Agent::Tools::MacOS::detectLocalTimeOffset(),
         format => 'xml'
     );
     ok ($softs);
     ok (scalar(keys %$softs) > 0);
 
-    my $infos = GLPI::Agent::Tools::MacOS::getSystemProfilerInfos(
+    my $infos = AssetSync::Agent::Tools::MacOS::getSystemProfilerInfos(
         type            => 'SPApplicationsDataType',
-        localTimeOffset => GLPI::Agent::Tools::MacOS::detectLocalTimeOffset(),
+        localTimeOffset => AssetSync::Agent::Tools::MacOS::detectLocalTimeOffset(),
         format => 'xml'
     );
     ok ($infos);
     ok (scalar(keys %$infos) > 0);
 
-    my $softwareHash = GLPI::Agent::Task::Inventory::MacOS::Softwares::_getSoftwaresList(
+    my $softwareHash = AssetSync::Agent::Task::Inventory::MacOS::Softwares::_getSoftwaresList(
         format => 'xml',
     );
     ok (defined $softwareHash);

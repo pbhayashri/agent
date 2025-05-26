@@ -6,7 +6,7 @@ use warnings;
 use Test::Deep;
 use Test::More;
 
-use GLPI::Agent::Tools::AIX;
+use AssetSync::Agent::Tools::AIX;
 
 my %lsvpd_tests = (
     'aix-5.3a' => [

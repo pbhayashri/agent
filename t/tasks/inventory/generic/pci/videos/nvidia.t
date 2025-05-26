@@ -10,9 +10,9 @@ use Test::More;
 use Test::NoWarnings;
 use Test::MockModule;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Generic::PCI::Videos;
-use GLPI::Agent::Task::Inventory::Generic::PCI::Videos::Nvidia;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Generic::PCI::Videos;
+use AssetSync::Agent::Task::Inventory::Generic::PCI::Videos::Nvidia;
 
 my %tests = (
     'nvidia-1' => [
@@ -96,15 +96,15 @@ my %merged = (
 
 plan tests => (2 * scalar keys %tests) +  (3 * scalar keys %merged) + 1;
 
-my $module = Test::MockModule->new('GLPI::Agent::Task::Inventory::Generic::PCI::Videos::Nvidia');
+my $module = Test::MockModule->new('AssetSync::Agent::Task::Inventory::Generic::PCI::Videos::Nvidia');
 
 foreach my $test (keys %tests) {
     my %params = ( file => "resources/generic/lspci/$test.nvidia-settings" );
     $params{gpus} = 1 if -e $params{file}.".gpus";
-    my @videos = GLPI::Agent::Task::Inventory::Generic::PCI::Videos::Nvidia::_getNvidiaVideos(%params);
+    my @videos = AssetSync::Agent::Task::Inventory::Generic::PCI::Videos::Nvidia::_getNvidiaVideos(%params);
     cmp_deeply(\@videos, $tests{$test}, $test);
     lives_ok {
-        my $inventory = GLPI::Test::Inventory->new();
+        my $inventory = AssetSync::Test::Inventory->new();
         $inventory->addEntry(section => 'VIDEOS', entry => $_)
             foreach @videos;
     } "$test: registering";
@@ -114,19 +114,19 @@ foreach my $test (keys %merged) {
     my %params = ( file => "resources/generic/lspci/$test" );
 
     # Populate inventory with lspci parsing
-    my $inventory = GLPI::Test::Inventory->new();
-    my @videos = GLPI::Agent::Task::Inventory::Generic::PCI::Videos::_getVideos(%params);
+    my $inventory = AssetSync::Test::Inventory->new();
+    my @videos = AssetSync::Agent::Task::Inventory::Generic::PCI::Videos::_getVideos(%params);
     $inventory->addEntry(section => 'VIDEOS', entry => $_)
         foreach @videos;
     cmp_deeply(\@videos, $merged{$test}->{origin}, "pci $test inventory");
 
     $params{file} .= ".nvidia-settings";
     $params{gpus} = 1 if -e $params{file}.".gpus";
-    @videos = GLPI::Agent::Task::Inventory::Generic::PCI::Videos::Nvidia::_getNvidiaVideos(%params);
+    @videos = AssetSync::Agent::Task::Inventory::Generic::PCI::Videos::Nvidia::_getNvidiaVideos(%params);
     $module->mock('_getNvidiaVideos', sub { return @videos; });
 
     lives_ok {
-        GLPI::Agent::Task::Inventory::Generic::PCI::Videos::Nvidia::doInventory(inventory => $inventory);
+        AssetSync::Agent::Task::Inventory::Generic::PCI::Videos::Nvidia::doInventory(inventory => $inventory);
     } "$test: doing inventory";
 
     my $videos = $inventory->getSection('VIDEOS');

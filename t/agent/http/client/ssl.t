@@ -8,11 +8,11 @@ use English qw(-no_match_vars);
 use Test::More;
 use Test::Exception;
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::HTTP::Client;
-use GLPI::Test::Proxy;
-use GLPI::Test::Server;
-use GLPI::Test::Utils;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::HTTP::Client;
+use AssetSync::Test::Proxy;
+use AssetSync::Test::Server;
+use AssetSync::Test::Utils;
 
 use Net::HTTPS;
 
@@ -22,7 +22,7 @@ use Net::HTTPS;
 unsetProxyEnvVar();
 
 # find an available port
-my $port = GLPI::Agent::Tools::first { test_port($_) } 8080 .. 8180;
+my $port = AssetSync::Agent::Tools::first { test_port($_) } 8080 .. 8180;
 
 if (!$port) {
     plan skip_all => 'no available port';
@@ -50,7 +50,7 @@ my $ok = sub {
     print "OK";
 };
 
-my $logger = GLPI::Agent::Logger->new(
+my $logger = AssetSync::Agent::Logger->new(
     logger => [ 'Test' ]
 );
 
@@ -59,27 +59,27 @@ unless (-e "resources/ssl/crt/ca.pem") {
     qx(cd resources/ssl ; ./generate.sh );
 }
 
-my $proxy = GLPI::Test::Proxy->new();
+my $proxy = AssetSync::Test::Proxy->new();
 $proxy->background();
 
 my $server;
 my $request;
 my $url = "https://127.0.0.1:$port/public";
-my $unsafe_client = GLPI::Agent::HTTP::Client->new(
+my $unsafe_client = AssetSync::Agent::HTTP::Client->new(
     logger  => $logger,
     config  => {
         'no-ssl-check' => 1,
     },
 );
 
-my $secure_client = GLPI::Agent::HTTP::Client->new(
+my $secure_client = AssetSync::Agent::HTTP::Client->new(
     logger  => $logger,
     config  => {
         'ca-cert-file' => 'resources/ssl/crt/ca.pem',
     },
 );
 
-my $secure_proxy_client = GLPI::Agent::HTTP::Client->new(
+my $secure_proxy_client = AssetSync::Agent::HTTP::Client->new(
     logger => $logger,
     config => {
         proxy           => $proxy->url(),
@@ -91,7 +91,7 @@ my $secure_proxy_client = GLPI::Agent::HTTP::Client->new(
 $SIG{__DIE__}  = sub { $server->stop(); };
 
 # trusted certificate, correct hostname
-$server = GLPI::Test::Server->new(
+$server = AssetSync::Test::Server->new(
     port     => $port,
     ssl      => 1,
     crt      => 'resources/ssl/crt/good.pem',
@@ -122,7 +122,7 @@ $server->stop();
 $proxy->stop();
 
 # trusted certificate, alternate hostname
-$server = GLPI::Test::Server->new(
+$server = AssetSync::Test::Server->new(
     port     => $port,
     ssl      => 1,
     crt      => 'resources/ssl/crt/alternate.pem',
@@ -142,7 +142,7 @@ ok(
 $server->stop();
 
 # trusted certificate, wrong hostname
-$server = GLPI::Test::Server->new(
+$server = AssetSync::Test::Server->new(
     port     => $port,
     ssl      => 1,
     crt      => 'resources/ssl/crt/wrong.pem',
@@ -168,7 +168,7 @@ ok(
 $server->stop();
 
 # untrusted certificate, correct hostname
-$server = GLPI::Test::Server->new(
+$server = AssetSync::Test::Server->new(
     port     => $port,
     ssl      => 1,
     crt      => 'resources/ssl/crt/bad.pem',

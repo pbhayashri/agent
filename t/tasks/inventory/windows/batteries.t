@@ -6,9 +6,9 @@ use Test::Deep;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Tools::Batteries;
-use GLPI::Agent::Task::Inventory::Win32::Batteries;
-use GLPI::Agent::Task::Inventory::Generic::Dmidecode::Battery;
+use AssetSync::Agent::Tools::Batteries;
+use AssetSync::Agent::Task::Inventory::Win32::Batteries;
+use AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Battery;
 
 my %testPowercfgInfos = (
     'windows-10-notebook' => [
@@ -118,7 +118,7 @@ plan tests =>
     1;
 
 foreach my $test (keys %testPowercfgInfos) {
-    my @batteries = GLPI::Agent::Task::Inventory::Win32::Batteries::_getBatteriesFromPowercfg(
+    my @batteries = AssetSync::Agent::Task::Inventory::Win32::Batteries::_getBatteriesFromPowercfg(
         file => 'resources/win32/powercfg/' . $test . '.xml'
     );
     cmp_deeply(
@@ -134,7 +134,7 @@ foreach my $test (keys %testPowercfgMerged) {
 
     # Prepare batteries list like it should be after dmidecode passed
     map { $list->add($_) }
-        GLPI::Agent::Task::Inventory::Generic::Dmidecode::Battery::_getBatteries(
+        AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Battery::_getBatteries(
             file => $testPowercfgMerged{$test}->{dmidecode} // 'resources/generic/dmidecode/batteries/' . $test
         );
 
@@ -144,7 +144,7 @@ foreach my $test (keys %testPowercfgMerged) {
         "test $test: merge step 1"
     );
 
-    $list->merge(GLPI::Agent::Task::Inventory::Win32::Batteries::_getBatteriesFromPowercfg(
+    $list->merge(AssetSync::Agent::Task::Inventory::Win32::Batteries::_getBatteriesFromPowercfg(
         file => 'resources/win32/powercfg/' . $test . '.xml'
     ));
 

@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Intelbras;
+package AssetSync::Agent::SNMP::MibSupport::Intelbras;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 # See DAHUA-SNMP-MIB
 use constant dahua  => '.1.3.6.1.4.1.1004849';
@@ -91,7 +91,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Intelbras - Inventory module for Intelbras
+AssetSync::Agent::SNMP::MibSupport::Intelbras - Inventory module for Intelbras
 
 =head1 DESCRIPTION
 

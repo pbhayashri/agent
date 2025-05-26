@@ -17,11 +17,11 @@ use Time::HiRes qw(gettimeofday);
 use File::Which;
 use File::Find;
 
-use GLPI::Agent::Config;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Storage;
-use GLPI::Agent::XML;
-use GLPI::Agent::Task::RemoteInventory::Remote;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Storage;
+use AssetSync::Agent::XML;
+use AssetSync::Agent::Task::RemoteInventory::Remote;
 
 our $VERSION = "1.0";
 
@@ -31,7 +31,7 @@ Getopt::Long::Configure( "pass_through" );
 my $logger;
 
 my $options = {
-    useragent   => "GLPI-Remote/$VERSION",
+    useragent   => "AssetSync-Remote/$VERSION",
     timeout     => 10,
 };
 
@@ -98,7 +98,7 @@ if ($cmd) {
 
     die "Unsupported '$cmd' command\n" unless exists($cmds{$cmd});
 
-    $logger = GLPI::Agent::Logger->new(config => $options);
+    $logger = AssetSync::Agent::Logger->new(config => $options);
 
     &{$cmds{$cmd}}(@params);
 
@@ -194,7 +194,7 @@ sub add {
         }
     }
     if ($options->{server} || $options->{local}) {
-        my $config = GLPI::Agent::Config->new(
+        my $config = AssetSync::Agent::Config->new(
             options => $options,
         );
         my $targets = $config->getTargets();
@@ -213,7 +213,7 @@ sub add {
 
     my $umask = umask 0007;
     foreach my $url (@urls) {
-        my $remote = GLPI::Agent::Task::RemoteInventory::Remote->new(
+        my $remote = AssetSync::Agent::Task::RemoteInventory::Remote->new(
             url     => $url,
             config  => $options,
             logger  => $logger,
@@ -245,7 +245,7 @@ sub add {
                 $match = $id;
             } elsif ($remote->protocol() eq 'winrm') {
                 foreach my $otherid (sort keys(%{$remotes})) {
-                    my $other = GLPI::Agent::Task::RemoteInventory::Remote->new(
+                    my $other = AssetSync::Agent::Task::RemoteInventory::Remote->new(
                         url     => $remotes->{$otherid}->{url},
                     );
                     next unless $other->protocol() eq 'winrm';
@@ -316,7 +316,7 @@ sub get_remotes {
         foreach my $id (sort keys(%{$remotes})) {
             my $dump = $remotes->{$id};
             next unless ref($dump) eq 'HASH';
-            my $remote = GLPI::Agent::Task::RemoteInventory::Remote->new(
+            my $remote = AssetSync::Agent::Task::RemoteInventory::Remote->new(
                 dump    => $dump,
                 config  => $options,
                 logger  => $logger,
@@ -349,7 +349,7 @@ sub get_targets {
                 return unless $File::Find::name =~ m/\/target\.dump$/;
                 return if -d $File::Find::name;
 
-                my $storage = GLPI::Agent::Storage->new(
+                my $storage = AssetSync::Agent::Storage->new(
                     directory   => $File::Find::dir,
                     logger      => $logger,
                     read_only   => 1,
@@ -533,7 +533,7 @@ sub agent {
         }
 
         my $deviceid;
-        $xml = GLPI::Agent::XML->new(string => $content);
+        $xml = AssetSync::Agent::XML->new(string => $content);
         my $tree = $xml->dump_as_hash();
         if ($tree && $tree->{REQUEST} && $tree->{REQUEST}->{DEVICEID}) {
             $deviceid = $tree->{REQUEST}->{DEVICEID};
@@ -572,11 +572,11 @@ __END__
 
 =head1 NAME
 
-glpi-remote - A tool to scan, manage and initialize virtual remote agents
+assetsync-remote - A tool to scan, manage and initialize virtual remote agents
 
 =head1 SYNOPSIS
 
-glpi-remote [options] [--server server|--local path] [command] [command options]
+assetsync-remote [options] [--server server|--local path] [command] [command options]
 
   Options:
     -h --help           this menu
@@ -611,7 +611,7 @@ glpi-remote [options] [--server server|--local path] [command] [command options]
     -l --local=<PATH>   agent will write tasks results locally
     --target=<TARGETID> use target identified by its id (see list targets command)
 
-  Remote GLPI agent having inventory server plugin enabled options:
+  Remote AssetSync agent having inventory server plugin enabled options:
     -b --baseurl <PATH> remote base url if not /inventory
     -K --token <TOKEN>  token as shared secret
     -I --id <ID>        request id to identify requests in agent log
@@ -627,8 +627,8 @@ glpi-remote [options] [--server server|--local path] [command] [command options]
     scan <first> [last] [TODO] scan given ip range for remote access or just <first> and
                         register it/them as remote agent
     agent [hosts]       remotely claim an inventory to given remote hosts with a
-                        GLPI agent having inventory server plugin enabled
-                        (see https://glpi-agent.rtfd.io/inventory-server-plugin.html)
+                        AssetSync agent having inventory server plugin enabled
+                        (see https://assetsync-agent.rtfd.io/inventory-server-plugin.html)
 
   Supported environment variables:
     USERNAME
@@ -640,28 +640,28 @@ glpi-remote [options] [--server server|--local path] [command] [command options]
     CREDENTIALS
 
   Examples:
-    glpi-remote list
-    glpi-remote list targets
-    glpi-remote add ssh://admin:pass@192.168.43.237
-    glpi-remote add ssh://admin:pass@192.168.43.237 --stricthostkeychecking=no
-    glpi-remote add ssh://admin:pass@192.168.43.238 --no-check
-    glpi-remote add winrm://admin:pass@192.168.48.250 --no-check --target server0
-    glpi-remote delete 1
-    glpi-remote scan 192.168.43.1 192.168.43.254
-    glpi-remote scan 10.0.0.1 10.0.10.254 --inventory -s https://myglpi/
-    glpi-remote scan 10.0.0.1 10.0.10.254 --inventory -l /var/tmp/remotes
-    glpi-remote scan --inventory
-    glpi-remote scan 192.168.48.99 | glpi-injector -url https://myglpi/
+    assetsync-remote list
+    assetsync-remote list targets
+    assetsync-remote add ssh://admin:pass@192.168.43.237
+    assetsync-remote add ssh://admin:pass@192.168.43.237 --stricthostkeychecking=no
+    assetsync-remote add ssh://admin:pass@192.168.43.238 --no-check
+    assetsync-remote add winrm://admin:pass@192.168.48.250 --no-check --target server0
+    assetsync-remote delete 1
+    assetsync-remote scan 192.168.43.1 192.168.43.254
+    assetsync-remote scan 10.0.0.1 10.0.10.254 --inventory -s https://myAssetSync/
+    assetsync-remote scan 10.0.0.1 10.0.10.254 --inventory -l /var/tmp/remotes
+    assetsync-remote scan --inventory
+    assetsync-remote scan 192.168.48.99 | assetsync-injector -url https://myAssetSync/
 
   Examples for agent command:
-    glpi-remote -T strong-shared-secret agent 192.168.43.236
-    glpi-remote -v -T strong-shared-secret agent 192.168.43.237 | \
-        glpi-injector -url https://myglpi/
-    glpi-remote -T strong-shared-secret -d /var/remote agent 192.168.43.236 192.168.43.237
+    assetsync-remote -T strong-shared-secret agent 192.168.43.236
+    assetsync-remote -v -T strong-shared-secret agent 192.168.43.237 | \
+        assetsync-injector -url https://myAssetSync/
+    assetsync-remote -T strong-shared-secret -d /var/remote agent 192.168.43.236 192.168.43.237
 
 =head1 DESCRIPTION
 
-The F<glpi-remote> tool is used to manage virtual agents known locally by F<glpi-agent>.
+The F<assetsync-remote> tool is used to manage virtual agents known locally by F<assetsync-agent>.
 A virtual agent is used to make remote inventories and is essentially defined by
 a remote access. A remote access can be defined by ssh authorization for unix/linux
 platforms or WinRM authorizations for a WinRM enabled platform like win32.
@@ -671,8 +671,8 @@ platforms or WinRM authorizations for a WinRM enabled platform like win32.
 Most of the options are available in a I<short> form and a I<long> form.  For
 example, the two lines below are all equivalent:
 
-    % glpi-agent -s localhost
-    % glpi-agent --server localhost
+    % assetsync-agent -s localhost
+    % assetsync-agent --server localhost
 
 =head2 Target definition options
 
@@ -858,9 +858,9 @@ Scan given ip range for remote access or just I<first> and register it/them as r
 
 =item * B<agent> [I<hosts>]
 
-Remotely claim an inventory to given remote hosts with a GLPI agent having inventory server plugin enabled.
+Remotely claim an inventory to given remote hosts with a AssetSync agent having inventory server plugin enabled.
 
-See online documentation for details: https://glpi-agent.rtfd.io/inventory-server-plugin.html
+See online documentation for details: https://assetsync-agent.rtfd.io/inventory-server-plugin.html
 
 =back
 

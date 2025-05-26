@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::DataLocale;
+package AssetSync::Agent::SOAP::WsMan::DataLocale;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package
@@ -12,7 +12,7 @@ package
 use parent
     'Node';
 
-use GLPI::Agent::SOAP::WsMan::Attribute;
+use AssetSync::Agent::SOAP::WsMan::Attribute;
 
 use constant    xmlns   => 'p';
 

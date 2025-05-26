@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Voltaire;
+package AssetSync::Agent::SNMP::MibSupport::Voltaire;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 use constant    sysName     => '.1.3.6.1.2.1.1.5.0' ;
 use constant    enterprises => '.1.3.6.1.4.1' ;
@@ -59,7 +59,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Voltaire - Inventory module for Voltaire devices
+AssetSync::Agent::SNMP::MibSupport::Voltaire - Inventory module for Voltaire devices
 
 =head1 DESCRIPTION
 

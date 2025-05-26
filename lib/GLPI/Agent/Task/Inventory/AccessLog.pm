@@ -1,11 +1,11 @@
-package GLPI::Agent::Task::Inventory::AccessLog;
+package AssetSync::Agent::Task::Inventory::AccessLog;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant    category    => "accesslog";
 

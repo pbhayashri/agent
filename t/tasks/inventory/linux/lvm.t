@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Linux::LVM;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Linux::LVM;
 
 my %lvs = (
     'linux-1' => [
@@ -254,10 +254,10 @@ plan tests =>
     (2 * scalar keys %vgs) +
     1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %pvs) {
-    my @pvs = GLPI::Agent::Task::Inventory::Linux::LVM::_getPhysicalVolumes(file => "resources/lvm/linux/pvs/$test");
+    my @pvs = AssetSync::Agent::Task::Inventory::Linux::LVM::_getPhysicalVolumes(file => "resources/lvm/linux/pvs/$test");
     cmp_deeply(\@pvs, $pvs{$test}, "$test: parsing");
     lives_ok {
         $inventory->addEntry(section => 'PHYSICAL_VOLUMES', entry => $_)
@@ -266,7 +266,7 @@ foreach my $test (keys %pvs) {
 }
 
 foreach my $test (keys %lvs) {
-    my @lvs = GLPI::Agent::Task::Inventory::Linux::LVM::_getLogicalVolumes(file => "resources/lvm/linux/lvs/$test");
+    my @lvs = AssetSync::Agent::Task::Inventory::Linux::LVM::_getLogicalVolumes(file => "resources/lvm/linux/lvs/$test");
     cmp_deeply(\@lvs, $lvs{$test}, "$test: parsing");
     lives_ok {
         $inventory->addEntry(section => 'LOGICAL_VOLUMES', entry => $_)
@@ -275,7 +275,7 @@ foreach my $test (keys %lvs) {
 }
 
 foreach my $test (keys %vgs) {
-    my @vgs = GLPI::Agent::Task::Inventory::Linux::LVM::_getVolumeGroups(file => "resources/lvm/linux/vgs/$test");
+    my @vgs = AssetSync::Agent::Task::Inventory::Linux::LVM::_getVolumeGroups(file => "resources/lvm/linux/vgs/$test");
     cmp_deeply(\@vgs, $vgs{$test}, "$test: parsing");
     lives_ok {
         $inventory->addEntry(section => 'VOLUME_GROUPS', entry => $_)

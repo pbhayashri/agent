@@ -9,16 +9,16 @@ use HTTP::Request;
 use Test::More;
 use Test::Exception;
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::HTTP::Client;
-use GLPI::Test::Proxy;
-use GLPI::Test::Server;
-use GLPI::Test::Utils;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::HTTP::Client;
+use AssetSync::Test::Proxy;
+use AssetSync::Test::Server;
+use AssetSync::Test::Utils;
 
 unsetProxyEnvVar();
 
 # find an available port
-my $port = GLPI::Agent::Tools::first { test_port($_) } 8080 .. 8180;
+my $port = AssetSync::Agent::Tools::first { test_port($_) } 8080 .. 8180;
 
 if (!$port) {
     plan skip_all => 'no port available';
@@ -32,7 +32,7 @@ my $ok = sub {
     print "OK";
 };
 
-my $logger = GLPI::Agent::Logger->new(
+my $logger = AssetSync::Agent::Logger->new(
     logger => [ 'Test' ]
 );
 
@@ -41,7 +41,7 @@ unless (-e "resources/ssl/crt/ca.pem") {
     qx(cd resources/ssl ; ./generate.sh );
 }
 
-my $client = GLPI::Agent::HTTP::Client->new(
+my $client = AssetSync::Agent::HTTP::Client->new(
     logger => $logger
 );
 
@@ -61,7 +61,7 @@ my ($server, $response);
 # ensure the server get stopped even if an exception is thrown
 $SIG{__DIE__}  = sub { $server->stop(); };
 
-$server = GLPI::Test::Server->new(
+$server = AssetSync::Test::Server->new(
     port     => $port,
     user     => 'test',
     realm    => 'test',
@@ -84,7 +84,7 @@ subtest "correct response" => sub {
 };
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger => $logger
     );
 } 'instanciation: http, auth, no credentials';
@@ -99,7 +99,7 @@ subtest "no response" => sub {
 };
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         config   => {
             user     => 'test',
             password => 'test',
@@ -122,7 +122,7 @@ skip 'non working test under MacOS', 12 if $OSNAME eq 'darwin';
 skip 'non working test under Windows', 12 if $OSNAME eq 'MSWin32';
 # https connection tests
 
-$server = GLPI::Test::Server->new(
+$server = AssetSync::Test::Server->new(
     port     => $port,
     user     => 'test',
     realm    => 'test',
@@ -141,7 +141,7 @@ eval {
 BAIL_OUT("can't launch the server: $EVAL_ERROR") if $EVAL_ERROR;
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger  => $logger,
         config  => {
             'no-ssl-check'  => 1,
@@ -157,7 +157,7 @@ subtest "correct response" => sub {
 };
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger  => $logger,
         config  => {
             'no-ssl-check'  => 1,
@@ -175,7 +175,7 @@ subtest "no response" => sub {
 };
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger  => $logger,
         config  => {
             user            => 'test',
@@ -193,7 +193,7 @@ subtest "correct response" => sub {
 };
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger  => $logger,
         config  => {
             'ca-cert-file'  => 'resources/ssl/crt/ca.pem',
@@ -209,7 +209,7 @@ subtest "correct response" => sub {
 };
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger       => $logger,
         config  => {
             'ca-cert-file'  => 'resources/ssl/crt/ca.pem',
@@ -227,7 +227,7 @@ subtest "no response" => sub {
 };
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger  => $logger,
         config  => {
             user            => 'test',
@@ -251,7 +251,7 @@ SKIP: {
 skip 'non working test under Windows', 18 if $OSNAME eq 'MSWin32';
 # http connection through proxy tests
 
-$server = GLPI::Test::Server->new(
+$server = AssetSync::Test::Server->new(
     port     => $port,
     user     => 'test',
     realm    => 'test',
@@ -266,11 +266,11 @@ eval {
 };
 BAIL_OUT("can't launch the server: $EVAL_ERROR") if $EVAL_ERROR;
 
-my $proxy = GLPI::Test::Proxy->new();
+my $proxy = AssetSync::Test::Proxy->new();
 $proxy->background();
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger  => $logger,
         config  => {
             proxy   => $proxy->url(),
@@ -286,7 +286,7 @@ subtest "correct response" => sub {
 };
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger  => $logger,
         config  => {
             proxy   => $proxy->url(),
@@ -304,7 +304,7 @@ subtest "no response" => sub {
 };
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger  => $logger,
         config  => {
             user        => 'test',
@@ -327,7 +327,7 @@ SKIP: {
 skip 'non working test under MacOS', 12 if $OSNAME eq 'darwin';
 # https connection through proxy tests
 
-$server = GLPI::Test::Server->new(
+$server = AssetSync::Test::Server->new(
     port     => $port,
     user     => 'test',
     realm    => 'test',
@@ -360,7 +360,7 @@ eval {
 BAIL_OUT("can't launch the server: $EVAL_ERROR") if $EVAL_ERROR;
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger  => $logger,
         config  => {
             'no-ssl-check'  => 1,
@@ -378,7 +378,7 @@ subtest "correct response" => sub {
 };
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger  => $logger,
         config  => {
             'no-ssl-check'  => 1,
@@ -397,7 +397,7 @@ subtest "no response" => sub {
 };
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger  => $logger,
         config  => {
             user            => 'test',
@@ -416,7 +416,7 @@ subtest "correct response" => sub {
 };
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger  => $logger,
         config  => {
             'ca-cert-file'  => 'resources/ssl/crt/ca.pem',
@@ -433,7 +433,7 @@ subtest "correct response" => sub {
 };
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger  => $logger,
         config  => {
             'ca-cert-file'  => 'resources/ssl/crt/ca.pem',
@@ -452,7 +452,7 @@ subtest "no response" => sub {
 };
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         logger  => $logger,
         config  => {
             user            => 'test',

@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::NetDiscovery;
+package AssetSync::Agent::Task::NetDiscovery;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task';
+use parent 'AssetSync::Agent::Task';
 
 use constant DEVICE_PER_MESSAGE => 4;
 
@@ -14,20 +14,20 @@ use UNIVERSAL::require;
 use Parallel::ForkManager;
 use File::Path qw(mkpath);
 
-use GLPI::Agent::Version;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Network;
-use GLPI::Agent::Tools::Hardware;
-use GLPI::Agent::Tools::Expiration;
-use GLPI::Agent::Tools::SNMP;
-use GLPI::Agent::HTTP::Client::OCS;
+use AssetSync::Agent::Version;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Network;
+use AssetSync::Agent::Tools::Hardware;
+use AssetSync::Agent::Tools::Expiration;
+use AssetSync::Agent::Tools::SNMP;
+use AssetSync::Agent::HTTP::Client::OCS;
 # We need to preload MibSupport configuration before running threads
-use GLPI::Agent::SNMP::MibSupport;
+use AssetSync::Agent::SNMP::MibSupport;
 
-use GLPI::Agent::Task::NetDiscovery::Version;
-use GLPI::Agent::Task::NetDiscovery::Job;
+use AssetSync::Agent::Task::NetDiscovery::Version;
+use AssetSync::Agent::Task::NetDiscovery::Job;
 
-our $VERSION = GLPI::Agent::Task::NetDiscovery::Version::VERSION;
+our $VERSION = AssetSync::Agent::Task::NetDiscovery::Version::VERSION;
 
 sub isEnabled {
     my ($self, $contact) = @_;
@@ -37,8 +37,8 @@ sub isEnabled {
         return;
     }
 
-    if (ref($contact) ne 'GLPI::Agent::XML::Response') {
-        # TODO Support NetDiscovery task via GLPI Agent Protocol
+    if (ref($contact) ne 'AssetSync::Agent::XML::Response') {
+        # TODO Support NetDiscovery task via AssetSync Agent Protocol
         $self->{logger}->debug("NetDiscovery task not supported by server");
         return;
     }
@@ -100,7 +100,7 @@ sub isEnabled {
             next;
         }
 
-        push @jobs, GLPI::Agent::Task::NetDiscovery::Job->new(
+        push @jobs, AssetSync::Agent::Task::NetDiscovery::Job->new(
             logger      => $self->{logger},
             params      => $params,
             credentials => $option->{AUTHENTICATION},
@@ -152,16 +152,16 @@ sub run {
         );
     }
 
-    GLPI::Agent::SNMP::Live->require();
+    AssetSync::Agent::SNMP::Live->require();
     if ($EVAL_ERROR) {
         $self->{logger}->info(
-            "Can't load GLPI::Agent::SNMP::Live, snmp detection " .
+            "Can't load AssetSync::Agent::SNMP::Live, snmp detection " .
             "can't be used"
         );
     }
 
     # Preload MibSupport
-    GLPI::Agent::SNMP::MibSupport::preload(
+    AssetSync::Agent::SNMP::MibSupport::preload(
         config  => $self->{config},
         logger  => $self->{logger}
     );
@@ -227,7 +227,7 @@ sub run {
             $self->{logger}->debug("no valid block found for job $jobid");
             # Always send control messages from a worker to avoid issue on win32
             unless ($manager->start(0)) {
-                # Support glpi-netdiscovery --control option & local task from ToolBox
+                # Support assetsync-netdiscovery --control option & local task from ToolBox
                 $self->{_control} = $job->control;
                 unless ($job->localtask) {
                     $self->_sendStartMessage($jobid);
@@ -284,7 +284,7 @@ sub run {
             my $job = $jobs{$jobid};
             $queued_count--;
             if ($job->done) {
-                # Support glpi-netdiscovery --control option & local task from ToolBox
+                # Support assetsync-netdiscovery --control option & local task from ToolBox
                 $self->{_control} = $job->control;
 
                 # send final message to the server before cleaning jobs
@@ -339,7 +339,7 @@ sub run {
                 $self->{logger}->debug("starting job $jobid with $size ip".($size > 1 ? "s" : "")." to scan using $max worker".($max > 1 ? "s" : ""));
                 # Always send control messages from a worker to avoid issue on win32
                 unless ($manager->start(0)) {
-                    # Support glpi-netdiscovery --control option & local task from ToolBox
+                    # Support assetsync-netdiscovery --control option & local task from ToolBox
                     $self->{_control} = $job->control;
 
                     unless ($job->localtask) {
@@ -364,7 +364,7 @@ sub run {
 
             # We should better use a new client on fork
             delete $self->{client}
-                if ref($self->{client}) eq "GLPI::Agent::HTTP::Client::OCS" && $worker_count > 1;
+                if ref($self->{client}) eq "AssetSync::Agent::HTTP::Client::OCS" && $worker_count > 1;
 
             my $jobaddress = {
                 ip                  => $blockip,
@@ -388,7 +388,7 @@ sub run {
 
                 my $authsnmp = $result->{AUTHSNMP};
                 my $deviceid;
-                # AUTHREMOTE can be set in results but is not actually supported by GLPI
+                # AUTHREMOTE can be set in results but is not actually supported by AssetSync
                 my $authremote = delete $result->{AUTHREMOTE};
                 if (($authsnmp || $authremote) && $job->localtask) {
                     # Don't keep authsnmp in result for local task
@@ -420,15 +420,15 @@ sub run {
                             grep { $_->{ID} eq $authsnmp } @{$jobaddress->{snmp_credentials}}
                         ];
 
-                        GLPI::Agent::Task::NetInventory->require();
-                        my $inventory = GLPI::Agent::Task::NetInventory->new(
+                        AssetSync::Agent::Task::NetInventory->require();
+                        my $inventory = AssetSync::Agent::Task::NetInventory->new(
                             map { $_ => $self->{$_} } qw(config datadir target deviceid logger agentid)
                         );
 
-                        GLPI::Agent::Task::NetInventory::Job->require();
+                        AssetSync::Agent::Task::NetInventory::Job->require();
                         $timeout = $job->timeout >= 15 ? $job->timeout : 15;
                         $inventory->{jobs} = [
-                            GLPI::Agent::Task::NetInventory::Job->new(
+                            AssetSync::Agent::Task::NetInventory::Job->new(
                                 params => {
                                     PID           => $jobid,
                                     THREADS_QUERY => 1,
@@ -480,13 +480,13 @@ sub run {
                             if ($credentials->{TYPE} eq 'esx') {
                                 $found->serverInventory($path, $collectdeviceid, $deviceid);
                             } else {
-                                # Setup a remote inventory as it is done in GLPI::Agent::Task::RemoteInventory
-                                GLPI::Agent::Task::Inventory->require();
+                                # Setup a remote inventory as it is done in AssetSync::Agent::Task::RemoteInventory
+                                AssetSync::Agent::Task::Inventory->require();
 
                                 # Update local target path in the case it has been updated
                                 $self->{target}->setFullPath($path) if $agentfolder;
 
-                                my $task = GLPI::Agent::Task::Inventory->new(
+                                my $task = AssetSync::Agent::Task::Inventory->new(
                                     logger      => $self->{logger},
                                     config      => $self->{config},
                                     datadir     => $self->{datadir},
@@ -616,10 +616,10 @@ sub abort {
 sub _sendMessage {
     my ($self, $content) = @_;
 
-    # Load GLPI::Agent::XML::Query as late as possible
-    return unless GLPI::Agent::XML::Query->require();
+    # Load AssetSync::Agent::XML::Query as late as possible
+    return unless AssetSync::Agent::XML::Query->require();
 
-    my $message = GLPI::Agent::XML::Query->new(
+    my $message = AssetSync::Agent::XML::Query->new(
         deviceid => $self->{deviceid} || 'foo',
         query    => 'NETDISCOVERY',
         content  => $content
@@ -660,7 +660,7 @@ sub _sendMessage {
 
     } elsif ($self->{target}->isType('server')) {
         unless ($self->{client}) {
-            $self->{client} = GLPI::Agent::HTTP::Client::OCS->new(
+            $self->{client} = AssetSync::Agent::HTTP::Client::OCS->new(
                 logger  => $self->{logger},
                 config  => $self->{config},
             );
@@ -923,9 +923,9 @@ sub _scanAddressBySNMPReal {
 
     my $snmp;
     if ($params{file}) {
-        GLPI::Agent::SNMP::Mock->require();
+        AssetSync::Agent::SNMP::Mock->require();
         eval {
-            $snmp = GLPI::Agent::SNMP::Mock->new(
+            $snmp = AssetSync::Agent::SNMP::Mock->new(
                 ip   => $params{ip},
                 file => $params{file}
             );
@@ -933,8 +933,8 @@ sub _scanAddressBySNMPReal {
         die "SNMP emulation error: $EVAL_ERROR" if $EVAL_ERROR;
     } else {
         eval {
-            # AUTHPASSPHRASE & PRIVPASSPHRASE are deprecated but still used by FusionInventory for GLPI plugin
-            $snmp = GLPI::Agent::SNMP::Live->new(
+            # AUTHPASSPHRASE & PRIVPASSPHRASE are deprecated but still used by FusionInventory for AssetSync plugin
+            $snmp = AssetSync::Agent::SNMP::Live->new(
                 version      => $params{credential}->{VERSION},
                 hostname     => $params{ip},
                 port         => $params{port},
@@ -978,9 +978,9 @@ sub _scanAddressByRemote {
 
         if ($credential->{TYPE} eq 'esx') {
 
-            GLPI::Agent::Task::ESX->require();
+            AssetSync::Agent::Task::ESX->require();
 
-            my $esxscan = GLPI::Agent::Task::ESX->new(%params);
+            my $esxscan = AssetSync::Agent::Task::ESX->new(%params);
             $esxscan->timeout($params->{timeout});
 
             if ($esxscan->connect(
@@ -1001,7 +1001,7 @@ sub _scanAddressByRemote {
             }
         } else {
 
-            GLPI::Agent::Task::RemoteInventory::Remote->require();
+            AssetSync::Agent::Task::RemoteInventory::Remote->require();
             URI->require();
 
             my $url = URI->new("http://".$params->{ip});
@@ -1012,7 +1012,7 @@ sub _scanAddressByRemote {
             $url->query("?mode=".$credential->{MODE}) unless empty($credential->{MODE});
             $url->scheme($credential->{TYPE});
 
-            my $remote = GLPI::Agent::Task::RemoteInventory::Remote->new(
+            my $remote = AssetSync::Agent::Task::RemoteInventory::Remote->new(
                 config  => $self->{config},
                 logger  => $self->{logger},
                 url     => $url->as_string(),
@@ -1055,7 +1055,7 @@ sub _sendStartMessage {
     $self->_sendMessage({
         AGENT => {
             START        => 1,
-            AGENTVERSION => $GLPI::Agent::Version::VERSION,
+            AGENTVERSION => $AssetSync::Agent::Version::VERSION,
         },
         MODULEVERSION => $VERSION,
         PROCESSNUMBER => $pid
@@ -1113,7 +1113,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Task::NetDiscovery - Net discovery support for GLPI Agent
+AssetSync::Agent::Task::NetDiscovery - Net discovery support for AssetSync Agent
 
 =head1 DESCRIPTION
 
@@ -1131,4 +1131,4 @@ devices identification, through SNMP
 
 =back
 
-This task requires a GLPI server with a FusionInventory compatible plugin.
+This task requires a AssetSync server with a FusionInventory compatible plugin.

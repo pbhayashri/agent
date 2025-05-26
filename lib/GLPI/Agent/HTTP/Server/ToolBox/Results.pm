@@ -1,20 +1,20 @@
-package GLPI::Agent::HTTP::Server::ToolBox::Results;
+package AssetSync::Agent::HTTP::Server::ToolBox::Results;
 
 use strict;
 use warnings;
 
-use parent "GLPI::Agent::HTTP::Server::ToolBox";
+use parent "AssetSync::Agent::HTTP::Server::ToolBox";
 
 use English qw(-no_match_vars);
 use Encode qw(encode);
 use HTML::Entities;
 use File::stat;
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools;
-use GLPI::Agent::XML;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::XML;
 
-use GLPI::Agent::HTTP::Server::ToolBox::Results::Device;
+use AssetSync::Agent::HTTP::Server::ToolBox::Results::Device;
 
 use constant    results => "results";
 
@@ -35,7 +35,7 @@ sub new {
 
     my $self = {
         logger      => $params{toolbox}->{logger} ||
-                        GLPI::Agent::Logger->new(),
+                        AssetSync::Agent::Logger->new(),
         toolbox     => $params{toolbox},
         name        => $name,
         _mtime      => {},
@@ -174,7 +174,7 @@ sub xml_analysis {
         # Don't reload file if still loaded and has not been updated
         next if $self->{_mtime}->{$file} && $self->{_mtime}->{$file} == $mtime;
 
-        my $tree = GLPI::Agent::XML->new(file => $file)->dump_as_hash()
+        my $tree = AssetSync::Agent::XML->new(file => $file)->dump_as_hash()
             or next;
 
         $self->{_mtime}->{$file} = $mtime;
@@ -184,7 +184,7 @@ sub xml_analysis {
 
         my $device = $self->{_devices}->{$name};
         unless ($device) {
-            $device = GLPI::Agent::HTTP::Server::ToolBox::Results::Device->new(
+            $device = AssetSync::Agent::HTTP::Server::ToolBox::Results::Device->new(
                 name    => $name,
             );
             $self->{_devices}->{$name} = $device;
@@ -418,7 +418,7 @@ sub handle_form {
             $self->reset_edit();
         }
     } elsif ($form->{'submit/export'} || $form->{'submit/full-export'}) {
-        $self->debug("Doing export for GLPI integration");
+        $self->debug("Doing export for AssetSync integration");
         my $archiver = $self->_get_archiver()
             or return $self->errors("Download results: No archiving software available");
         my @time = localtime();
@@ -535,7 +535,7 @@ sub _save_inventory {
 
     my $xml;
     if (-e $file) {
-        $xml = GLPI::Agent::XML->new(file => $file)->dump_as_hash();
+        $xml = AssetSync::Agent::XML->new(file => $file)->dump_as_hash();
     } else {
         # Without existing inventory we suppose this is a new netinventory
         $xml = {
@@ -555,10 +555,10 @@ sub _save_inventory {
         my $info = $xml->{REQUEST}->{CONTENT}->{DEVICE}->{INFO};
         $xml->{REQUEST}->{DEVICEID} = "toolbox";
         $xml->{REQUEST}->{CONTENT}->{MODULEVERSION} =
-            "ToolBox v".$GLPI::Agent::HTTP::Server::ToolBox::VERSION;
+            "ToolBox v".$AssetSync::Agent::HTTP::Server::ToolBox::VERSION;
 
         my %from = ();
-        foreach my $field (GLPI::Agent::HTTP::Server::ToolBox::Results::NetInventory->fields()) {
+        foreach my $field (AssetSync::Agent::HTTP::Server::ToolBox::Results::NetInventory->fields()) {
             $from{$field->{from}} = $field->{name}
                 if ($field->{from} && $field->{from} ne 'ips');
         }
@@ -588,7 +588,7 @@ sub _save_inventory {
     }
 
     $self->info("Saving updated $kind_base: $file");
-    GLPI::Agent::XML->new()->writefile($file, $xml);
+    AssetSync::Agent::XML->new()->writefile($file, $xml);
 }
 
 sub _register_supported_modules {

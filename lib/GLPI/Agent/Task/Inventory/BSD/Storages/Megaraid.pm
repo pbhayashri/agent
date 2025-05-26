@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Inventory::BSD::Storages::Megaraid;
+package AssetSync::Agent::Task::Inventory::BSD::Storages::Megaraid;
 
 # Authors: Egor Shornikov <se@wbr.su>, Egor Morozov <akrus@flygroup.st>
 # License: GPLv2+
@@ -6,10 +6,10 @@ package GLPI::Agent::Task::Inventory::BSD::Storages::Megaraid;
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Task::Inventory::BSD::Storages;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Task::Inventory::BSD::Storages;
 
 sub isEnabled {
     return canRun('mfiutil');

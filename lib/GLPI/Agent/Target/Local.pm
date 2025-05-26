@@ -1,9 +1,9 @@
-package GLPI::Agent::Target::Local;
+package AssetSync::Agent::Target::Local;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Target';
+use parent 'AssetSync::Agent::Target';
 
 use File::Spec;
 use Cwd qw(abs_path);
@@ -92,7 +92,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Target::Local - Local target
+AssetSync::Agent::Target::Local - Local target
 
 =head1 DESCRIPTION
 
@@ -103,7 +103,7 @@ This is a target for storing execution result in a local folder.
 =head2 new(%params)
 
 The constructor. The following parameters are allowed, in addition to those
-from the base class C<GLPI::Agent::Target>, as keys of the %params
+from the base class C<AssetSync::Agent::Target>, as keys of the %params
 hash:
 
 =over

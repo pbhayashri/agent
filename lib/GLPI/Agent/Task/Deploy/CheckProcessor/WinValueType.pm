@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Deploy::CheckProcessor::WinValueType;
+package AssetSync::Agent::Task::Deploy::CheckProcessor::WinValueType;
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use warnings;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
-use parent "GLPI::Agent::Task::Deploy::CheckProcessor";
+use parent "AssetSync::Agent::Task::Deploy::CheckProcessor";
 
 # No perl Win32API returns the string type from the value, here is the
 # official ordered list interpreted from winnt.h
@@ -49,7 +49,7 @@ sub success {
     };
     return 0 unless (defined($expected));
 
-    GLPI::Agent::Tools::Win32->require();
+    AssetSync::Agent::Tools::Win32->require();
     if ($EVAL_ERROR) {
         $self->on_failure("failed to load Win32 tools: $EVAL_ERROR");
         return 0;
@@ -60,7 +60,7 @@ sub success {
     $self->on_failure("registry path not supported: ".$self->{path});
     return 0 unless (defined($parent));
     $self->on_failure("missing registry key: ".$parent);
-    my $parent_key = GLPI::Agent::Tools::Win32::getRegistryKey(
+    my $parent_key = AssetSync::Agent::Tools::Win32::getRegistryKey(
         path => $parent
     );
     return 0 unless (defined($parent_key));

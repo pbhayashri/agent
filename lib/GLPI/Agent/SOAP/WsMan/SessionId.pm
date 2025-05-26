@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::SessionId;
+package AssetSync::Agent::SOAP::WsMan::SessionId;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package
@@ -16,7 +16,7 @@ use Data::UUID;
 
 use constant    xmlns   => 'p';
 
-use GLPI::Agent::SOAP::WsMan::Attribute;
+use AssetSync::Agent::SOAP::WsMan::Attribute;
 
 sub new {
     my ($class, $sessionid) = @_;

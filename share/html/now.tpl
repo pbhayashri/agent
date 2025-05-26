@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
 
 <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
-<title>GLPI-Agent</title>
+<title>AssetSync-Agent</title>
 <link rel="stylesheet" href="site.css" type="text/css" />
 
 </head>

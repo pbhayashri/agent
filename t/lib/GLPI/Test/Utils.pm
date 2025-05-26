@@ -1,4 +1,4 @@
-package GLPI::Test::Utils;
+package AssetSync::Test::Utils;
 
 use strict;
 use warnings;
@@ -8,7 +8,7 @@ use English qw(-no_match_vars);
 use IPC::Run qw(run);
 use Socket;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 our @EXPORT = qw(
     run_executable
@@ -231,7 +231,7 @@ sub openWin32Registry {
         TiedRef     => \$Registry
     );
 
-    my $agentKey = 'GLPI-Agent-unittest';
+    my $agentKey = 'AssetSync-Agent-unittest';
     my $machKey = $Registry->{'LMachine'};
     die "\nFailed to open HKEY_LOCAL_MACHINE hive, be sure to run this win32 test with Administrator privileges"
         unless $machKey;

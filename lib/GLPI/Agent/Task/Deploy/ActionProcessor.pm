@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Deploy::ActionProcessor;
+package AssetSync::Agent::Task::Deploy::ActionProcessor;
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use warnings;
 use Cwd;
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Task::Deploy::ActionProcessor::Action;
+use AssetSync::Agent::Task::Deploy::ActionProcessor::Action;
 
 sub new {
     my ($class, %params) = @_;
@@ -54,7 +54,7 @@ sub process {
         # not an action
     } elsif ( $actionName =~ /^cmd|copy|delete|mkdir|move$/i ) {
         $self->{_logger}->debug2("Processing $actionName action...");
-        my $action = GLPI::Agent::Task::Deploy::ActionProcessor::Action->new(
+        my $action = AssetSync::Agent::Task::Deploy::ActionProcessor::Action->new(
             logger  => $self->{_logger},
             action  => $actionName
         );

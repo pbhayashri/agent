@@ -1,9 +1,9 @@
-package GLPI::Agent::HTTP::Server::ToolBox::Results::ArchiveZip;
+package AssetSync::Agent::HTTP::Server::ToolBox::Results::ArchiveZip;
 
 use strict;
 use warnings;
 
-use parent "GLPI::Agent::HTTP::Server::ToolBox::Results::Archive";
+use parent "AssetSync::Agent::HTTP::Server::ToolBox::Results::Archive";
 
 use UNIVERSAL::require;
 

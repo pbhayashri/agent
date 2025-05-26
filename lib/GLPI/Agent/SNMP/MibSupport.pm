@@ -1,4 +1,4 @@
-package GLPI::Agent::SNMP::MibSupport;
+package AssetSync::Agent::SNMP::MibSupport;
 
 use strict;
 use warnings;
@@ -10,8 +10,8 @@ use English qw(-no_match_vars);
 use File::Glob;
 use UNIVERSAL::require;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Logger;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Logger;
 
 my $available_mib_support;
 
@@ -22,7 +22,7 @@ sub new {
 
     return unless $device;
 
-    my $logger      = $params{logger} || $device->{logger} || GLPI::Agent::Logger->new();
+    my $logger      = $params{logger} || $device->{logger} || AssetSync::Agent::Logger->new();
     my $sysobjectid = $params{sysobjectid};
     my $sysorid     = $device->walk(sysORID);
 
@@ -169,7 +169,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport - GLPI agent SNMP mib support
+AssetSync::Agent::SNMP::MibSupport - AssetSync agent SNMP mib support
 
 =head1 DESCRIPTION
 

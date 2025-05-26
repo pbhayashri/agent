@@ -1,15 +1,15 @@
-package GLPI::Agent::Task::Inventory::Win32::License;
+package AssetSync::Agent::Task::Inventory::Win32::License;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools::License;
-use GLPI::Agent::Tools::Win32;
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools::License;
+use AssetSync::Agent::Tools::Win32;
+use AssetSync::Agent::Tools;
 
 use constant    category    => "licenseinfo";
 

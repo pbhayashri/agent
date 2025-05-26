@@ -10,8 +10,8 @@ use Test::Deep qw(cmp_deeply);
 use Test::MockModule;
 use Test::More;
 
-use GLPI::Test::Utils;
-use GLPI::Agent::Tools;
+use AssetSync::Test::Utils;
+use AssetSync::Agent::Tools;
 
 BEGIN {
     # use mock modules for non-available ones
@@ -658,11 +658,11 @@ plan tests =>
     (scalar keys %tests) + $win32_only_test_count +
     (scalar keys %regkey_tests) + (scalar keys %regval_tests);
 
-GLPI::Agent::Tools::Win32->require();
-GLPI::Agent::Tools::Win32->use('getInterfaces');
+AssetSync::Agent::Tools::Win32->require();
+AssetSync::Agent::Tools::Win32->use('getInterfaces');
 
 my $module = Test::MockModule->new(
-    'GLPI::Agent::Tools::Win32'
+    'AssetSync::Agent::Tools::Win32'
 );
 
 foreach my $test (keys %tests) {
@@ -729,7 +729,7 @@ SKIP: {
         }
     );
 
-    GLPI::Agent::Tools::Win32->use('getRegistryKey');
+    AssetSync::Agent::Tools::Win32->use('getRegistryKey');
     foreach my $test (keys %regkey_tests) {
 
         my $regkey = getRegistryKey( %{$regkey_tests{$test}} );
@@ -740,7 +740,7 @@ SKIP: {
         );
     }
 
-    GLPI::Agent::Tools::Win32->use('getRegistryValue');
+    AssetSync::Agent::Tools::Win32->use('getRegistryValue');
     foreach my $test (keys %regval_tests) {
 
         my $regval = getRegistryValue( %{$regval_tests{$test}} );
@@ -756,7 +756,7 @@ SKIP: {
     skip 'Windows-specific test', $win32_only_test_count
         unless $OSNAME eq 'MSWin32';
 
-    GLPI::Agent::Tools::Win32->use('runCommand');
+    AssetSync::Agent::Tools::Win32->use('runCommand');
 
     my ($code, $fd) = runCommand(command => "perl -V");
     ok($code eq 0, "perl -V returns 0");
@@ -776,12 +776,12 @@ SKIP: {
     ok(defined(<$fd>), "no_stderr=0: catch STDERR output");
 
     # From here we need to avoid crashes due to not thread-safe Win32::OLE
-    GLPI::Agent::Tools::Win32::start_Win32_OLE_Worker();
+    AssetSync::Agent::Tools::Win32::start_Win32_OLE_Worker();
 
-    GLPI::Agent::Tools::Win32->use('is64bit');
+    AssetSync::Agent::Tools::Win32->use('is64bit');
     ok(defined(is64bit()), "is64bit api call");
 
-    GLPI::Agent::Tools::Win32->use('getLocalCodepage');
+    AssetSync::Agent::Tools::Win32->use('getLocalCodepage');
     ok(defined(getLocalCodepage()), "getLocalCodepage api call");
     ok(getLocalCodepage() =~ /^cp.+/, "local codepage check");
 

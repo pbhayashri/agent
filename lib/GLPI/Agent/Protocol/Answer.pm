@@ -1,9 +1,9 @@
-package GLPI::Agent::Protocol::Answer;
+package AssetSync::Agent::Protocol::Answer;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Protocol::Message';
+use parent 'AssetSync::Agent::Protocol::Message';
 
 use Cpanel::JSON::XS;
 
@@ -92,7 +92,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Protocol::Answer - Answer for GLPI Agent messages
+AssetSync::Agent::Protocol::Answer - Answer for AssetSync Agent messages
 
 =head1 DESCRIPTION
 

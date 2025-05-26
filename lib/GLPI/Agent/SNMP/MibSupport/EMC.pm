@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::EMC;
+package AssetSync::Agent::SNMP::MibSupport::EMC;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 use constant    emc => '.1.3.6.1.4.1.674';
 
@@ -68,7 +68,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::EMC - Inventory module for EMC devices
+AssetSync::Agent::SNMP::MibSupport::EMC - Inventory module for EMC devices
 
 =head1 DESCRIPTION
 

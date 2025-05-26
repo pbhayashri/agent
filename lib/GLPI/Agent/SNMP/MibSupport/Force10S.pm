@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Force10S;
+package AssetSync::Agent::SNMP::MibSupport::Force10S;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 use constant Force10S => '.1.3.6.1.4.1.6027.1.3' ;
 

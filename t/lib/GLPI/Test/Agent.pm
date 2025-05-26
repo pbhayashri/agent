@@ -1,8 +1,8 @@
-package GLPI::Test::Agent;
+package AssetSync::Test::Agent;
 
 use strict;
 use warnings;
-use parent qw(GLPI::Agent);
+use parent qw(AssetSync::Agent);
 
 use File::Temp;
 

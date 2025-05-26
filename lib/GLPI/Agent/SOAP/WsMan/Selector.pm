@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::Selector;
+package AssetSync::Agent::SOAP::WsMan::Selector;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package
@@ -12,7 +12,7 @@ package
 use parent
     'Node';
 
-use GLPI::Agent::SOAP::WsMan::Selector;
+use AssetSync::Agent::SOAP::WsMan::Selector;
 
 use constant    xmlns   => 'w';
 

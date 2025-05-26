@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Linux::Drives;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Linux::Drives;
 
 my %hal_tests = (
     'dell-xt2' => [
@@ -82,11 +82,11 @@ my %hal_tests = (
 
 plan tests => (2 * scalar keys %hal_tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %hal_tests) {
     my $file = "resources/linux/hal/$test";
-    my $drives = GLPI::Agent::Task::Inventory::Linux::Drives::_parseLshal(file => $file);
+    my $drives = AssetSync::Agent::Task::Inventory::Linux::Drives::_parseLshal(file => $file);
     cmp_deeply($drives, $hal_tests{$test}, "$test: parsing");
     lives_ok {
         $inventory->addEntry(section => 'DRIVES', entry => $_) foreach @$drives;

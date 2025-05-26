@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::WakeOnLan::Version;
+package AssetSync::Agent::Task::WakeOnLan::Version;
 
 use strict;
 use warnings;

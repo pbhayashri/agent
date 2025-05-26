@@ -1,11 +1,11 @@
-package GLPI::Agent::SNMP::Mock;
+package AssetSync::Agent::SNMP::Mock;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP';
+use parent 'AssetSync::Agent::SNMP';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 my %prefixes = (
     'iso'                               => '.1',
@@ -325,7 +325,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::Mock - Mock SNMP client
+AssetSync::Agent::SNMP::Mock - Mock SNMP client
 
 =head1 DESCRIPTION
 

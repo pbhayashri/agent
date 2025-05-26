@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Deploy::File;
+package AssetSync::Agent::Task::Deploy::File;
 
 use strict;
 use warnings;
@@ -165,11 +165,11 @@ sub download {
 
     my @peers;
     if ($self->{p2p}) {
-        GLPI::Agent::Task::Deploy::P2P->require();
+        AssetSync::Agent::Task::Deploy::P2P->require();
         if ($EVAL_ERROR) {
             $self->{logger}->debug("can't enable P2P: $EVAL_ERROR")
         } else {
-            my $p2p = GLPI::Agent::Task::Deploy::P2P->new(
+            my $p2p = AssetSync::Agent::Task::Deploy::P2P->new(
                 scan_timeout    => 1,
                 datastore       => $self->{datastore},
                 max_worker      => $workers,
@@ -227,7 +227,7 @@ sub download {
         # Here, we missed to download the part
         if (!$lastPeer && !@peers && !@{$self->{mirrors}}) {
             $self->{logger}->debug("can't download part as no mirror is defined");
-            $self->{logger}->debug("You probably missed to enable the GLPI option to use GLPI server as a mirror");
+            $self->{logger}->debug("You probably missed to enable the AssetSync option to use AssetSync server as a mirror");
             # Don't try to download any other part
             $self->{logger}->error("Aborting download: no mirror");
             last;

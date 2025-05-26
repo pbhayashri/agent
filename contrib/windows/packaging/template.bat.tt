@@ -4,9 +4,9 @@ cd /d "%~dp0"
 set _OLDPATH=%PATH%
 set PATH=%~dp0perl\bin;%PATH%
 [% IF ! msi AND tag == 'agent' %]
-perl\bin\glpi-agent.exe perl\bin\glpi-[%tag%] --conf-file=etc/agent.cfg %*
+perl\bin\assetsync-agent.exe perl\bin\assetsync-[%tag%] --conf-file=etc/agent.cfg %*
 [% ELSE %]
-perl\bin\glpi-agent.exe perl\bin\glpi-[%tag%] %*
+perl\bin\assetsync-agent.exe perl\bin\assetsync-[%tag%] %*
 [% END %]
 set PATH=%_OLDPATH%
 set _OLDPATH=

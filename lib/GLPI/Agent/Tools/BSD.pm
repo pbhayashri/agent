@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::BSD;
+package AssetSync::Agent::Tools::BSD;
 
 use strict;
 use warnings;
@@ -6,8 +6,8 @@ use parent 'Exporter';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Network;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Network;
 
 our @EXPORT = qw(
     getInterfacesFromIfconfig
@@ -113,7 +113,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::BSD - BSD generic functions
+AssetSync::Agent::Tools::BSD - BSD generic functions
 
 =head1 DESCRIPTION
 

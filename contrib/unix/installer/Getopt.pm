@@ -22,7 +22,7 @@ my @options = (
     'extract=s',
     'force',
     'full-inventory-postpone=i',
-    'glpi-version=s',
+    'assetsync-version=s',
     'help|h',
     'install',
     'itemtype=s',
@@ -118,10 +118,10 @@ sub GetOptions {
 
 sub Help {
     return  <<'HELP';
-glpi-agent-linux-installer [options]
+assetsync-agent-linux-installer [options]
 
   Target definition options:
-    -s --server=URI                configure agent GLPI server
+    -s --server=URI                configure agent AssetSync server
     -l --local=PATH                configure local path to store inventories
 
   Target scheduling options:
@@ -140,10 +140,10 @@ glpi-agent-linux-installer [options]
     -t --tag=TAG                   configure tag to define in inventories
     --full-inventory-postpone=NUM  set number of possible full inventory postpone (14)
     --required-category=CATEGORY   list of category required even when postponing full inventory
-    --itemtype=TYPE                set asset type for target supporting genericity like GLPI 11+
+    --itemtype=TYPE                set asset type for target supporting genericity like AssetSync 11+
 
   ESX task specific options:
-    --esx-itemtype=TYPE            set ESX asset type for target supporting genericity like GLPI 11+
+    --esx-itemtype=TYPE            set ESX asset type for target supporting genericity like AssetSync 11+
 
   RemoteInventory specific options:
     --remote=REMOTE[,REMOTE]...    list of remotes for remoteinventory task
@@ -169,7 +169,7 @@ glpi-agent-linux-installer [options]
     --no-httpd                     disable embedded web server (false)
     --httpd-ip=IP                  set network interface to listen to (all)
     --httpd-port=PORT              set network port to listen to (62354)
-    --httpd-trust=IP               list of IPs to trust (GLPI server only by default)
+    --httpd-trust=IP               list of IPs to trust (AssetSync server only by default)
 
   Logging options:
     --logger=BACKEND               configure logger backend (stderr)
@@ -183,7 +183,7 @@ glpi-agent-linux-installer [options]
     --cron                         setup the agent as cron task running hourly (false)
 
   Other options:
-    --glpi-version=<VERSION>       set targeted glpi version to enable supported features
+    --assetsync-version=<VERSION>       set targeted assetsync version to enable supported features
 
   Installer options:
     --install                      install the agent (true)
@@ -202,7 +202,7 @@ glpi-agent-linux-installer [options]
     --runnow                       run agent tasks on installation (false)
     --type=INSTALL_TYPE            select type of installation (typical)
                                      - "typical" to only install computer inventory and remote inventory tasks
-                                     - "network" to install glpi-agent and network related tasks
+                                     - "network" to install assetsync-agent and network related tasks
                                      - "all" to install all tasks
                                      - or tasks to install in a comma-separated list
     -v --verbose                   make verbose install (false)

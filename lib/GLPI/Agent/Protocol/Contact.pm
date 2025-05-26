@@ -1,11 +1,11 @@
-package GLPI::Agent::Protocol::Contact;
+package AssetSync::Agent::Protocol::Contact;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Protocol::Message';
+use parent 'AssetSync::Agent::Protocol::Message';
 
-use GLPI::Agent::Version;
+use AssetSync::Agent::Version;
 
 sub new {
     my ($class, %params) = @_;
@@ -21,8 +21,8 @@ sub new {
     unless ($self->get('status')) {
         my $message = $self->get;
         $message->{action}   = 'contact';
-        $message->{name}     = $GLPI::Agent::Version::PROVIDER . "-Agent";
-        $message->{version}  = $GLPI::Agent::Version::VERSION;
+        $message->{name}     = $AssetSync::Agent::Version::PROVIDER . "-Agent";
+        $message->{version}  = $AssetSync::Agent::Version::VERSION;
     }
 
     return $self;
@@ -45,7 +45,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Protocol::Contact - Contact GLPI Agent messages
+AssetSync::Agent::Protocol::Contact - Contact AssetSync Agent messages
 
 =head1 DESCRIPTION
 

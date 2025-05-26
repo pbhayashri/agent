@@ -18,28 +18,28 @@ my $RPMVERSION = InstallerVersion::VERSION();
 $RPMVERSION .= "-$RPMREVISION" unless $RPMVERSION =~ /-.+$/;
 
 my %RpmPackages = (
-    "glpi-agent"                => qr/^inventory$/i,
-    "glpi-agent-task-network"   => qr/^netdiscovery|netinventory|network$/i,
-    "glpi-agent-task-collect"   => qr/^collect$/i,
-    "glpi-agent-task-esx"       => qr/^esx$/i,
-    "glpi-agent-task-deploy"    => qr/^deploy$/i,
-    "glpi-agent-task-wakeonlan" => qr/^wakeonlan|wol$/i,
-    "glpi-agent-cron"           => 0,
+    "assetsync-agent"                => qr/^inventory$/i,
+    "assetsync-agent-task-network"   => qr/^netdiscovery|netinventory|network$/i,
+    "assetsync-agent-task-collect"   => qr/^collect$/i,
+    "assetsync-agent-task-esx"       => qr/^esx$/i,
+    "assetsync-agent-task-deploy"    => qr/^deploy$/i,
+    "assetsync-agent-task-wakeonlan" => qr/^wakeonlan|wol$/i,
+    "assetsync-agent-cron"           => 0,
 );
 
 my %RpmInstallTypes = (
     all     => [ qw(
-        glpi-agent
-        glpi-agent-task-network
-        glpi-agent-task-collect
-        glpi-agent-task-esx
-        glpi-agent-task-deploy
-        glpi-agent-task-wakeonlan
+        assetsync-agent
+        assetsync-agent-task-network
+        assetsync-agent-task-collect
+        assetsync-agent-task-esx
+        assetsync-agent-task-deploy
+        assetsync-agent-task-wakeonlan
     ) ],
-    typical => [ qw(glpi-agent) ],
+    typical => [ qw(assetsync-agent) ],
     network => [ qw(
-        glpi-agent
-        glpi-agent-task-network
+        assetsync-agent
+        assetsync-agent-task-network
     ) ],
 );
 
@@ -83,10 +83,10 @@ sub _extract_rpm {
 sub install {
     my ($self) = @_;
 
-    $self->verbose("Trying to install glpi-agent v$RPMVERSION on $self->{_release} release ($self->{_name}:$self->{_version})...");
+    $self->verbose("Trying to install assetsync-agent v$RPMVERSION on $self->{_release} release ($self->{_name}:$self->{_version})...");
 
     my $type = $self->{_type} // "typical";
-    my %pkgs = qw( glpi-agent 1 );
+    my %pkgs = qw( assetsync-agent 1 );
     if ($RpmInstallTypes{$type}) {
         map { $pkgs{$_} = 1 } @{$RpmInstallTypes{$type}};
     } else {
@@ -95,7 +95,7 @@ sub install {
             $pkgs{$pkg} = 1 if $pkg;
         }
     }
-    $pkgs{"glpi-agent-cron"} = 1 if $self->{_cron};
+    $pkgs{"assetsync-agent-cron"} = 1 if $self->{_cron};
 
     # Check installed packages
     if ($self->{_packages}) {
@@ -142,7 +142,7 @@ sub install {
         if ($? >> 8 && $self->{_yum} && $self->downgradeAllowed()) {
             $err = $self->run("yum -y downgrade @rpms");
         }
-        die "Failed to install glpi-agent\n" if $err;
+        die "Failed to install assetsync-agent\n" if $err;
         $self->{_installed} = \@rpms;
     } else {
         $self->{_installed} = 1;
@@ -260,18 +260,18 @@ sub uninstall {
     my @rpms = sort keys(%{$self->{_packages}});
 
     unless (@rpms) {
-        $self->info("glpi-agent is not installed");
+        $self->info("assetsync-agent is not installed");
         return;
     }
 
     $self->uninstall_service();
 
     $self->info(
-        @rpms == 1 ? "Uninstalling glpi-agent package..." :
-            "Uninstalling ".scalar(@rpms)." glpi-agent related packages..."
+        @rpms == 1 ? "Uninstalling assetsync-agent package..." :
+            "Uninstalling ".scalar(@rpms)." assetsync-agent related packages..."
     );
     my $err = $self->run("rpm -e @rpms");
-    die "Failed to uninstall glpi-agent\n" if $err;
+    die "Failed to uninstall assetsync-agent\n" if $err;
 
     map { delete $self->{_packages}->{$_} } @rpms;
 }
@@ -281,7 +281,7 @@ sub clean {
 
     $self->SUPER::clean();
 
-    unlink "/etc/sysconfig/glpi-agent" if -e "/etc/sysconfig/glpi-agent";
+    unlink "/etc/sysconfig/assetsync-agent" if -e "/etc/sysconfig/assetsync-agent";
 }
 
 sub install_service {
@@ -290,36 +290,36 @@ sub install_service {
     return $self->SUPER::install_service() if $self->which("systemctl");
 
     unless ($self->which("chkconfig") && $self->which("service") && -d "/etc/rc.d/init.d") {
-        return $self->info("Failed to enable glpi-agent service: unsupported distro");
+        return $self->info("Failed to enable assetsync-agent service: unsupported distro");
     }
 
-    $self->info("Enabling glpi-agent service using init file...");
+    $self->info("Enabling assetsync-agent service using init file...");
 
     $self->verbose("Extracting init file ...");
-    $self->{_archive}->extract("pkg/rpm/glpi-agent.init.redhat")
-        or die "Failed to extract glpi-agent.init.redhat: $!\n";
+    $self->{_archive}->extract("pkg/rpm/assetsync-agent.init.redhat")
+        or die "Failed to extract assetsync-agent.init.redhat: $!\n";
     $self->verbose("Installing init file ...");
-    $self->system("mv -vf glpi-agent.init.redhat /etc/rc.d/init.d/glpi-agent");
-    $self->system("chmod +x /etc/rc.d/init.d/glpi-agent");
-    $self->system("chkconfig --add glpi-agent") unless qx{chkconfig --list glpi-agent 2>/dev/null};
+    $self->system("mv -vf assetsync-agent.init.redhat /etc/rc.d/init.d/assetsync-agent");
+    $self->system("chmod +x /etc/rc.d/init.d/assetsync-agent");
+    $self->system("chkconfig --add assetsync-agent") unless qx{chkconfig --list assetsync-agent 2>/dev/null};
     $self->verbose("Trying to start service ...");
-    $self->run("service glpi-agent restart");
+    $self->run("service assetsync-agent restart");
 }
 
 sub install_cron {
     my ($self) = @_;
-    # glpi-agent-cron package should have been installed
-    $self->info("glpi-agent will be run every hour via cron");
-    $self->verbose("Disabling glpi-agent service...");
-    my $ret = $self->run("systemctl disable glpi-agent" . ($self->verbose ? "" : " 2>/dev/null"));
-    return $self->info("Failed to disable glpi-agent service") if $ret;
-    $self->verbose("Stopping glpi-agent service if running...");
-    $ret = $self->run("systemctl stop glpi-agent" . ($self->verbose ? "" : " 2>/dev/null"));
-    return $self->info("Failed to stop glpi-agent service") if $ret;
-    # Finally update /etc/sysconfig/glpi-agent to enable cron mode
-    $self->verbose("Enabling glpi-agent cron mode...");
-    $ret = $self->run("sed -i -e s/=none/=cron/ /etc/sysconfig/glpi-agent");
-    $self->info("Failed to update /etc/sysconfig/glpi-agent") if $ret;
+    # assetsync-agent-cron package should have been installed
+    $self->info("assetsync-agent will be run every hour via cron");
+    $self->verbose("Disabling assetsync-agent service...");
+    my $ret = $self->run("systemctl disable assetsync-agent" . ($self->verbose ? "" : " 2>/dev/null"));
+    return $self->info("Failed to disable assetsync-agent service") if $ret;
+    $self->verbose("Stopping assetsync-agent service if running...");
+    $ret = $self->run("systemctl stop assetsync-agent" . ($self->verbose ? "" : " 2>/dev/null"));
+    return $self->info("Failed to stop assetsync-agent service") if $ret;
+    # Finally update /etc/sysconfig/assetsync-agent to enable cron mode
+    $self->verbose("Enabling assetsync-agent cron mode...");
+    $ret = $self->run("sed -i -e s/=none/=cron/ /etc/sysconfig/assetsync-agent");
+    $self->info("Failed to update /etc/sysconfig/assetsync-agent") if $ret;
 }
 
 sub uninstall_service {
@@ -328,17 +328,17 @@ sub uninstall_service {
     return $self->SUPER::uninstall_service() if $self->which("systemctl");
 
     unless ($self->which("chkconfig") && $self->which("service") && -d "/etc/rc.d/init.d") {
-        return $self->info("Failed to uninstall glpi-agent service: unsupported distro");
+        return $self->info("Failed to uninstall assetsync-agent service: unsupported distro");
     }
 
-    $self->info("Uninstalling glpi-agent service init script...");
+    $self->info("Uninstalling assetsync-agent service init script...");
 
     $self->verbose("Trying to stop service ...");
-    $self->run("service glpi-agent stop");
+    $self->run("service assetsync-agent stop");
 
     $self->verbose("Uninstalling init file ...");
-    $self->system("chkconfig --del glpi-agent") if qx{chkconfig --list glpi-agent 2>/dev/null};
-    $self->system("rm -vf /etc/rc.d/init.d/glpi-agent");
+    $self->system("chkconfig --del assetsync-agent") if qx{chkconfig --list assetsync-agent 2>/dev/null};
+    $self->system("rm -vf /etc/rc.d/init.d/assetsync-agent");
 }
 
 1;

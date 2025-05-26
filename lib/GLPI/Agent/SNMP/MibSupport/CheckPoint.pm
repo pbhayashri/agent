@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::CheckPoint;
+package AssetSync::Agent::SNMP::MibSupport::CheckPoint;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 use constant checkpoint => '.1.3.6.1.4.1.2620';
 
@@ -99,7 +99,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::CheckPoint - Inventory module for CheckPoint appliance
+AssetSync::Agent::SNMP::MibSupport::CheckPoint - Inventory module for CheckPoint appliance
 
 =head1 DESCRIPTION
 

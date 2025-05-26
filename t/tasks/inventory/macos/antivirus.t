@@ -11,8 +11,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::MacOS::AntiVirus;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::MacOS::AntiVirus;
 
 my %av_tests = (
     'defender-101.98.30' => {
@@ -50,10 +50,10 @@ plan tests =>
     (2 * scalar keys %av_tests) +
     1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (sort keys %av_tests) {
-    my $module = "GLPI::Agent::Task::Inventory::MacOS::AntiVirus::".(delete $av_tests{$test}->{_module});
+    my $module = "AssetSync::Agent::Task::Inventory::MacOS::AntiVirus::".(delete $av_tests{$test}->{_module});
     $module->require();
     my $funct_name = $module."::".(delete $av_tests{$test}->{_funcion});
     my $function = \&{$funct_name};

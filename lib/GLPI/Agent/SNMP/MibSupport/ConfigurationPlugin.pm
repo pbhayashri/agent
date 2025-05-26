@@ -1,20 +1,20 @@
-package GLPI::Agent::SNMP::MibSupport::ConfigurationPlugin;
+package AssetSync::Agent::SNMP::MibSupport::ConfigurationPlugin;
 
 use strict;
 use warnings;
 
 use parent qw(
-    GLPI::Agent::SNMP::MibSupportTemplate
+    AssetSync::Agent::SNMP::MibSupportTemplate
 );
 
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
-use GLPI::Agent::Config;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
-use GLPI::Agent::Logger;
-use GLPI::Agent::HTTP::Server::ToolBox;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::HTTP::Server::ToolBox;
 
 our $mibSupport = [];
 
@@ -87,11 +87,11 @@ sub run {
 sub configure {
     my ($agent, %params) = @_;
 
-    $logger = $params{logger} || GLPI::Agent::Logger->new();
+    $logger = $params{logger} || AssetSync::Agent::Logger->new();
 
     # Load defaults and plugin configuration
-    my $config = GLPI::Agent::Config->new(
-        defaults => GLPI::Agent::HTTP::Server::ToolBox::defaults(),
+    my $config = AssetSync::Agent::Config->new(
+        defaults => AssetSync::Agent::HTTP::Server::ToolBox::defaults(),
         options  => { config => "none" },
     );
 
@@ -238,7 +238,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::ConfigurationPlugin - Fully configurable
+AssetSync::Agent::SNMP::MibSupport::ConfigurationPlugin - Fully configurable
 inventory module
 
 =head1 DESCRIPTION

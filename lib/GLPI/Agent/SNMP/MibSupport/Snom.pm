@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Snom;
+package AssetSync::Agent::SNMP::MibSupport::Snom;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 # See https://service.snom.com/display/wiki/How+to+setup+SNMP
 use constant snom       => '.1.3.6.1.2.1.7526';
@@ -91,7 +91,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Snom - Inventory module for Snom phones
+AssetSync::Agent::SNMP::MibSupport::Snom - Inventory module for Snom phones
 
 =head1 DESCRIPTION
 

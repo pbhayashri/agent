@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Virtualization::XenCitrixServer;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Virtualization::XenCitrixServer;
 
 my %tests_getVirtualMachines = (
     'xenserver-6.2_vm_list' => [
@@ -76,7 +76,7 @@ my %tests_xe_vm_params = (
         VCPU      => '16'
     },
     'xenserver-6.2_vm_param_list_002' => {
-        NAME      => 'GLPI',
+        NAME      => 'AssetSync',
         STATUS    => 'running',
         MEMORY    => '2048',
         VCPU      => '2',
@@ -125,12 +125,12 @@ plan tests => 1 + (scalar keys %tests_getVirtualMachines)
 
 foreach my $test (keys %tests_getVirtualMachines) {
     my $file = "resources/virtualization/xe/$test";
-    my @vms = GLPI::Agent::Task::Inventory::Virtualization::XenCitrixServer::_getVirtualMachines(file => $file);
+    my @vms = AssetSync::Agent::Task::Inventory::Virtualization::XenCitrixServer::_getVirtualMachines(file => $file);
     cmp_deeply(\@vms, $tests_getVirtualMachines{$test}, $test);
 }
 
 foreach my $test (keys %tests_xe_vm_params) {
     my $file = "resources/virtualization/xe/$test";
-    my $machine = GLPI::Agent::Task::Inventory::Virtualization::XenCitrixServer::_getVirtualMachine(file => $file);
+    my $machine = AssetSync::Agent::Task::Inventory::Virtualization::XenCitrixServer::_getVirtualMachine(file => $file);
     cmp_deeply($machine, $tests_xe_vm_params{$test}, $test);
 }

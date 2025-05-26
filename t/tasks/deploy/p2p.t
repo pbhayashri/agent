@@ -8,13 +8,13 @@ use English qw(-no_match_vars);
 use Test::Deep;
 use Test::More;
 
-use GLPI::Agent::Logger;
+use AssetSync::Agent::Logger;
 
-use GLPI::Test::Server;
-use GLPI::Test::Utils;
+use AssetSync::Test::Server;
+use AssetSync::Test::Utils;
 
-plan(skip_all => "Can't load GLPI::Agent::Task::Deploy::P2P")
-    unless GLPI::Agent::Task::Deploy::P2P->require();
+plan(skip_all => "Can't load AssetSync::Agent::Task::Deploy::P2P")
+    unless AssetSync::Agent::Task::Deploy::P2P->require();
 
 my @tests = (
     {
@@ -148,11 +148,11 @@ my %find_tests = (
 
 plan tests => scalar @tests + keys(%find_tests);
 
-my $logger = GLPI::Agent::Logger->new(
+my $logger = AssetSync::Agent::Logger->new(
     logger => [ 'Test' ]
 );
 
-my $p2p = GLPI::Agent::Task::Deploy::P2P->new(
+my $p2p = AssetSync::Agent::Task::Deploy::P2P->new(
     logger => $logger
 );
 
@@ -167,9 +167,9 @@ SKIP: {
         unless Parallel::ForkManager->require();
 
     # find an available port on loopback
-    my $port = GLPI::Agent::Tools::first { test_port($_) } 62354 .. 62400;
+    my $port = AssetSync::Agent::Tools::first { test_port($_) } 62354 .. 62400;
 
-    my $server = GLPI::Test::Server->new(
+    my $server = AssetSync::Test::Server->new(
         port     => $port,
     );
     eval {
@@ -182,8 +182,8 @@ SKIP: {
     if ($OSNAME eq 'MSWin32') {
         # So from here we need to avoid crashes due to not thread-safe Win32::OLE
         # Enabling a dedicated worker thread
-        GLPI::Agent::Tools::Win32->require();
-        GLPI::Agent::Tools::Win32::start_Win32_OLE_Worker();
+        AssetSync::Agent::Tools::Win32->require();
+        AssetSync::Agent::Tools::Win32::start_Win32_OLE_Worker();
 
         $p2p->findPeers();
     }

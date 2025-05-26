@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::Win32::TimeZone;
+package AssetSync::Agent::Tools::Win32::TimeZone;
 
 use warnings;
 use strict;

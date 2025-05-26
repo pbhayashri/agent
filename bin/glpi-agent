@@ -11,8 +11,8 @@ use English qw(-no_match_vars);
 use Getopt::Long;
 use Pod::Usage;
 
-use GLPI::Agent;
-use GLPI::Agent::Event;
+use AssetSync::Agent;
+use AssetSync::Agent::Event;
 
 Getopt::Long::Configure( "no_ignorecase" );
 
@@ -38,7 +38,7 @@ GetOptions(
     'force|f',
     'full',
     'full-inventory-postpone=i',
-    'glpi-version=s',
+    'assetsync-version=s',
     'help|h',
     'html',
     'itemtype=s',
@@ -91,13 +91,13 @@ GetOptions(
 pod2usage(-verbose => 0, -exitstatus => 0) if $options->{help};
 
 if ($options->{version}) {
-    map { print $_."\n" } $GLPI::Agent::VERSION_STRING,
-        @{$GLPI::Agent::COMMENTS};
+    map { print $_."\n" } $AssetSync::Agent::VERSION_STRING,
+        @{$AssetSync::Agent::COMMENTS};
     exit 0;
 }
 
 if ($options->{setup}) {
-    my $agent = GLPI::Agent->new(%setup);
+    my $agent = AssetSync::Agent->new(%setup);
     $options->{debug} = 0;
     $agent->init(options => $options);
     $setup{vardir} = $agent->{vardir};
@@ -121,9 +121,9 @@ if ($options->{'conf-file'}) {
 }
 
 if ($options->{daemon}) {
-    GLPI::Agent::Daemon->require();
+    AssetSync::Agent::Daemon->require();
     if ($EVAL_ERROR) {
-        print STDERR "Can't load GLPI::Agent::Daemon library:\n";
+        print STDERR "Can't load AssetSync::Agent::Daemon library:\n";
         print STDERR $EVAL_ERROR;
         exit 1;
     }
@@ -138,9 +138,9 @@ die "given '$options->{vardir}' vardir folder doesn't exist\n"
     if $options->{vardir} && ! -d $options->{vardir};
 
 my $agent = $options->{daemon} ?
-    GLPI::Agent::Daemon->new(%setup)
+    AssetSync::Agent::Daemon->new(%setup)
     :
-    GLPI::Agent->new(%setup);
+    AssetSync::Agent->new(%setup);
 
 if ($options->{'list-tasks'}) {
     $options->{logger} = "Stderr";
@@ -169,9 +169,9 @@ if ($options->{'list-tasks'}) {
 }
 
 if ($options->{"list-categories"}) {
-    GLPI::Agent::Task::Inventory->require();
+    AssetSync::Agent::Task::Inventory->require();
     die $EVAL_ERROR if $EVAL_ERROR;
-    my $inventory = GLPI::Agent::Task::Inventory->new(
+    my $inventory = AssetSync::Agent::Task::Inventory->new(
         config       => $agent->{config},
         datadir      => $agent->{datadir},
         logger       => $agent->{logger},
@@ -199,7 +199,7 @@ if ($options->{'set-forcerun'}) {
 if ($options->{partial}) {
     die "--partial option not compatible with --daemon\n"
         if $options->{daemon};
-    $agent->{event} = GLPI::Agent::Event->new(
+    $agent->{event} = AssetSync::Agent::Event->new(
         name        => "partial inventory",
         task        => "inventory",
         partial     => 1,
@@ -218,9 +218,9 @@ eval {
 
     if ($OSNAME eq 'MSWin32' && ! $options->{'no-win32-ole-workaround'}) {
         # From here we may need to avoid crashes due to not thread-safe Win32::OLE
-        GLPI::Agent::Tools::Win32->require();
-        GLPI::Agent::Tools::Win32::start_Win32_OLE_Worker();
-        GLPI::Agent::Tools::Win32::setupWorkerLogger(config => $agent->{config});
+        AssetSync::Agent::Tools::Win32->require();
+        AssetSync::Agent::Tools::Win32::start_Win32_OLE_Worker();
+        AssetSync::Agent::Tools::Win32::setupWorkerLogger(config => $agent->{config});
     }
 
     $agent->run();
@@ -238,11 +238,11 @@ __END__
 
 =head1 NAME
 
-glpi-agent - GLPI perl agent For Linux/UNIX, Windows and MacOSX
+assetsync-agent - AssetSync perl agent For Linux/UNIX, Windows and MacOSX
 
 =head1 SYNOPSIS
 
-glpi-agent [options] [--server server|--local path]
+assetsync-agent [options] [--server server|--local path]
 
   Target definition options:
     -s --server=URI                send tasks result to a server
@@ -284,15 +284,15 @@ glpi-agent [options] [--server server|--local path]
     --full-inventory-postpone=NUM  set number of possible full inventory postpone (14)
     --full                         force inventory task to generate a full inventory
     --required-category=CATEGORY   list of category required even when postponing full inventory
-    --itemtype=TYPE                set asset type for target supporting genericity like GLPI 11+
+    --itemtype=TYPE                set asset type for target supporting genericity like AssetSync 11+
                                    Remark: This option is also used by RemoteInventory task
 
   ESX task specific options:
-    --esx-itemtype=TYPE            set ESX asset type for target supporting genericity like GLPI 11+
+    --esx-itemtype=TYPE            set ESX asset type for target supporting genericity like AssetSync 11+
 
   RemoteInventory task specific options:
     --remote=REMOTE[,REMOTE]...    specify a list of remotes to process in place
-                                   of remotes managed via glpi-remote command
+                                   of remotes managed via assetsync-remote command
     --remote-workers=COUNT         maximum number of workers for remoteinventory task
 
   Package deployment task specific options:
@@ -351,7 +351,7 @@ glpi-agent [options] [--server server|--local path]
     --vardir=PATH                  use specified path as storage folder for agent
                                      persistent datas
 
-    --glpi-version=<VERSION>       set targeted glpi version to enable supported features
+    --assetsync-version=<VERSION>       set targeted assetsync version to enable supported features
     --version                      print the version and exit
     --no-win32-ole-workaround      [win32 only] disable win32 work-around
                                      used to better handle Win32::OLE apis.
@@ -360,7 +360,7 @@ glpi-agent [options] [--server server|--local path]
 
 =head1 DESCRIPTION
 
-The F<glpi-agent> agent is a generic multi-platform agent. It can
+The F<assetsync-agent> agent is a generic multi-platform agent. It can
 perform a large array of management tasks, such as local inventory, software
 deployment or network discovery. It can be used either standalone, or in
 combination with a compatible server acting as a centralized control point.
@@ -370,8 +370,8 @@ combination with a compatible server acting as a centralized control point.
 Most of the options are available in a I<short> form and a I<long> form.  For
 example, the two lines below are all equivalent:
 
-    % glpi-agent -s localhost
-    % glpi-agent --server localhost
+    % assetsync-agent -s localhost
+    % assetsync-agent --server localhost
 
 =head2 Target definition options
 
@@ -384,15 +384,15 @@ Send the results of tasks execution to given server.
 If I<URI> doesn't start with http:// or https://, the agent assume the
 parameter is a hostname and rewrite it as:
 
-    % --server=http://my-glpi-server/
+    % --server=http://my-assetsync-server/
 
-In general, GLPI server URL have this format:
+In general, AssetSync server URL have this format:
 
-    http://my-glpi-server/
+    http://my-assetsync-server/
 
-and FusionInventory for GLPI this one:
+and FusionInventory for AssetSync this one:
 
-    http://my-glpi-server/plugins/fusioninventory
+    http://my-assetsync-server/plugins/fusioninventory
 
 Multiple values can be specified, using comma as a separator.
 
@@ -604,9 +604,9 @@ but I<bios> and I<harware> categories are always implied and can be omitted as t
 
 =item B<--itemtype>=I<TYPE>
 
-Allow to set JSON inventory itemtype to I<TYPE>. This feature requires a target supporting genericity, like GLPI 11+.
+Allow to set JSON inventory itemtype to I<TYPE>. This feature requires a target supporting genericity, like AssetSync 11+.
 
-When expected asset itemtype in GLPI 11+ is B<Server>, I<itemtype> option value must be set to B<\Glpi\CustomAsset\Server>.
+When expected asset itemtype in AssetSync 11+ is B<Server>, I<itemtype> option value must be set to B<\AssetSync\CustomAsset\Server>.
 
 =item B<--scan-homedirs>
 
@@ -645,9 +645,9 @@ agent.
 
 =item B<--esx-itemtype>=I<TYPE>
 
-Allow to set ESX JSON inventory itemtype to I<TYPE>. This feature requires a target supporting genericity, like GLPI 11+.
+Allow to set ESX JSON inventory itemtype to I<TYPE>. This feature requires a target supporting genericity, like AssetSync 11+.
 
-When expected ESX asset itemtype in GLPI 11+ is B<Esx>, I<esx-itemtype> option value must be set to B<\Glpi\CustomAsset\Esx>.
+When expected ESX asset itemtype in AssetSync 11+ is B<Esx>, I<esx-itemtype> option value must be set to B<\AssetSync\CustomAsset\Esx>.
 
 =back
 
@@ -737,11 +737,11 @@ and B<--httpd-trust> should be set to enable trusted remote clients.
 
 =item B<--oauth-client-id>=I<ID>
 
-The OAuth client id required to authenticate against GLPI >= 11.
+The OAuth client id required to authenticate against AssetSync >= 11.
 
 =item B<--oauth-client-secret>=I<SECRET>
 
-The OAuth client secret required to authenticate against GLPI >= 11.
+The OAuth client secret required to authenticate against AssetSync >= 11.
 
 =back
 

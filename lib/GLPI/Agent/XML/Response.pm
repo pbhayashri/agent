@@ -1,14 +1,14 @@
-package GLPI::Agent::XML::Response;
+package AssetSync::Agent::XML::Response;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::XML;
+use AssetSync::Agent::XML;
 
 sub new {
     my ($class, %params) = @_;
 
-    my $xml = GLPI::Agent::XML->new(
+    my $xml = AssetSync::Agent::XML->new(
         force_array   => [ qw/
             OPTION PARAM MODEL AUTHENTICATION RANGEIP DEVICE GET WALK
         / ],
@@ -52,7 +52,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::XML::Response - Generic server message
+AssetSync::Agent::XML::Response - Generic server message
 
 =head1 DESCRIPTION
 

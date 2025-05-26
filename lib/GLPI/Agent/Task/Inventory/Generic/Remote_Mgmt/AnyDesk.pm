@@ -1,15 +1,15 @@
-package GLPI::Agent::Task::Inventory::Generic::Remote_Mgmt::AnyDesk;
+package AssetSync::Agent::Task::Inventory::Generic::Remote_Mgmt::AnyDesk;
 
 # Based on the work done by Ilya published on no more existing https://fusioninventory.userecho.com site
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub _get_anydesk_config {
     my @configs = ();

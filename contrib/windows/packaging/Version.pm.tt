@@ -1,4 +1,4 @@
-package GLPI::Agent::Version;
+package AssetSync::Agent::Version;
 
 use strict;
 use warnings;

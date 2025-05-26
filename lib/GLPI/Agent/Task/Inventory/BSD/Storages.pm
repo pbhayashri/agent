@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::BSD::Storages;
+package AssetSync::Agent::Task::Inventory::BSD::Storages;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::XML;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::XML;
 
 use constant    category    => "storage";
 
@@ -37,7 +37,7 @@ sub _getStorages {
         %params
     );
     $lines =~ s/^kern.geom.confxml://;
-    my $tree = GLPI::Agent::XML->new(string => $lines)->dump_as_hash();
+    my $tree = AssetSync::Agent::XML->new(string => $lines)->dump_as_hash();
 
     my @storages = ();
     for my $class (@{$tree->{mesh}->{class}}) {

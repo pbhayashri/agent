@@ -1,4 +1,4 @@
-name: GLPI Agent Packaging
+name: AssetSync Agent Packaging
 
 # Set publish_development_build to "yes" to publish development builds as pre-release
 # Set number_of_development_build_to_keep to the number of development build to keep
@@ -85,18 +85,18 @@ jobs:
             echo "build=yes" >>$GITHUB_OUTPUT
             echo "tag_name=$VERSION" >>$GITHUB_OUTPUT
         else
-            VERSION=$(perl -Ilib -MGLPI::Agent::Version -e 'print $GLPI::Agent::Version::VERSION')
+            VERSION=$(perl -Ilib -MAssetSync::Agent::Version -e 'print $AssetSync::Agent::Version::VERSION')
             VERSION=${VERSION%-dev}-git${GITHUB_SHA:0:8}
             if [ "${{ github.event_name }}" = "schedule" -o "${{ inputs.nightly }}" = "true" -o "${{ env.publish_development_build }}" = "yes" ]; then
                 if [ "${{ github.event_name }}" = "schedule" -o "${{ inputs.nightly }}" = "true" ]; then
                     TYPE=nightly
                     if [ -z "$PUBLISHING_TOKEN" ]; then
-                        echo "No PUBLISHING_TOKEN defined to publish GLPI-Agent nightly builds"
+                        echo "No PUBLISHING_TOKEN defined to publish AssetSync-Agent nightly builds"
                         echo "create-release=no" >>$GITHUB_OUTPUT
                         echo "build=no" >>$GITHUB_OUTPUT
                         exit 0
-                    elif gh api /repos/{owner}/glpi-project.github.io/git/refs/tags/glpi-agent-development-$VERSION --silent 2>/dev/null; then
-                        echo "GLPI-Agent v$VERSION still published as development build"
+                    elif gh api /repos/{owner}/assetsync-project.github.io/git/refs/tags/assetsync-agent-development-$VERSION --silent 2>/dev/null; then
+                        echo "AssetSync-Agent v$VERSION still published as development build"
                         echo "create-release=no" >>$GITHUB_OUTPUT
                         echo "build=no" >>$GITHUB_OUTPUT
                         exit 0
@@ -170,7 +170,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
         tag: ${{ steps.set-version.outputs.tag_name }}
-        name: GLPI Agent ${{ steps.set-version.outputs.revname }}
+        name: AssetSync Agent ${{ steps.set-version.outputs.revname }}
         bodyFile: release-description.md
         draft: true
         prerelease: ${{ steps.set-version.outputs.prerelease }}
@@ -189,36 +189,36 @@ jobs:
     - uses: actions/checkout@v4
     - name: Create folders for cached datas
       run: |
-        mkdir C:\Strawberry-perl-for-GLPI-Agent_build\download
-        mkdir C:\Strawberry-perl-for-GLPI-Agent_build\restore
+        mkdir C:\Strawberry-perl-for-AssetSync-Agent_build\download
+        mkdir C:\Strawberry-perl-for-AssetSync-Agent_build\restore
       shell: cmd
     - name: Restore points cache
       uses: actions/cache@v4
       id: built-perl-cache
       with:
         path: |
-            C:/Strawberry-perl-for-GLPI-Agent_build/restore
-        key: windows-packaging-perl-cache-${{ matrix.arch }}-${{ hashFiles('contrib\windows\glpi-agent-extlibs-build.pl', 'contrib\windows\glpi-agent-packaging.pl', 'contrib\windows\packaging\*') }}
+            C:/Strawberry-perl-for-AssetSync-Agent_build/restore
+        key: windows-packaging-perl-cache-${{ matrix.arch }}-${{ hashFiles('contrib\windows\assetsync-agent-extlibs-build.pl', 'contrib\windows\assetsync-agent-packaging.pl', 'contrib\windows\packaging\*') }}
     - name: Restore ca.dll points cache
       uses: actions/cache@v4
       id: built-ca-dll-cache
       with:
         path: contrib/windows/packaging/tools/ca/ca.dll
-        key: windows-packaging-ca-dll-cache-${{ matrix.arch }}-${{ hashFiles('contrib\windows\glpi-agent-extlibs-build.pl', 'contrib\windows\packaging\ToolchainBuildJob.pm', 'contrib\windows\packaging\CustomActionDllBuildJob.pm', 'contrib\windows\packaging\tools\ca\Makefile', 'contrib\windows\packaging\tools\ca\dll\*') }}
+        key: windows-packaging-ca-dll-cache-${{ matrix.arch }}-${{ hashFiles('contrib\windows\assetsync-agent-extlibs-build.pl', 'contrib\windows\packaging\ToolchainBuildJob.pm', 'contrib\windows\packaging\CustomActionDllBuildJob.pm', 'contrib\windows\packaging\tools\ca\Makefile', 'contrib\windows\packaging\tools\ca\dll\*') }}
     - name: Restore Toolchain points cache
       uses: actions/cache@v4
       id: built-extlibs-cache
       if: steps.built-perl-cache.outputs.cache-hit != 'true' || steps.built-ca-dll-cache.outputs.cache-hit != 'true'
       with:
         path: |
-            C:/Strawberry-perl-for-GLPI-Agent_build/download/winlibs*.zip
-            C:/Strawberry-perl-for-GLPI-Agent_build/download/extlibs.zip
-        key: windows-packaging-extlibs-cache-${{ matrix.arch }}-${{ hashFiles('contrib\windows\glpi-agent-extlibs-build.pl', 'contrib\windows\packaging\ToolchainBuildJob.pm', 'contrib\windows\packaging\*.patch') }}
+            C:/Strawberry-perl-for-AssetSync-Agent_build/download/winlibs*.zip
+            C:/Strawberry-perl-for-AssetSync-Agent_build/download/extlibs.zip
+        key: windows-packaging-extlibs-cache-${{ matrix.arch }}-${{ hashFiles('contrib\windows\assetsync-agent-extlibs-build.pl', 'contrib\windows\packaging\ToolchainBuildJob.pm', 'contrib\windows\packaging\*.patch') }}
     - name: List files in cached paths
       if: success() || failure()
       run: |
-        dir C:\Strawberry-perl-for-GLPI-Agent_build\download
-        dir C:\Strawberry-perl-for-GLPI-Agent_build\restore
+        dir C:\Strawberry-perl-for-AssetSync-Agent_build\download
+        dir C:\Strawberry-perl-for-AssetSync-Agent_build\restore
         dir contrib\windows\packaging\tools\ca
       shell: cmd
     - name: Restore required perl libraries cache
@@ -228,7 +228,7 @@ jobs:
         path: |
             C:\Strawberry\perl\site\lib
             C:\Strawberry\perl\site\bin
-        key: built-perl-windows-packaging-perl-site-cache-${{ matrix.arch }}-${{ hashFiles('contrib\windows\glpi-agent-extlibs-build.pl', 'contrib\windows\glpi-agent-packaging.pl', 'contrib\windows\packaging\*') }}
+        key: built-perl-windows-packaging-perl-site-cache-${{ matrix.arch }}-${{ hashFiles('contrib\windows\assetsync-agent-extlibs-build.pl', 'contrib\windows\assetsync-agent-packaging.pl', 'contrib\windows\packaging\*') }}
     - name: Update environment
       run: |
         echo 'C:\Strawberry\perl\bin'      >> $GITHUB_PATH
@@ -259,21 +259,21 @@ jobs:
     - name: Build Extlibs with Perl Toolchain
       if: steps.built-perl-cache.outputs.cache-hit != 'true' && steps.built-extlibs-cache.outputs.cache-hit != 'true'
       run: |
-        perl contrib\windows\glpi-agent-extlibs-build.pl --arch ${{ matrix.arch }}
+        perl contrib\windows\assetsync-agent-extlibs-build.pl --arch ${{ matrix.arch }}
       shell: cmd
     - name: Build ca.dll with Perl Toolchain
       if: steps.built-ca-dll-cache.outputs.cache-hit != 'true'
       run: |
-        perl contrib\windows\glpi-agent-extlibs-build.pl --arch ${{ matrix.arch }} --cadll
+        perl contrib\windows\assetsync-agent-extlibs-build.pl --arch ${{ matrix.arch }} --cadll
       shell: cmd
     - name: Build package
       run: |
-        perl contrib\windows\glpi-agent-packaging.pl --arch ${{ matrix.arch }}
+        perl contrib\windows\assetsync-agent-packaging.pl --arch ${{ matrix.arch }}
       shell: cmd
     - name: MSI Signing (CST)
       if: ${{ needs.setup-release.outputs.win32-signing == 'cst' }}
       run: |
-        perl tools\msi-signing.pl "C:\Strawberry-perl-for-GLPI-Agent_build" "GLPI-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.msi"
+        perl tools\msi-signing.pl "C:\Strawberry-perl-for-AssetSync-Agent_build" "AssetSync-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.msi"
       shell: cmd
       env:
         CST_USERNAME: ${{ secrets.CST_USERNAME }}
@@ -283,13 +283,13 @@ jobs:
     - name: MSI Signing (ALT)
       if: ${{ needs.setup-release.outputs.win32-signing == 'alt' }}
       run: |
-        cd "C:\\Strawberry-perl-for-GLPI-Agent_build"
+        cd "C:\\Strawberry-perl-for-AssetSync-Agent_build"
         umask 0077
         mkdir ~/.ssh
         echo "$CODESIGN_KNOWNHOST"            > ~/.ssh/known_hosts
         echo "$CODESIGN_PRIVATE"              > private.key
         umask 0002
-        MSI="GLPI-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.msi"
+        MSI="AssetSync-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.msi"
         cat "output\\$MSI" | $CODESIGN_COMMAND codesign "$MSI" > "$MSI"
         rm -f private.key ~/.ssh/known_hosts "output\\$MSI"
         mv -vf "$MSI" "output\\$MSI"
@@ -301,32 +301,32 @@ jobs:
     - name: List generated files
       if: success() || failure()
       run: |
-        dir C:\Strawberry-perl-for-GLPI-Agent_build\output
+        dir C:\Strawberry-perl-for-AssetSync-Agent_build\output
       shell: cmd
     - name: Upload windows built artifacts
       if: success() || failure()
       uses: actions/upload-artifact@v4
       with:
         name: Windows-Build-${{ matrix.arch }}
-        path: C:\Strawberry-perl-for-GLPI-Agent_build\output
+        path: C:\Strawberry-perl-for-AssetSync-Agent_build\output
     - name: Upload debug MSI-Build artifacts
       if: failure() #success() || failure() # Only enable on failure or when debugging is required
       uses: actions/upload-artifact@v4
       with:
         name: MSI-Build-Debug-${{ matrix.arch }}
-        path: C:\Strawberry-perl-for-GLPI-Agent_build\build\msi
+        path: C:\Strawberry-perl-for-AssetSync-Agent_build\build\msi
     - name: VirusTotal Scan
       uses: crazy-max/ghaction-virustotal@v4
       if: ${{ needs.setup-release.outputs.create-release == 'yes' || startsWith(needs.setup-release.outputs.tag_name, 'nightly') }}
       with:
         vt_api_key: ${{ secrets.VT_API_KEY }}
         files: |
-          C:\Strawberry-perl-for-GLPI-Agent_build\output\GLPI-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.msi
-          C:\Strawberry-perl-for-GLPI-Agent_build\output\glpi-agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.zip
+          C:\Strawberry-perl-for-AssetSync-Agent_build\output\AssetSync-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.msi
+          C:\Strawberry-perl-for-AssetSync-Agent_build\output\assetsync-agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.zip
     - name: VirusTotal Report Analysis
       if: ${{ vars.VT_SKIP_REPORT_ANALYSIS != 'yes' && ( needs.setup-release.outputs.create-release == 'yes' || startsWith(needs.setup-release.outputs.tag_name, 'nightly') ) }}
       run: |
-        perl tools\virustotal-report-analysis.pl --path C:\Strawberry-perl-for-GLPI-Agent_build\output GLPI-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.msi glpi-agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.zip
+        perl tools\virustotal-report-analysis.pl --path C:\Strawberry-perl-for-AssetSync-Agent_build\output AssetSync-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.msi assetsync-agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.zip
       shell: cmd
       env:
         VT_API_KEY: ${{ secrets.VT_API_KEY }}
@@ -335,7 +335,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: VirusTotal-Report-${{ matrix.arch }}
-        path: C:\Strawberry-perl-for-GLPI-Agent_build\output\*.json
+        path: C:\Strawberry-perl-for-AssetSync-Agent_build\output\*.json
     - name: Upload Portable Archive Asset
       id: upload-portable-archive-asset
       if: ${{ needs.setup-release.outputs.create-release == 'yes' }}
@@ -344,8 +344,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.setup-release.outputs.upload_url }}
-        asset_path: C:\Strawberry-perl-for-GLPI-Agent_build\output\GLPI-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.zip
-        asset_name: GLPI-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.zip
+        asset_path: C:\Strawberry-perl-for-AssetSync-Agent_build\output\AssetSync-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.zip
+        asset_name: AssetSync-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.zip
         asset_content_type: application/zip
     - name: Upload MSI Installer Asset
       id: upload-msi-asset
@@ -355,8 +355,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.setup-release.outputs.upload_url }}
-        asset_path: C:\Strawberry-perl-for-GLPI-Agent_build\output\GLPI-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.msi
-        asset_name: GLPI-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.msi
+        asset_path: C:\Strawberry-perl-for-AssetSync-Agent_build\output\AssetSync-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.msi
+        asset_name: AssetSync-Agent-${{ needs.setup-release.outputs.version }}-${{ matrix.arch }}.msi
         asset_content_type: application/x-msi
 
   macosx-packaging:
@@ -387,7 +387,7 @@ jobs:
           contrib/macosx/build/openssl*
           contrib/macosx/build/zlib*
           contrib/macosx/build/Applications
-        key: macosx-packaging-restore-points-${{ matrix.os }}-${{ matrix.arch }}-${{ hashFiles('contrib/macosx/glpi-agent-packaging.sh') }}
+        key: macosx-packaging-restore-points-${{ matrix.os }}-${{ matrix.arch }}-${{ hashFiles('contrib/macosx/assetsync-agent-packaging.sh') }}
     - name: Import Application Signing Cert
       id: application-signing-cert
       uses: slidoapp/import-codesign-certs@1923310662e8682dd05b76b612b53301f431cd5d
@@ -424,7 +424,7 @@ jobs:
             fi
           fi
         fi
-        ./contrib/macosx/glpi-agent-packaging.sh --arch ${{ matrix.arch }} --notarize $MACOSX_NOTARIZE
+        ./contrib/macosx/assetsync-agent-packaging.sh --arch ${{ matrix.arch }} --notarize $MACOSX_NOTARIZE
       env:
         APPSIGNID: ${{ vars.MACOSX_APPSIGNID }}
         INSTSIGNID: ${{ vars.MACOSX_INSTSIGNID }}
@@ -468,8 +468,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.setup-release.outputs.upload_url }}
-        asset_path: contrib/macosx/build/GLPI-Agent-${{ needs.setup-release.outputs.version }}_${{ matrix.arch }}.pkg
-        asset_name: GLPI-Agent-${{ needs.setup-release.outputs.version }}_${{ matrix.arch }}.pkg
+        asset_path: contrib/macosx/build/AssetSync-Agent-${{ needs.setup-release.outputs.version }}_${{ matrix.arch }}.pkg
+        asset_name: AssetSync-Agent-${{ needs.setup-release.outputs.version }}_${{ matrix.arch }}.pkg
         asset_content_type: application/octet-stream
     - name: Upload MacOSX DMG installer image
       id: upload-macosx-dmg-asset
@@ -479,8 +479,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.setup-release.outputs.upload_url }}
-        asset_path: contrib/macosx/build/GLPI-Agent-${{ needs.setup-release.outputs.version }}_${{ matrix.arch }}.dmg
-        asset_name: GLPI-Agent-${{ needs.setup-release.outputs.version }}_${{ matrix.arch }}.dmg
+        asset_path: contrib/macosx/build/AssetSync-Agent-${{ needs.setup-release.outputs.version }}_${{ matrix.arch }}.dmg
+        asset_name: AssetSync-Agent-${{ needs.setup-release.outputs.version }}_${{ matrix.arch }}.dmg
         asset_content_type: application/octet-stream
 
   linux-snap-packaging:
@@ -594,20 +594,20 @@ jobs:
     - name: Build rpm packages
       id: rpmbuild
       run: |
-        contrib/unix/glpi-agent-rpm-build.sh --nodeps
+        contrib/unix/assetsync-agent-rpm-build.sh --nodeps
       shell: bash
     - name: Test rpm local install & uninstall
       run: |
-        sudo rpm -ivh --nodeps ${{ steps.rpmbuild.outputs.glpi-agent-rpm }} \
-            ${{ steps.rpmbuild.outputs.glpi-agent-task-network-rpm }} \
-            ${{ steps.rpmbuild.outputs.glpi-agent-task-collect-rpm }} \
-            ${{ steps.rpmbuild.outputs.glpi-agent-task-deploy-rpm }} \
-            ${{ steps.rpmbuild.outputs.glpi-agent-task-wakeonlan-rpm }} \
-            ${{ steps.rpmbuild.outputs.glpi-agent-task-esx-rpm }} \
-            ${{ steps.rpmbuild.outputs.glpi-agent-cron-rpm }}
-        sudo rpm -e glpi-agent glpi-agent-task-network glpi-agent-task-collect \
-            glpi-agent-task-deploy glpi-agent-task-wakeonlan \
-            glpi-agent-task-esx glpi-agent-cron
+        sudo rpm -ivh --nodeps ${{ steps.rpmbuild.outputs.assetsync-agent-rpm }} \
+            ${{ steps.rpmbuild.outputs.assetsync-agent-task-network-rpm }} \
+            ${{ steps.rpmbuild.outputs.assetsync-agent-task-collect-rpm }} \
+            ${{ steps.rpmbuild.outputs.assetsync-agent-task-deploy-rpm }} \
+            ${{ steps.rpmbuild.outputs.assetsync-agent-task-wakeonlan-rpm }} \
+            ${{ steps.rpmbuild.outputs.assetsync-agent-task-esx-rpm }} \
+            ${{ steps.rpmbuild.outputs.assetsync-agent-cron-rpm }}
+        sudo rpm -e assetsync-agent assetsync-agent-task-network assetsync-agent-task-collect \
+            assetsync-agent-task-deploy assetsync-agent-task-wakeonlan \
+            assetsync-agent-task-esx assetsync-agent-cron
       shell: bash
     - name: Upload built rpm artifacts
       uses: actions/upload-artifact@v4
@@ -621,7 +621,7 @@ jobs:
         name: RPM-Sources
         path: |
           ${{ steps.rpmbuild.outputs.srpmdir }}/*.rpm
-          ${{ steps.rpmbuild.outputs.srcdir }}/glpi-agent-*.tar.gz
+          ${{ steps.rpmbuild.outputs.srcdir }}/assetsync-agent-*.tar.gz
     - name: Upload RPM Packages
       id: upload-linux-rpm-asset
       if: ${{ needs.setup-release.outputs.create-release == 'yes' }}
@@ -654,11 +654,11 @@ jobs:
       id: installer-build
       run: |
         contrib/unix/make-linux-installer.sh --version $VERSION --rpm *.rpm \
-            contrib/unix/glpi-agent.init.redhat \
+            contrib/unix/assetsync-agent.init.redhat \
             --deb *.deb --snap *.snap
-        mv glpi-agent-$VERSION-linux-installer.pl glpi-agent-$VERSION-with-snap-linux-installer.pl
+        mv assetsync-agent-$VERSION-linux-installer.pl assetsync-agent-$VERSION-with-snap-linux-installer.pl
         contrib/unix/make-linux-installer.sh --version $VERSION --rpm *.rpm \
-            contrib/unix/glpi-agent.init.redhat \
+            contrib/unix/assetsync-agent.init.redhat \
             --deb *.deb
         ls -l
         sha1sum *.rpm *.deb *.snap *.pl
@@ -671,12 +671,12 @@ jobs:
       with:
         name: Linux-Installer-Build
         path: |
-          glpi-agent-*-linux-installer.pl
+          assetsync-agent-*-linux-installer.pl
     - name: Upload linux installers
       id: upload-linux-installer-assets
       if: ${{ needs.setup-release.outputs.create-release == 'yes' }}
       run: |
-        gh release upload ${{ needs.setup-release.outputs.tag_name }} glpi-agent-*-linux-installer.pl
+        gh release upload ${{ needs.setup-release.outputs.tag_name }} assetsync-agent-*-linux-installer.pl
       shell: bash
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -725,13 +725,13 @@ jobs:
         sudo apt -y install libfuse2
         echo ====
         echo Installer version:
-        ./glpi-agent-$VERSION-x86_64.AppImage --version
+        ./assetsync-agent-$VERSION-x86_64.AppImage --version
         echo ====
         echo Embedded perl version:
-        ./glpi-agent-$VERSION-x86_64.AppImage --perl --version
+        ./assetsync-agent-$VERSION-x86_64.AppImage --perl --version
         echo ====
-        echo Embedded GLPI Agent version:
-        ./glpi-agent-$VERSION-x86_64.AppImage --script=glpi-agent --version
+        echo Embedded AssetSync Agent version:
+        ./assetsync-agent-$VERSION-x86_64.AppImage --script=assetsync-agent --version
         echo ====
       env:
         VERSION: ${{ needs.setup-release.outputs.version }}
@@ -782,7 +782,7 @@ jobs:
         perl Makefile.PL
         make manifest
         make
-        make dist DISTVNAME=GLPI-Agent-$VERSION
+        make dist DISTVNAME=AssetSync-Agent-$VERSION
       shell: bash
       env:
         VERSION: ${{ needs.setup-release.outputs.version }}
@@ -791,12 +791,12 @@ jobs:
       with:
         name: Sources
         path: |
-          GLPI-Agent-*.tar.gz
+          AssetSync-Agent-*.tar.gz
     - name: Upload Sources Archive
       id: upload-sources-asset
       if: ${{ needs.setup-release.outputs.create-release == 'yes' }}
       run: |
-        gh release upload ${{ needs.setup-release.outputs.tag_name }} GLPI-Agent-*.tar.gz
+        gh release upload ${{ needs.setup-release.outputs.tag_name }} AssetSync-Agent-*.tar.gz
       shell: bash
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -841,8 +841,8 @@ jobs:
       run: |
         # Clean up not published files from Debian-Build
         rm -f *.buildinfo *.changes
-        sha256sum *$VERSION* > glpi-agent-$VERSION.sha256
-        gh release upload ${{ needs.setup-release.outputs.tag_name }} glpi-agent-$VERSION.sha256
+        sha256sum *$VERSION* > assetsync-agent-$VERSION.sha256
+        gh release upload ${{ needs.setup-release.outputs.tag_name }} assetsync-agent-$VERSION.sha256
       shell: bash
       env:
         VERSION: ${{ needs.setup-release.outputs.version }}
@@ -902,50 +902,50 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        repository: ${{ github.repository_owner }}/glpi-project.github.io
+        repository: ${{ github.repository_owner }}/assetsync-project.github.io
         token: ${{ secrets.PUBLISHING_TOKEN }}
         fetch-depth: 0
     - uses: actions/download-artifact@v4
       with:
         name: Linux-Installer-Build
-        path: glpi-agent
+        path: assetsync-agent
     - uses: actions/download-artifact@v4
       with:
         name: RPM-Build
-        path: glpi-agent
+        path: assetsync-agent
     - uses: actions/download-artifact@v4
       with:
         name: Debian-Build
-        path: glpi-agent
+        path: assetsync-agent
     - uses: actions/download-artifact@v4
       with:
         name: Snap-Build
-        path: glpi-agent
+        path: assetsync-agent
     - uses: actions/download-artifact@v4
       with:
         name: Linux-AppImage-Build
-        path: glpi-agent
+        path: assetsync-agent
     - uses: actions/download-artifact@v4
       with:
         pattern: MacOSX-Build-*
-        path: glpi-agent
+        path: assetsync-agent
         merge-multiple: true
     - uses: actions/download-artifact@v4
       with:
         pattern: Windows-Build-*
-        path: glpi-agent
+        path: assetsync-agent
         merge-multiple: true
     - uses: actions/download-artifact@v4
       with:
         name: Sources
-        path: glpi-agent
+        path: assetsync-agent
     - name: Cleanup nightly
       run: |
         # Clean up Debian-Build
-        rm -f glpi-agent/*.buildinfo glpi-agent/*.changes
+        rm -f assetsync-agent/*.buildinfo assetsync-agent/*.changes
         # Clean up Windows-Build
-        rm -f glpi-agent/*_debug_dir.zip
-        ls -lt glpi-agent
+        rm -f assetsync-agent/*_debug_dir.zip
+        ls -lt assetsync-agent
       shell: bash
     - name: Publish nightly
       id: publish-nightly
@@ -967,41 +967,41 @@ jobs:
         # Get script to prepare page
         curl -L -s -o github-nightly-description.sh https://github.com/glpi-project/glpi-agent/raw/develop/tools/github-nightly-description.sh
         chmod +x github-nightly-description.sh
-        cd glpi-agent
-        echo "Generating glpi-agent ${{ needs.setup-release.outputs.version }} packages sha256 file"
-        sha256sum *${{ needs.setup-release.outputs.version }}* > glpi-agent-${{ needs.setup-release.outputs.version }}.sha256
+        cd assetsync-agent
+        echo "Generating assetsync-agent ${{ needs.setup-release.outputs.version }} packages sha256 file"
+        sha256sum *${{ needs.setup-release.outputs.version }}* > assetsync-agent-${{ needs.setup-release.outputs.version }}.sha256
         cd ..
-        ./github-nightly-description.sh --header --version ${{ needs.setup-release.outputs.version }} >glpi-agent/index.md.new
+        ./github-nightly-description.sh --header --version ${{ needs.setup-release.outputs.version }} >assetsync-agent/index.md.new
         git config --local user.email "${{ needs.setup-release.outputs.user-email }}"
         git config --local user.name "${{ needs.setup-release.outputs.user-name }}"
-        egrep '^# ' glpi-agent/index.md | \
+        egrep '^# ' assetsync-agent/index.md | \
         while read dash agent version x
         do
             VERSION="${version#v}"
             if (( --COUNT > 0 )); then
-                echo "Keeping glpi-agent $VERSION build"
-                if [ ! -e glpi-agent/glpi-agent-$VERSION.sha256 ]; then
-                    cd glpi-agent
-                    echo "Generating glpi-agent $VERSION packages sha256 file"
-                    sha256sum *$VERSION* > glpi-agent-$VERSION.sha256
+                echo "Keeping assetsync-agent $VERSION build"
+                if [ ! -e assetsync-agent/assetsync-agent-$VERSION.sha256 ]; then
+                    cd assetsync-agent
+                    echo "Generating assetsync-agent $VERSION packages sha256 file"
+                    sha256sum *$VERSION* > assetsync-agent-$VERSION.sha256
                     cd ..
                 fi
-                read date time tz <<<$(git log -n1 --pretty=%ci -- glpi-agent/glpi-agent_${VERSION}_all.deb)
-                ./github-nightly-description.sh --version $VERSION --date "$date $time UTC" >>glpi-agent/index.md.new
+                read date time tz <<<$(git log -n1 --pretty=%ci -- assetsync-agent/assetsync-agent_${VERSION}_all.deb)
+                ./github-nightly-description.sh --version $VERSION --date "$date $time UTC" >>assetsync-agent/index.md.new
             else
-                echo "Removing glpi-agent $VERSION build"
+                echo "Removing assetsync-agent $VERSION build"
                 git filter-branch --prune-empty -f --index-filter "git rm --cached --ignore-unmatch *$VERSION*" HEAD
             fi
         done
-        mv -vf glpi-agent/index.md.new glpi-agent/index.md
+        mv -vf assetsync-agent/index.md.new assetsync-agent/index.md
         rm -f github-nightly-description.sh
         echo "Repository status:"
         git status
-        ls -lt glpi-agent
+        ls -lt assetsync-agent
         # Prepare commit
-        echo "Adding GLPI-Agent ${{ needs.setup-release.outputs.version }} build"
-        git add glpi-agent/*
-        git commit -m "Add GLPI-Agent ${{ needs.setup-release.outputs.version }} build"
+        echo "Adding AssetSync-Agent ${{ needs.setup-release.outputs.version }} build"
+        git add assetsync-agent/*
+        git commit -m "Add AssetSync-Agent ${{ needs.setup-release.outputs.version }} build"
         # Force commit
         git push --force
         git status

@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::OperationTimeout;
+package AssetSync::Agent::SOAP::WsMan::OperationTimeout;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package

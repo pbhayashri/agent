@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Linux::Networks::DockerMacvlan;
+package AssetSync::Agent::Task::Inventory::Linux::Networks::DockerMacvlan;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use Cpanel::JSON::XS;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Network;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Network;
 
 sub isEnabled {
     return canRun('docker');

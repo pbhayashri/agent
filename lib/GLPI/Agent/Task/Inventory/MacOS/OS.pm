@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::MacOS::OS;
+package AssetSync::Agent::Task::Inventory::MacOS::OS;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::MacOS;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::MacOS;
 
 use constant    category    => "os";
 

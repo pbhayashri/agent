@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Deploy::DiskFree;
+package AssetSync::Agent::Task::Deploy::DiskFree;
 
 use strict;
 use warnings;
@@ -8,7 +8,7 @@ use English qw(-no_match_vars);
 use UNIVERSAL::require;
 use File::Find;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 our @EXPORT = qw(
     getFreeSpace
@@ -53,10 +53,10 @@ sub _getFreeSpaceWindows {
     my $logger = $params{logger};
 
 
-    GLPI::Agent::Tools::Win32->require();
+    AssetSync::Agent::Tools::Win32->require();
     if ($EVAL_ERROR) {
         $logger->error(
-            "Failed to load GLPI::Agent::Tools::Win32: $EVAL_ERROR"
+            "Failed to load AssetSync::Agent::Tools::Win32: $EVAL_ERROR"
         );
         return;
     }
@@ -69,7 +69,7 @@ sub _getFreeSpaceWindows {
     $letter = $1.':';
 
     my $freeSpace;
-    foreach my $object (GLPI::Agent::Tools::Win32::getWMIObjects(
+    foreach my $object (AssetSync::Agent::Tools::Win32::getWMIObjects(
         moniker    => 'winmgmts:{impersonationLevel=impersonate,(security)}!//./',
         class      => 'Win32_LogicalDisk',
         properties => [ qw/Caption FreeSpace/ ]

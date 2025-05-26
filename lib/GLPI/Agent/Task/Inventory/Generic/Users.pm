@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Generic::Users;
+package AssetSync::Agent::Task::Inventory::Generic::Users;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant    other_categories
                             => qw(local_user local_group);

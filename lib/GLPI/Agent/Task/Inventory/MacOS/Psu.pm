@@ -1,18 +1,18 @@
-package GLPI::Agent::Task::Inventory::MacOS::Psu;
+package AssetSync::Agent::Task::Inventory::MacOS::Psu;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::MacOS;
-use GLPI::Agent::Tools::PowerSupplies;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::MacOS;
+use AssetSync::Agent::Tools::PowerSupplies;
 
 use constant    category    => "psu";
 
 our $runAfterIfEnabled = [ qw(
-    GLPI::Agent::Task::Inventory::Generic::Dmidecode::Psu
+    AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Psu
 )];
 
 sub isEnabled {
@@ -50,7 +50,7 @@ sub doInventory {
 sub _getCharger {
     my (%params) = @_;
 
-    my $infos = GLPI::Agent::Tools::MacOS::getSystemProfilerInfos(
+    my $infos = AssetSync::Agent::Tools::MacOS::getSystemProfilerInfos(
         type    => 'SPPowerDataType',
         format  => 'text',
         %params

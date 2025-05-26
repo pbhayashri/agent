@@ -13,30 +13,30 @@ use Test::More;
 use Test::MockModule;
 use Test::Deep qw(cmp_deeply);
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Config;
-use GLPI::Agent::Target::Server;
-use GLPI::Agent::HTTP::Client::OCS;
-use GLPI::Agent::XML::Response;
-use GLPI::Agent::XML::Query::Prolog;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Target::Server;
+use AssetSync::Agent::HTTP::Client::OCS;
+use AssetSync::Agent::XML::Response;
+use AssetSync::Agent::XML::Query::Prolog;
 
-use GLPI::Agent::Version;
-use GLPI::Agent::Task::NetInventory::Version;
+use AssetSync::Agent::Version;
+use AssetSync::Agent::Task::NetInventory::Version;
 
-our $VERSION = $GLPI::Agent::Version::VERSION;
-our $TASKVERSION = GLPI::Agent::Task::NetInventory::Version::VERSION;
+our $VERSION = $AssetSync::Agent::Version::VERSION;
+our $TASKVERSION = AssetSync::Agent::Task::NetInventory::Version::VERSION;
 
-GLPI::Agent::Task::NetInventory->use();
-GLPI::Agent::Task::NetInventory::Job->use();
+AssetSync::Agent::Task::NetInventory->use();
+AssetSync::Agent::Task::NetInventory::Job->use();
 
 # Setup a target with a Test logger and debug
-my $logger = GLPI::Agent::Logger->new(
+my $logger = AssetSync::Agent::Logger->new(
     logger  => [ 'Test' ],
     debug   => 1
 );
 
-my $target = GLPI::Agent::Target::Server->new(
-    url    => 'http://localhost/glpi-any',
+my $target = AssetSync::Agent::Target::Server->new(
+    url    => 'http://localhost/assetsync-any',
     logger => $logger,
     basevardir => tempdir(CLEANUP => 1)
 );
@@ -495,7 +495,7 @@ plan tests => $plan_tests_count ;
 my $test_pid = $$;
 my $storable_tempdir = tempdir(CLEANUP => 1);
 
-my $client_module = Test::MockModule->new('GLPI::Agent::HTTP::Client::OCS');
+my $client_module = Test::MockModule->new('AssetSync::Agent::HTTP::Client::OCS');
 $client_module->mock('send', sub {
     my ($self, %params) = @_;
 
@@ -524,7 +524,7 @@ $client_module->mock('send', sub {
     }
 
     return $query eq 'PROLOG' ?
-        GLPI::Agent::XML::Response->new( content => $response ) :
+        AssetSync::Agent::XML::Response->new( content => $response ) :
         $response;
 });
 
@@ -533,24 +533,24 @@ foreach my $case (keys(%responses)) {
     my $client;
 
     lives_ok {
-        $client = GLPI::Agent::HTTP::Client::OCS->new( logger  => $logger );
+        $client = AssetSync::Agent::HTTP::Client::OCS->new( logger  => $logger );
     } "$case: HTTP Client object instanciation" ;
 
     my $response;
     lives_ok {
         $response = $client->send(
             url     => $target->getUrl(),
-            message => GLPI::Agent::XML::Query::Prolog->new( deviceid => $case )
+            message => AssetSync::Agent::XML::Query::Prolog->new( deviceid => $case )
         );
     } "$case PROLOG response";
 
     my $task;
 
     lives_ok {
-        $task = GLPI::Agent::Task::NetInventory->new(
+        $task = AssetSync::Agent::Task::NetInventory->new(
             target      => $target,
             logger      => $logger,
-            config      => GLPI::Agent::Config->new(),
+            config      => AssetSync::Agent::Config->new(),
             datadir     => tempdir(CLEANUP => 1),
             deviceid    => $case
         );

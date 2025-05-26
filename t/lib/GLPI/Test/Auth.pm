@@ -1,4 +1,4 @@
-package GLPI::Test::Auth;
+package AssetSync::Test::Auth;
 
 use strict;
 use parent 'Authen::Simple::Adapter';

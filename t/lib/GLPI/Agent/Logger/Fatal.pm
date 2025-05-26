@@ -1,9 +1,9 @@
-package GLPI::Agent::Logger::Fatal;
+package AssetSync::Agent::Logger::Fatal;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Logger::Backend';
+use parent 'AssetSync::Agent::Logger::Backend';
 
 use English qw(-no_match_vars);
 use Carp;

@@ -1,20 +1,20 @@
-package GLPI::Agent::Task::Inventory::Virtualization::Wsl;
+package AssetSync::Agent::Task::Inventory::Virtualization::Wsl;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::UUID;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::UUID;
+use AssetSync::Agent::Tools::Virtualization;
 
 our $runAfterIfEnabled = [ qw(
-    GLPI::Agent::Task::Inventory::Win32::Hardware
-    GLPI::Agent::Task::Inventory::Win32::CPU
+    AssetSync::Agent::Task::Inventory::Win32::Hardware
+    AssetSync::Agent::Task::Inventory::Win32::CPU
 )];
 
 sub isEnabled {
@@ -41,8 +41,8 @@ sub  _getUsersWslInstances {
     my @machines;
 
     # Always load Win32 API as late as possible
-    GLPI::Agent::Tools::Win32->require();
-    GLPI::Agent::Tools::Win32::Users->require();
+    AssetSync::Agent::Tools::Win32->require();
+    AssetSync::Agent::Tools::Win32::Users->require();
 
     # Prepare vcpu, memory and a serial from still inventoried CPUS, HARDWARE & BIOS
     my $cpus = $params{inventory}->getSection('CPUS') // [{}];
@@ -51,7 +51,7 @@ sub  _getUsersWslInstances {
     my $memory = $params{inventory}->getHardware('MEMORY');
 
     # Get system build revision to handle default max memory with WSL2
-    my ($operatingSystem) = GLPI::Agent::Tools::Win32::getWMIObjects(
+    my ($operatingSystem) = AssetSync::Agent::Tools::Win32::getWMIObjects(
         class      => 'Win32_OperatingSystem',
         properties => [ qw/Version/ ]
     );
@@ -59,16 +59,16 @@ sub  _getUsersWslInstances {
     my ($build) = $kernel_version =~ /^\d+\.\d+\.(\d+)/;
 
     # Search users profiles for existing WSL instance
-    foreach my $user (GLPI::Agent::Tools::Win32::Users::getSystemUserProfiles()) {
+    foreach my $user (AssetSync::Agent::Tools::Win32::Users::getSystemUserProfiles()) {
         my $sid = $user->{SID};
 
         my ($lxsskey, $userhive);
         unless ($user->{LOADED}) {
             my $ntuserdat = $user->{PATH}."/NTUSER.DAT";
             # This call involves we use cleanupPrivileges before leaving
-            $userhive = GLPI::Agent::Tools::Win32::loadUserHive( sid => $sid, file => $ntuserdat );
+            $userhive = AssetSync::Agent::Tools::Win32::loadUserHive( sid => $sid, file => $ntuserdat );
         }
-        $lxsskey = GLPI::Agent::Tools::Win32::getRegistryKey(
+        $lxsskey = AssetSync::Agent::Tools::Win32::getRegistryKey(
             path        => "HKEY_USERS/$sid/SOFTWARE/Microsoft/Windows/CurrentVersion/Lxss/",
             # Important for remote inventory optimization
             required    => [ qw/BasePath DistributionName/ ],
@@ -91,7 +91,7 @@ sub  _getUsersWslInstances {
                 or next;
             my $distro = $lxsskey->{$sub}->{'/DistributionName'}
                 or next;
-            my $username = GLPI::Agent::Tools::Win32::Users::getProfileUsername($user);
+            my $username = AssetSync::Agent::Tools::Win32::Users::getProfileUsername($user);
             my $hostname = $username ? "$distro on $username account" : "$distro on $sid profile";
 
             # Create an UUID based on user SID and distro name
@@ -131,7 +131,7 @@ sub  _getUsersWslInstances {
         undef $lxsskey if $userhive;
     }
 
-    GLPI::Agent::Tools::Win32::cleanupPrivileges();
+    AssetSync::Agent::Tools::Win32::cleanupPrivileges();
 
     return @machines;
 }

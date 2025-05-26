@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::License;
+package AssetSync::Agent::Tools::License;
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use parent 'Exporter';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 our @EXPORT = qw(
     getAdobeLicenses
@@ -192,7 +192,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::License - License-related functions
+AssetSync::Agent::Tools::License - License-related functions
 
 =head1 DESCRIPTION
 

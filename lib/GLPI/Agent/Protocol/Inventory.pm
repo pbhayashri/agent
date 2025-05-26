@@ -1,15 +1,15 @@
-package GLPI::Agent::Protocol::Inventory;
+package AssetSync::Agent::Protocol::Inventory;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Protocol::Message';
+use parent 'AssetSync::Agent::Protocol::Message';
 
 use DateTime;
 use English qw(-no_match_vars);
 use Cpanel::JSON::XS;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant date_qr            => qr/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
 use constant datetime_qr        => qr/^[0-9]{4}-[0-9]{2}-[0-9]{2}[ |T][0-9]{2}:[0-9]{2}:[0-9]{2}(Z|[+|-][0-9]{2}:[0-9]{2}:[0-9]{2})?$/;
@@ -196,19 +196,19 @@ sub _setupStandardization {
     if ($suffix eq 'dev') {
         $self->{logger}->debug2(
             "inventory format: server is a development version\n" .
-            "Be sure to use latest GLPI Agent nightly build being aware your JSON inventory\n" .
+            "Be sure to use latest AssetSync Agent nightly build being aware your JSON inventory\n" .
             "may be rejected by server, and in that case, you probably just have to update the\n" .
             "server-side 'inventory.schema.json' file manually.\n" .
-            "If this is not sufficient, please, can you open an issue on glpi-agent github project ?"
+            "If this is not sufficient, please, can you open an issue on assetsync-agent github project ?"
         );
     } elsif ($suffix eq 'beta') {
         $self->{logger}->debug2(
             "inventory format: server is a beta version\n" .
-            "Be sure to use latest GLPI Agent nightly build.\n" .
-            "If the server rejects the inventory, please, report an issue on glpi-agent github project."
+            "Be sure to use latest AssetSync Agent nightly build.\n" .
+            "If the server rejects the inventory, please, report an issue on assetsync-agent github project."
         );
         if ($major == 10 && !$minor && !$rev) {
-            # GLPI 10.0.0-beta supported specs
+            # AssetSync 10.0.0-beta supported specs
             delete $normalize{MEMORIES}->{boolean};
             $normalize{MEMORIES}->{string} = [ qw/REMOVABLE/ ];
         }
@@ -542,7 +542,7 @@ sub _transform {
         } grep { exists($_->{MACADDR}) } @{$networks};
     }
 
-    # Cleanup GLPI unsupported values
+    # Cleanup AssetSync unsupported values
     my $licenseinfos = $content->{LICENSEINFOS};
     if (ref($licenseinfos) eq 'ARRAY') {
         map { delete $_->{OEM} } grep { exists($_->{OEM}) } @{$licenseinfos};
@@ -563,7 +563,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Protocol::Inventory - Inventory GLPI Agent messages
+AssetSync::Agent::Protocol::Inventory - Inventory AssetSync Agent messages
 
 =head1 DESCRIPTION
 

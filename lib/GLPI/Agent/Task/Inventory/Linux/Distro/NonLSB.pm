@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Linux::Distro::NonLSB;
+package AssetSync::Agent::Task::Inventory::Linux::Distro::NonLSB;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 # This array contains four items for each distribution:
 # - release file
@@ -64,7 +64,7 @@ my @distributions = (
 );
 
 our $runMeIfTheseChecksFailed =
-    ["GLPI::Agent::Task::Inventory::Linux::Distro::OSRelease"];
+    ["AssetSync::Agent::Task::Inventory::Linux::Distro::OSRelease"];
 
 sub isEnabled {
     return canRead('/etc/os-release') ? 0 : 1;

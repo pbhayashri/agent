@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Generic::Dmidecode::Psu;
+package AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Psu;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Generic;
-use GLPI::Agent::Tools::PartNumber;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Generic;
+use AssetSync::Agent::Tools::PartNumber;
 
 use constant    category    => "psu";
 
@@ -60,7 +60,7 @@ sub doInventory {
 
         # Validate PartNumber, as example, this fixes Dell PartNumbers
         if ($psu->{'PARTNUM'} && $psu->{'MANUFACTURER'}) {
-            my $partnumber_factory = GLPI::Agent::Tools::PartNumber->new(
+            my $partnumber_factory = AssetSync::Agent::Tools::PartNumber->new(
                 logger  => $params{logger},
             );
             my $partnumber = $partnumber_factory->match(

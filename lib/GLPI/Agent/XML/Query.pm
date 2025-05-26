@@ -1,9 +1,9 @@
-package GLPI::Agent::XML::Query;
+package AssetSync::Agent::XML::Query;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::XML;
+use AssetSync::Agent::XML;
 
 sub new {
     my ($class, %params) = @_;
@@ -22,7 +22,7 @@ sub new {
 sub getContent {
     my ($self) = @_;
 
-    return GLPI::Agent::XML->new()->write({ REQUEST => $self->{h} });
+    return AssetSync::Agent::XML->new()->write({ REQUEST => $self->{h} });
 }
 
 
@@ -32,7 +32,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::XML::Query - Base class for agent messages
+AssetSync::Agent::XML::Query - Base class for agent messages
 
 =head1 DESCRIPTION
 

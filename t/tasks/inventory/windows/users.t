@@ -12,7 +12,7 @@ use Test::MockModule;
 use Test::More;
 use UNIVERSAL::require;
 
-use GLPI::Test::Utils;
+use AssetSync::Test::Utils;
 
 BEGIN {
     # use mock modules for non-available ones
@@ -27,7 +27,7 @@ if (!$Config{usethreads} || $Config{usethreads} ne 'define') {
 
 Test::NoWarnings->use();
 
-GLPI::Agent::Task::Inventory::Win32::Users->require();
+AssetSync::Agent::Task::Inventory::Win32::Users->require();
 
 my %tests = (
     '7-AD' => {
@@ -48,15 +48,15 @@ my %tests = (
 plan tests => scalar (keys %tests) + 1;
 
 my $module = Test::MockModule->new(
-    'GLPI::Agent::Task::Inventory::Win32::Users'
+    'AssetSync::Agent::Task::Inventory::Win32::Users'
 );
 
 my $tools_module = Test::MockModule->new(
-    'GLPI::Agent::Tools::Win32'
+    'AssetSync::Agent::Tools::Win32'
 );
 
 my $users_module = Test::MockModule->new(
-    'GLPI::Agent::Tools::Win32::Users'
+    'AssetSync::Agent::Tools::Win32::Users'
 );
 
 foreach my $test (keys %tests) {
@@ -76,7 +76,7 @@ foreach my $test (keys %tests) {
         mockGetWMIObjects($test)
     );
 
-    my $user = GLPI::Agent::Task::Inventory::Win32::Users::_getLastUser();
+    my $user = AssetSync::Agent::Task::Inventory::Win32::Users::_getLastUser();
 
     cmp_deeply(
         $user,

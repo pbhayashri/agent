@@ -1,4 +1,4 @@
-Source: glpi-agent
+Source: assetsync-agent
 Section: net
 Testsuite: autopkgtest-pkg-perl
 Priority: optional
@@ -45,11 +45,11 @@ Build-Depends-Indep:
  ucf
 Standards-Version: 4.5.1
 Vcs-Git: https://github.com/glpi-project/glpi-agent.git
-Homepage: https://glpi-project.org/
+Homepage: https://assetsync-project.org/
 Vcs-Browser: https://github.com/glpi-project/glpi-agent
 Rules-Requires-Root: binary-targets
 
-Package: glpi-agent
+Package: assetsync-agent
 Architecture: all
 Depends:
  ${misc:Depends},
@@ -79,7 +79,7 @@ Depends:
 Suggests: smartmontools, read-edid
 Recommends: libio-socket-ssl-perl, dmidecode, hdparm, fdisk | util-linux (<< 2.29.2-3~), net-tools
 Description: hardware and software inventory tool (client)
- GLPI Agent is an application designed to help a network
+ AssetSync Agent is an application designed to help a network
  or system administrator to keep track of the hardware and software
  configurations of devices.
  This agent can collect information about from:
@@ -87,70 +87,70 @@ Description: hardware and software inventory tool (client)
   - the network using SNMP
   - an VMware ESX or vCenter server
  The agent can be driven from different asset management software
- including GLPI, Rudder, Uranos, OCSInventory.
+ including AssetSync, Rudder, Uranos, OCSInventory.
  .
  The agent can also be used to install new software and configuration
  changes.
 
-Package: glpi-agent-task-esx
+Package: assetsync-agent-task-esx
 Architecture: all
 Depends:
  ${misc:Depends},
  ${perl:Depends},
- glpi-agent (>= ${binary:Version}),
+ assetsync-agent (>= ${binary:Version}),
  libhttp-cookies-perl,
  libjson-pp-perl
-Description: ESX and ESXi inventory for GLPI Agent
+Description: ESX and ESXi inventory for AssetSync Agent
  Do remote inventory of your ESX, ESXi, vCenter server using the SOAP interface.
  You can import the generated .xml files in:
-  - GLPI
+  - AssetSync
   - ocsinventory
   - Uranos
- This module can also be controlled from GLPI using a FusionInventory compatible
+ This module can also be controlled from AssetSync using a FusionInventory compatible
  plugin.
 
-Package: glpi-agent-task-deploy
+Package: assetsync-agent-task-deploy
 Architecture: all
 Depends:
  ${misc:Depends},
- glpi-agent (>= ${binary:Version}),
+ assetsync-agent (>= ${binary:Version}),
  libjson-pp-perl,
  liburi-perl,
  libfile-copy-recursive-perl,
  libdigest-sha-perl,
  libparallel-forkmanager-perl
-Description: software and file deployment support for GLPI
- With this module, GLPI can accept software deployment
- request from an GLPI server with a FusionInventory compatible plugin.
+Description: software and file deployment support for AssetSync
+ With this module, AssetSync can accept software deployment
+ request from an AssetSync server with a FusionInventory compatible plugin.
  This module uses SSL certificate to authentificate the server.
  .
  If the P2P option is turned on, the agent will looks for peer in its
  network to reduce the bandwidth usage with the primary server.
 
-Package: glpi-agent-task-collect
+Package: assetsync-agent-task-collect
 Architecture: all
 Depends:
  ${misc:Depends},
- glpi-agent (>= ${binary:Version}),
-Description: collect task support for GLPI
- With this module, GLPI can collect desired datas, essentially
+ assetsync-agent (>= ${binary:Version}),
+Description: collect task support for AssetSync
+ With this module, AssetSync can collect desired datas, essentially
  files under Linux.
  .
  The plugin can depend on a FusionInventory compatible plugin on server side.
 
-Package: glpi-agent-task-network
+Package: assetsync-agent-task-network
 Architecture: all
 Depends:
  ${misc:Depends},
  ${perl:Depends},
- glpi-agent (>= ${binary:Version}),
+ assetsync-agent (>= ${binary:Version}),
  libcrypt-des-perl,
  libdigest-hmac-perl,
  libnet-ip-perl,
  libnet-snmp-perl,
  libnet-nbname-perl,
  libparallel-forkmanager-perl
-Description: network device discovery for GLPI Agent
+Description: network device discovery for AssetSync Agent
  This module scans your networks to quickly identify its hosts with SNMP,
  Echo Ping, TimeStamp ping, arp table lookup and NetBIOS request:
   - networking devices discovery within an IP range

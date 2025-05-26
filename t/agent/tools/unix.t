@@ -7,7 +7,7 @@ use English qw(-no_match_vars);
 use Test::Deep;
 use Test::More;
 
-use GLPI::Agent::Tools::Unix;
+use AssetSync::Agent::Tools::Unix;
 
 my %df_tests = (
     'freebsd' => [
@@ -2890,19 +2890,19 @@ foreach my $test (keys %df_tests) {
 
 foreach my $test (keys %busybox_ps_tests) {
     my $file = "resources/generic/ps/$test";
-    my @processes = GLPI::Agent::Tools::Unix::_getProcessesBusybox(file => $file);
+    my @processes = AssetSync::Agent::Tools::Unix::_getProcessesBusybox(file => $file);
     cmp_deeply(\@processes, $busybox_ps_tests{$test}, "$test ps parsing");
 }
 
 foreach my $test (keys %other_ps_tests) {
     my $file = "resources/generic/ps/$test";
-    my @processes = GLPI::Agent::Tools::Unix::_getProcessesOther(file => $file);
+    my @processes = AssetSync::Agent::Tools::Unix::_getProcessesOther(file => $file);
     cmp_deeply(\@processes, $other_ps_tests{$test}, "$test ps parsing");
 }
 
 foreach my $test (@dhcp_leases_test) {
     my $file = "resources/generic/dhcp/$test->{file}";
-    my $server = GLPI::Agent::Tools::Unix::_parseDhcpLeaseFile(undef, $test->{if}, $file);
+    my $server = AssetSync::Agent::Tools::Unix::_parseDhcpLeaseFile(undef, $test->{if}, $file);
     ok(
         $server && ($server eq $test->{result}),
         "Parse DHCP lease"
@@ -2923,6 +2923,6 @@ foreach my $test (keys %mount_tests) {
 
 foreach my $test (keys %rootfsbirth) {
     my $file = "resources/generic/stat/$test";
-    my $installdate = GLPI::Agent::Tools::Unix::getRootFSBirth(file => $file);
+    my $installdate = AssetSync::Agent::Tools::Unix::getRootFSBirth(file => $file);
     is($installdate, $rootfsbirth{$test}, "$test installdate");
 }

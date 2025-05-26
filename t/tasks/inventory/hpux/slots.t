@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::HPUX::Slots;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::HPUX::Slots;
 
 my %tests = (
     'hpux2-ioa' => [
@@ -125,11 +125,11 @@ my %tests = (
 
 plan tests => (2 * scalar keys %tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %tests) {
     my $file = "resources/hpux/ioscan/$test";
-    my @slots = GLPI::Agent::Task::Inventory::HPUX::Slots::_getSlots(file => $file);
+    my @slots = AssetSync::Agent::Task::Inventory::HPUX::Slots::_getSlots(file => $file);
     cmp_deeply(\@slots, $tests{$test}, "$test ioscan parsing");
     lives_ok {
         $inventory->addEntry(section => 'SLOTS', entry => $_) foreach @slots;

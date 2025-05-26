@@ -12,8 +12,8 @@ use File::Path qw(make_path);
 
 plan tests => 6;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Task::Deploy::File;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Task::Deploy::File;
 
 # Temp dir
 my $datastoredir = tempdir(CLEANUP => $ENV{TEST_DEBUG} ? 0 : 1);
@@ -27,14 +27,14 @@ $sha->addfile( "$filedir/toto", 'b' );
 my $sha512 = $sha->hexdigest();
 
 # Create File object
-my $file = GLPI::Agent::Task::Deploy::File->new(
+my $file = AssetSync::Agent::Task::Deploy::File->new(
    datastore => { path => $datastoredir },
    sha512 => "void",
    data => {multiparts => [ $sha512 ]}
 );
 
 ################
-ok($file, "GLPI::Agent::Task::Deploy::File object created");
+ok($file, "AssetSync::Agent::Task::Deploy::File object created");
 my $partFilePath = $file->getPartFilePath($sha512);
 ok($partFilePath, "getPartFilePath()");
 ok(! -f $partFilePath, "file does not exist yet");

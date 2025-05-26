@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Panasas;
+package AssetSync::Agent::SNMP::MibSupport::Panasas;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 # See PANASAS-ROOT-MIB
 
@@ -68,7 +68,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Panasas - Inventory module for Panasas PanFS
+AssetSync::Agent::SNMP::MibSupport::Panasas - Inventory module for Panasas PanFS
 
 =head1 DESCRIPTION
 

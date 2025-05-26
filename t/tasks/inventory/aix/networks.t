@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::AIX::Networks;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::AIX::Networks;
 
 my %tests = (
     'aix-4.3.1' => {
@@ -48,10 +48,10 @@ my %tests = (
 
 plan tests => (scalar keys %tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %tests) {
     my $file = "resources/aix/lscfg/$test-en";
-    my %addresses = GLPI::Agent::Task::Inventory::AIX::Networks::_parseLscfg(file => $file);
+    my %addresses = AssetSync::Agent::Task::Inventory::AIX::Networks::_parseLscfg(file => $file);
     cmp_deeply(\%addresses, $tests{$test}, "$test: parsing");
 }

@@ -65,12 +65,12 @@ done
 : ${ARCH:=$(uname -m)}
 case "$(uname -s) $ARCH" in
     Darwin*x86_64)
-        echo "GLPI-Agent MacOSX Packaging for $ARCH..."
+        echo "AssetSync-Agent MacOSX Packaging for $ARCH..."
         : ${MACOSX_DEPLOYMENT_TARGET:=10.10}
         OPENSSL_CONFIG="darwin64-x86_64-cc"
         ;;
     Darwin*arm64)
-        echo "GLPI-Agent MacOSX Packaging for $ARCH..."
+        echo "AssetSync-Agent MacOSX Packaging for $ARCH..."
         : ${MACOSX_DEPLOYMENT_TARGET:=11.0}
         OPENSSL_CONFIG="darwin64-arm64-cc"
         # Try to disable annoying warning
@@ -104,14 +104,14 @@ fi
 
 export MACOSX_DEPLOYMENT_TARGET
 
-BUILD_PREFIX="/Applications/GLPI-Agent"
+BUILD_PREFIX="/Applications/AssetSync-Agent"
 
 # We uses a modified munkipkg script to simplify the process
 # The modification targets notarytool support & distribution build
 # Get munkipkg from a modified version of https://github.com/munki/munki-pkg project's notarytool branch
 if [ ! -e munkipkg ]; then
     echo "Downloading modified munkipkg script..."
-    curl -so munkipkg https://raw.githubusercontent.com/g-bougard/munki-pkg/used-by-glpi-agent/munkipkg
+    curl -so munkipkg https://raw.githubusercontent.com/g-bougard/munki-pkg/used-by-assetsync-agent/munkipkg
     if [ ! -e munkipkg ]; then
         echo "Failed to download munkipkg script" >&2
         exit 3
@@ -318,7 +318,7 @@ if [ -z "$LOCAL_ARCH" ]; then
     echo ========
 fi
 
-# Prepare glpi-agent sources
+# Prepare assetsync-agent sources
 cd ../..
 rm -rf build MANIFEST MANIFEST.bak *.tar.gz
 [ -e Makefile ] && make clean
@@ -415,7 +415,7 @@ if [ "$ARCH" == "arm64" -a -n "$LOCAL_ARCH" ]; then
         mv -f "$file.arm64" "$file"
         lipo -info "$file"
     done <<CHECK_ARCH
-pkg/payload/Applications/GLPI-Agent/bin/perl
+pkg/payload/Applications/AssetSync-Agent/bin/perl
 $(find pkg/payload -name '*.bundle')
 CHECK_ARCH
 fi
@@ -427,7 +427,7 @@ sed -i .1.bak -Ee "s/^scan-homedirs *=.*/scan-homedirs = 1/" $AGENT_CFG
 sed -i .2.bak -Ee "s/^scan-profiles *=.*/scan-profiles = 1/" $AGENT_CFG
 sed -i .3.bak -Ee "s/^httpd-trust *=.*/httpd-trust = 127.0.0.1/" $AGENT_CFG
 sed -i .4.bak -Ee "s/^logger *=.*/logger = File/" $AGENT_CFG
-sed -i .5.bak -Ee "s/^#?logfile *=.*/logfile = \/var\/log\/glpi-agent.log/" $AGENT_CFG
+sed -i .5.bak -Ee "s/^#?logfile *=.*/logfile = \/var\/log\/assetsync-agent.log/" $AGENT_CFG
 sed -i .6.bak -Ee "s/^#?logfile-maxsize *=.*/logfile-maxsize = 10/" $AGENT_CFG
 sed -i .7.bak -Ee "s/^#?include \"conf\.d\/\"/include \"conf.d\"/" $AGENT_CFG
 # By default, only enable inventory task on MacOSX
@@ -444,11 +444,11 @@ cat >pkg/build-info.plist <<-BUILD_INFO
 	    <key>distribution_style</key>
 	    <true/>
 	    <key>identifier</key>
-	    <string>com.teclib.glpi-agent</string>
+	    <string>com.teclib.assetsync-agent</string>
 	    <key>install_location</key>
 	    <string>/</string>
 	    <key>name</key>
-	    <string>GLPI-Agent-${VERSION}_$ARCH.pkg</string>
+	    <string>AssetSync-Agent-${VERSION}_$ARCH.pkg</string>
 	    <key>ownership</key>
 	    <string>recommended</string>
 	    <key>postinstall_action</key>
@@ -523,22 +523,22 @@ if [ -n "$APPSIGNID" ]; then
         codesign --options runtime -s "$APPSIGNID" --timestamp "$file" \
             && let ++SIGNED
     done <<CODE_SIGNING
-pkg/payload/Applications/GLPI-Agent/bin/perl
+pkg/payload/Applications/AssetSync-Agent/bin/perl
 pkg/scripts/dmidecode
 $(find pkg/payload -name '*.bundle')
 CODE_SIGNING
     echo "Signed files: $SIGNED"
 fi
 
-PKG="GLPI-Agent-${VERSION}_$ARCH.pkg"
-DMG="GLPI-Agent-${VERSION}_$ARCH.dmg"
+PKG="AssetSync-Agent-${VERSION}_$ARCH.pkg"
+DMG="AssetSync-Agent-${VERSION}_$ARCH.dmg"
 
 echo "Prepare distribution installer..."
 cat >pkg/Distribution.xml <<-CUSTOM
 	<?xml version="1.0" encoding="utf-8" standalone="no"?>
 	<installer-gui-script minSpecVersion="2">
-	    <title>GLPI-Agent $VERSION ($ARCH)</title>
-	    <pkg-ref id="com.teclib.glpi-agent" version="$VERSION" onConclusion="none">$PKG</pkg-ref>
+	    <title>AssetSync-Agent $VERSION ($ARCH)</title>
+	    <pkg-ref id="com.teclib.assetsync-agent" version="$VERSION" onConclusion="none">$PKG</pkg-ref>
 	    <license file="License.txt" mime-type="text/plain" />
 	    <background file="background.png" uti="public.png" alignment="bottomleft"/>
 	    <background-darkAqua file="background.png" uti="public.png" alignment="bottomleft"/>
@@ -546,20 +546,20 @@ cat >pkg/Distribution.xml <<-CUSTOM
 	    <options customize="never" require-scripts="false" hostArchitectures="$ARCH"/>
 	    <choices-outline>
 	        <line choice="default">
-	            <line choice="com.teclib.glpi-agent"/>
+	            <line choice="com.teclib.assetsync-agent"/>
 	        </line>
 	    </choices-outline>
 	    <choice id="default"/>
-	    <choice id="com.teclib.glpi-agent" visible="false">
-	        <pkg-ref id="com.teclib.glpi-agent"/>
+	    <choice id="com.teclib.assetsync-agent" visible="false">
+	        <pkg-ref id="com.teclib.assetsync-agent"/>
 	    </choice>
 	    <os-version min="$MACOSX_DEPLOYMENT_TARGET" />
 	</installer-gui-script>
 CUSTOM
 
 echo "Prepare Info.plist..."
-[ -d pkg/payload/Applications/GLPI-Agent/Contents ] || mkdir -p pkg/payload/Applications/GLPI-Agent/Contents
-cat >pkg/payload/Applications/GLPI-Agent/Contents/Info.plist <<-INFO_PLIST
+[ -d pkg/payload/Applications/AssetSync-Agent/Contents ] || mkdir -p pkg/payload/Applications/AssetSync-Agent/Contents
+cat >pkg/payload/Applications/AssetSync-Agent/Contents/Info.plist <<-INFO_PLIST
 	<?xml version="1.0" encoding="UTF-8"?>
 	<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 	<plist version="1.0">
@@ -569,15 +569,15 @@ cat >pkg/payload/Applications/GLPI-Agent/Contents/Info.plist <<-INFO_PLIST
 	    <key>CFBundleVersion</key>
 	    <string>$VERSION</string>
 	    <key>NSHumanReadableCopyright</key>
-	    <string>Copyright 2023 GLPI-Project, GNU General Public License v2</string>
+	    <string>Copyright 2023 AssetSync-Project, GNU General Public License v2</string>
 	    <key>CFBundleDevelopmentRegion</key>
 	    <string>en</string>
 	    <key>CFBundleName</key>
-	    <string>GLPI-Agent</string>
+	    <string>AssetSync-Agent</string>
 	    <key>CFBundleExecutable</key>
-	    <string>glpi-agent</string>
+	    <string>assetsync-agent</string>
 	    <key>CFBundleIdentifier</key>
-	    <string>com.teclib.glpi-agent</string>
+	    <string>com.teclib.assetsync-agent</string>
 	    <key>CFBundleInfoDictionaryVersion</key>
 	    <string>6.0</string>
 	    <key>CFBundlePackageType</key>
@@ -619,7 +619,7 @@ mv -vf "pkg/build/$PKG" "build/$PKG"
 
 rm -f "build/$DMG"
 echo "Create DMG"
-hdiutil create -volname "GLPI-Agent $VERSION ($ARCH) installer" -fs "HFS+" -srcfolder "build/$PKG" "build/$DMG"
+hdiutil create -volname "AssetSync-Agent $VERSION ($ARCH) installer" -fs "HFS+" -srcfolder "build/$PKG" "build/$DMG"
 
 # Sign dmg file
 if [ -n "$APPSIGNID" ]; then

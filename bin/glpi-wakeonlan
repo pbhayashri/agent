@@ -10,10 +10,10 @@ use English qw(-no_match_vars);
 use Getopt::Long;
 use Pod::Usage;
 
-use GLPI::Agent::Task::WakeOnLan;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools::Network;
-use GLPI::Agent::Version;
+use AssetSync::Agent::Task::WakeOnLan;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools::Network;
+use AssetSync::Agent::Version;
 
 my $options = {
     debug => 0,
@@ -29,11 +29,11 @@ GetOptions(
 ) or pod2usage(-verbose => 0);
 
 if ($options->{version}) {
-    my $PROVIDER = $GLPI::Agent::Version::PROVIDER;
+    my $PROVIDER = $AssetSync::Agent::Version::PROVIDER;
     map { print $_."\n" }
-        "WakeOnLan task $GLPI::Agent::Task::WakeOnLan::VERSION",
-        "based on $PROVIDER Agent v$GLPI::Agent::Version::VERSION",
-        @{$GLPI::Agent::Version::COMMENTS}
+        "WakeOnLan task $AssetSync::Agent::Task::WakeOnLan::VERSION",
+        "based on $PROVIDER Agent v$AssetSync::Agent::Version::VERSION",
+        @{$AssetSync::Agent::Version::COMMENTS}
         ;
     exit 0;
 }
@@ -45,9 +45,9 @@ pod2usage(
     -message => "invalid mac address given, aborting\n", -verbose => 0
 ) if $options->{mac} !~ /^$mac_address_pattern$/;
 
-my $task = GLPI::Agent::Task::WakeOnLan->new(
+my $task = AssetSync::Agent::Task::WakeOnLan->new(
     target => {},
-    logger => GLPI::Agent::Logger->new(config => $options)
+    logger => AssetSync::Agent::Logger->new(config => $options)
 );
 
 $task->{options} = {
@@ -67,11 +67,11 @@ __END__
 
 =head1 NAME
 
-glpi-wakeonlan - Standalone wake-on-lan
+assetsync-wakeonlan - Standalone wake-on-lan
 
 =head1 SYNOPSIS
 
-glpi-wakeonlan [options]
+assetsync-wakeonlan [options]
 
   Options:
     --mac=MAC         target mac address
@@ -82,5 +82,5 @@ glpi-wakeonlan [options]
 
 =head1 DESCRIPTION
 
-F<glpi-wakeonlan> can be used to run a wakeonlan task without a GLPI
+F<assetsync-wakeonlan> can be used to run a wakeonlan task without a AssetSync
 server.

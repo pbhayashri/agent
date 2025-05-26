@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::Canon;
+package AssetSync::Agent::SNMP::MibSupport::Canon;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 # See CANON-MIB & PRINTER-PORT-MONITOR-MIB
 
@@ -146,7 +146,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::Canon - Inventory module for Canon
+AssetSync::Agent::SNMP::MibSupport::Canon - Inventory module for Canon
 
 =head1 DESCRIPTION
 

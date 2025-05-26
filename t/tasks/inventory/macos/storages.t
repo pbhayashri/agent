@@ -10,9 +10,9 @@ use Test::More;
 use Test::NoWarnings;
 use English;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::MacOS::Storages;
-use GLPI::Agent::XML;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::MacOS::Storages;
+use AssetSync::Agent::XML;
 
 my %testsSerialATA = (
     'SPSerialATADataType.xml' => [
@@ -268,11 +268,11 @@ my $nbTests = scalar (keys %testsSerialATA)
 
 plan tests => 2 * $nbTests + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %testsSerialATA) {
     my $file = "resources/macos/system_profiler/$test";
-    my @storages = GLPI::Agent::Task::Inventory::MacOS::Storages::_getSerialATAStorages(file => $file);
+    my @storages = AssetSync::Agent::Task::Inventory::MacOS::Storages::_getSerialATAStorages(file => $file);
     cmp_deeply(
         [ sort { compare() } @storages ],
         [ sort { compare() } @{$testsSerialATA{$test}} ],
@@ -286,7 +286,7 @@ foreach my $test (keys %testsSerialATA) {
 
 foreach my $test (keys %testsDiscBurning) {
     my $file = "resources/macos/system_profiler/$test";
-    my @storages = GLPI::Agent::Task::Inventory::MacOS::Storages::_getDiscBurningStorages(file => $file);
+    my @storages = AssetSync::Agent::Task::Inventory::MacOS::Storages::_getDiscBurningStorages(file => $file);
     cmp_deeply(
         [ sort { compare() } @storages ],
         [ sort { compare() } @{$testsDiscBurning{$test}} ],
@@ -300,7 +300,7 @@ foreach my $test (keys %testsDiscBurning) {
 
 foreach my $test (keys %testsCardReader) {
     my $file = "resources/macos/system_profiler/$test";
-    my @storages = GLPI::Agent::Task::Inventory::MacOS::Storages::_getCardReaderStorages(file => $file);
+    my @storages = AssetSync::Agent::Task::Inventory::MacOS::Storages::_getCardReaderStorages(file => $file);
     cmp_deeply(
         [ sort { compare() } @storages ],
         [ sort { compare() } @{$testsCardReader{$test}} ],
@@ -314,7 +314,7 @@ foreach my $test (keys %testsCardReader) {
 
 foreach my $test (keys %testsUSBStorage) {
     my $file = "resources/macos/system_profiler/$test";
-    my @storages = GLPI::Agent::Task::Inventory::MacOS::Storages::_getUSBStorages(file => $file);
+    my @storages = AssetSync::Agent::Task::Inventory::MacOS::Storages::_getUSBStorages(file => $file);
     cmp_deeply(
         [ sort { compare() } @storages ],
         [ sort { compare() } @{$testsUSBStorage{$test}} ],
@@ -328,7 +328,7 @@ foreach my $test (keys %testsUSBStorage) {
 
 foreach my $test (keys %testsFireWireStorage) {
     my $file = "resources/macos/system_profiler/$test";
-    my @storages = GLPI::Agent::Task::Inventory::MacOS::Storages::_getFireWireStorages(file => $file);
+    my @storages = AssetSync::Agent::Task::Inventory::MacOS::Storages::_getFireWireStorages(file => $file);
     cmp_deeply(
         [ sort { compare() } @storages ],
         [ sort { compare() } @{$testsFireWireStorage{$test}} ],

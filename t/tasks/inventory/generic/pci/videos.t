@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Generic::PCI::Videos;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Generic::PCI::Videos;
 
 my %tests = (
     'dell-xt2' => [
@@ -87,13 +87,13 @@ my %tests = (
 
 plan tests => (2 * scalar keys %tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %tests) {
     my %params = ( file => "resources/generic/lspci/$test" );
     $params{xrandr}   = 1 if -e $params{file}.".xrandr";
     $params{xdpyinfo} = 1 if -e $params{file}.".xdpyinfo";
-    my @videos = GLPI::Agent::Task::Inventory::Generic::PCI::Videos::_getVideos(%params);
+    my @videos = AssetSync::Agent::Task::Inventory::Generic::PCI::Videos::_getVideos(%params);
     cmp_deeply(\@videos, $tests{$test}, $test);
     lives_ok {
         $inventory->addEntry(section => 'VIDEOS', entry => $_)

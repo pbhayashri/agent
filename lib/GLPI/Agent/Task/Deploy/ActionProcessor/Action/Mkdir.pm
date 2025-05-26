@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::Deploy::ActionProcessor::Action::Mkdir;
+package AssetSync::Agent::Task::Deploy::ActionProcessor::Action::Mkdir;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Deploy::ActionProcessor::Action';
+use parent 'AssetSync::Agent::Task::Deploy::ActionProcessor::Action';
 
 use File::Path qw(make_path);
 use Encode;
@@ -25,8 +25,8 @@ sub do {
         my $dir_local = $dir;
 
         if ($OSNAME eq 'MSWin32' && Encode::is_utf8($dir)) {
-            GLPI::Agent::Tools::Win32->require;
-            my $localCodepage = GLPI::Agent::Tools::Win32::getLocalCodepage();
+            AssetSync::Agent::Tools::Win32->require;
+            my $localCodepage = AssetSync::Agent::Tools::Win32::getLocalCodepage();
             $dir_local = encode($localCodepage, $dir);
         }
 

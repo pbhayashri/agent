@@ -12,11 +12,11 @@ use Pod::Usage;
 use UNIVERSAL::require;
 use File::Temp;
 
-use GLPI::Agent::Task::ESX;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Config;
-use GLPI::Agent::Target::Local;
-use GLPI::Agent::Version;
+use AssetSync::Agent::Task::ESX;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Target::Local;
+use AssetSync::Agent::Version;
 
 my $options = {
     path    => '-'
@@ -38,31 +38,31 @@ GetOptions(
     'dump',
     'dumpfile=s',
     'json',
-    'glpi-version=s',
+    'assetsync-version=s',
     'esx-itemtype=s',
 ) or pod2usage(-verbose => 0);
 
 pod2usage(-verbose => 0, -exitstatus => 0) if $options->{help};
 
 if ($options->{version}) {
-    my $PROVIDER = $GLPI::Agent::Version::PROVIDER;
+    my $PROVIDER = $AssetSync::Agent::Version::PROVIDER;
     map { print $_."\n" }
-        "glpi-esx $GLPI::Agent::Task::ESX::VERSION",
-        "based on $PROVIDER Agent v$GLPI::Agent::Version::VERSION",
-        @{$GLPI::Agent::Version::COMMENTS};
+        "assetsync-esx $AssetSync::Agent::Task::ESX::VERSION",
+        "based on $PROVIDER Agent v$AssetSync::Agent::Version::VERSION",
+        @{$AssetSync::Agent::Version::COMMENTS};
     exit 0;
 }
 
-my $config = GLPI::Agent::Config->new(
-    options => { map { $_ => $options->{$_} } qw{debug tag json glpi-version esx-itemtype} }
+my $config = AssetSync::Agent::Config->new(
+    options => { map { $_ => $options->{$_} } qw{debug tag json assetsync-version esx-itemtype} }
 );
 
-my $logger = GLPI::Agent::Logger->new(config => $config);
+my $logger = AssetSync::Agent::Logger->new(config => $config);
 
-my $esx = GLPI::Agent::Task::ESX->new(
+my $esx = AssetSync::Agent::Task::ESX->new(
     logger => $logger,
     config => $config,
-    target => GLPI::Agent::Target::Local->new(
+    target => AssetSync::Agent::Target::Local->new(
         logger     => $logger,
         path       => $options->{path},
         json       => $config->{json},
@@ -161,7 +161,7 @@ sub inventory_from_dump {
     die "Can't load host full infos from $options->{dumpfile}\n"
         unless $host;
 
-    $esx->{vpbs} = GLPI::Agent::Task::ESX::Dump->new($host);
+    $esx->{vpbs} = AssetSync::Agent::Task::ESX::Dump->new($host);
 
     $esx->serverInventory($options->{path} // $file);
 
@@ -169,9 +169,9 @@ sub inventory_from_dump {
 }
 
 package
-    GLPI::Agent::Task::ESX::Dump;
+    AssetSync::Agent::Task::ESX::Dump;
 
-use parent qw(GLPI::Agent::SOAP::VMware::Host);
+use parent qw(AssetSync::Agent::SOAP::VMware::Host);
 
 sub new {
     my ($class, $fullinfo) = @_;
@@ -192,11 +192,11 @@ __END__
 
 =head1 NAME
 
-glpi-esx - vCenter/ESX/ESXi remote inventory from command line
+assetsync-esx - vCenter/ESX/ESXi remote inventory from command line
 
 =head1 SYNOPSIS
 
-glpi-esx --host <host> --user <user> --password <password> --path <directory or file>
+assetsync-esx --host <host> --user <user> --password <password> --path <directory or file>
 
   Options:
     --help                 this menu
@@ -209,8 +209,8 @@ glpi-esx --host <host> --user <user> --password <password> --path <directory or 
     --stdout               dump inventory on stdout (enabled by default if no path is set)
     --tag tag              tag for the inventoried machine
     --json                 use json as format for generated inventories
-    --glpi-version VERSION set targeted glpi version to enable supported features
-    --esx-itemtype=TYPE    set ESX asset type for target supporting genericity like GLPI 11+
+    --assetsync-version VERSION set targeted assetsync version to enable supported features
+    --esx-itemtype=TYPE    set ESX asset type for target supporting genericity like AssetSync 11+
 
   Advanced options:
     --dump                 also dump esx host full info datas in a *-hostfullinfo.dump file
@@ -218,15 +218,15 @@ glpi-esx --host <host> --user <user> --password <password> --path <directory or 
 
 =head1 EXAMPLES
 
-    % glpi-esx --host myesx --user foo --password bar --path /tmp --json
+    % assetsync-esx --host myesx --user foo --password bar --path /tmp --json
 
-You can import the .json file in your inventory server with the glpi-injector tool.
+You can import the .json file in your inventory server with the assetsync-injector tool.
 
-    % glpi-injector -v --file /tmp/*.json -u https://example/
+    % assetsync-injector -v --file /tmp/*.json -u https://example/
 
 =head1 DESCRIPTION
 
-F<glpi-esx> creates inventory of remote ESX/ESXi and vCenter VMware.
+F<assetsync-esx> creates inventory of remote ESX/ESXi and vCenter VMware.
 It uses the SOAP interface of the remote server.
 
 Supported systems:

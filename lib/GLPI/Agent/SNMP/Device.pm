@@ -1,15 +1,15 @@
-package GLPI::Agent::SNMP::Device;
+package AssetSync::Agent::SNMP::Device;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP';
+use parent 'AssetSync::Agent::SNMP';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
-use GLPI::Agent::Tools::Network;
-use GLPI::Agent::SNMP::MibSupport;
-use GLPI::Agent::SNMP::Device::Components;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools::Network;
+use AssetSync::Agent::SNMP::MibSupport;
+use AssetSync::Agent::SNMP::Device::Components;
 
 # Supported infos are specified here:
 # http://fusioninventory.org/documentation/dev/spec/protocol/netdiscovery.html
@@ -79,7 +79,7 @@ sub new {
 
     my $self = {
         snmp   => $snmp,
-        glpi   => $params{glpi} // '', # glpi server version if we need to check feature support
+        assetsync   => $params{assetsync} // '', # assetsync server version if we need to check feature support
         nowalk => 0, # Can be set to disable walk API for devices not supporting it like Snom phones
         logger => $logger
     };
@@ -133,7 +133,7 @@ sub loadMibSupport {
 
     # list supported mibs regarding sysORID list as this list permits to
     # identify device supported MIBs
-    $self->{MIBSUPPORT} = GLPI::Agent::SNMP::MibSupport->new(
+    $self->{MIBSUPPORT} = AssetSync::Agent::SNMP::MibSupport->new(
         sysobjectid => $sysobjectid,
         device      => $self,
         config      => $config, # Required for ConfigurationPlugin module
@@ -629,7 +629,7 @@ sub setComponents {
     my ($self) = @_;
 
     # First try to get components from standard ENTITY-MIB support
-    my $components = GLPI::Agent::SNMP::Device::Components->new(
+    my $components = AssetSync::Agent::SNMP::Device::Components->new(
         device => $self
     );
     if ($components) {
@@ -653,7 +653,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::Device - GLPI agent SNMP device
+AssetSync::Agent::SNMP::Device - AssetSync agent SNMP device
 
 =head1 DESCRIPTION
 

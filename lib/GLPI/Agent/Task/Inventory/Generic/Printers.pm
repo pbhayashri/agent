@@ -1,14 +1,14 @@
-package GLPI::Agent::Task::Inventory::Generic::Printers;
+package AssetSync::Agent::Task::Inventory::Generic::Printers;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant    category    => "printer";
 
@@ -23,19 +23,19 @@ sub isEnabled {
 
     # Printers inventory only supported remotely with Net::CUPS
     if ($params{remote}) {
-        unless ($GLPI::Agent::Tools::remote->mode('perl')) {
+        unless ($AssetSync::Agent::Tools::remote->mode('perl')) {
             $params{logger}->debug(
                 "printers inventory not supported remotely without perl mode enabled"
             );
             return 0;
         }
-        unless ($GLPI::Agent::Tools::remote->remotePerlModule('Net::CUPS')) {
+        unless ($AssetSync::Agent::Tools::remote->remotePerlModule('Net::CUPS')) {
             $params{logger}->debug(
                 "printers inventory not supported remotely without Net::CUPS Perl module on remote"
             );
             return 0;
         }
-        unless ($GLPI::Agent::Tools::remote->remotePerlModule('Net::CUPS', "0.60")) {
+        unless ($AssetSync::Agent::Tools::remote->remotePerlModule('Net::CUPS', "0.60")) {
             $params{logger}->debug(
                 "Net::CUPS Perl remote module too old (required at least: 0.60), unable to retrieve printers"
             );
@@ -72,7 +72,7 @@ sub doInventory {
 
     # We should handle remote case
     if ($remote) {
-        foreach my $printer ($GLPI::Agent::Tools::remote->remoteGetPrinters()) {
+        foreach my $printer ($AssetSync::Agent::Tools::remote->remoteGetPrinters()) {
             $inventory->addEntry(
                 section => 'PRINTERS',
                 entry   => $printer

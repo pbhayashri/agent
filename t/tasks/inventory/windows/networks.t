@@ -8,7 +8,7 @@ use English qw(-no_match_vars);
 use Test::More;
 use UNIVERSAL::require;
 
-use GLPI::Test::Utils;
+use AssetSync::Test::Utils;
 
 BEGIN {
     # use mock modules for non-available ones
@@ -23,7 +23,7 @@ if (!$Config{usethreads} || $Config{usethreads} ne 'define') {
 
 Test::NoWarnings->use();
 
-GLPI::Agent::Task::Inventory::Win32::Networks->require();
+AssetSync::Agent::Task::Inventory::Win32::Networks->require();
 
 my %tests = (
     xp => {
@@ -49,7 +49,7 @@ foreach my $test (keys %tests) {
 
     foreach my $deviceId (keys %{$tests{$test}}) {
         is(
-            GLPI::Agent::Task::Inventory::Win32::Networks::_getMediaType($deviceId, $keys),
+            AssetSync::Agent::Task::Inventory::Win32::Networks::_getMediaType($deviceId, $keys),
             $tests{$test}->{$deviceId},
             "$test sample, $deviceId device"
         );

@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::Body;
+package AssetSync::Agent::SOAP::WsMan::Body;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package
@@ -14,8 +14,8 @@ use parent
 
 use constant    xmlns   => 's';
 
-use GLPI::Agent::SOAP::WsMan::Fault;
-use GLPI::Agent::SOAP::WsMan::EnumerateResponse;
+use AssetSync::Agent::SOAP::WsMan::Fault;
+use AssetSync::Agent::SOAP::WsMan::EnumerateResponse;
 
 sub support {
     return {

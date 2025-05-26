@@ -1,20 +1,20 @@
-package GLPI::Agent::Task::Inventory::Generic::Remote_Mgmt::MeshCentral;
+package AssetSync::Agent::Task::Inventory::Generic::Remote_Mgmt::MeshCentral;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub isEnabled {
     my (%params) = @_;
 
     if (OSNAME eq 'MSWin32') {
 
-        GLPI::Agent::Tools::Win32->use();
+        AssetSync::Agent::Tools::Win32->use();
 
         my $key = getRegistryKey(
             path        => "HKEY_LOCAL_MACHINE/SOFTWARE/Open Source/",

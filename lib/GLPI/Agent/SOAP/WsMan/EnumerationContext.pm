@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::EnumerationContext;
+package AssetSync::Agent::SOAP::WsMan::EnumerationContext;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package

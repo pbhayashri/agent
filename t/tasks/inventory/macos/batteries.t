@@ -8,7 +8,7 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Task::Inventory::MacOS::Batteries;
+use AssetSync::Agent::Task::Inventory::MacOS::Batteries;
 
 use English;
 
@@ -28,7 +28,7 @@ plan tests => 1
 my $resourcesPath = 'resources/macos/system_profiler/';
 for my $fileName (keys %tests) {
     my $filePath = $resourcesPath . $fileName;
-    my $battery = GLPI::Agent::Task::Inventory::MacOS::Batteries::_getBattery(
+    my $battery = AssetSync::Agent::Task::Inventory::MacOS::Batteries::_getBattery(
         file => $filePath
     );
     cmp_deeply(

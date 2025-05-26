@@ -1,16 +1,16 @@
-package GLPI::Agent::Task::Deploy::ActionProcessor::Action::Cmd;
+package AssetSync::Agent::Task::Deploy::ActionProcessor::Action::Cmd;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Deploy::ActionProcessor::Action';
+use parent 'AssetSync::Agent::Task::Deploy::ActionProcessor::Action';
 
 use Fcntl qw(SEEK_SET);
 use UNIVERSAL::require;
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 sub _evaluateRet {
     my ($retChecks, $buf, $exitStatus) = @_;
@@ -78,9 +78,9 @@ sub _runOnUnix {
 sub _runOnWindows {
     my ($self, $params) = @_;
 
-    GLPI::Agent::Tools::Win32->require;
+    AssetSync::Agent::Tools::Win32->require;
 
-    my ($exitcode, $fd) = GLPI::Agent::Tools::Win32::runCommand(
+    my ($exitcode, $fd) = AssetSync::Agent::Tools::Win32::runCommand(
         command => $params->{exec}
     );
 

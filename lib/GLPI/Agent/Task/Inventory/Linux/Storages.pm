@@ -1,17 +1,17 @@
-package GLPI::Agent::Task::Inventory::Linux::Storages;
+package AssetSync::Agent::Task::Inventory::Linux::Storages;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 use File::Basename qw(basename);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Generic;
-use GLPI::Agent::Tools::Linux;
-use GLPI::Agent::Tools::Unix;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Generic;
+use AssetSync::Agent::Tools::Linux;
+use AssetSync::Agent::Tools::Unix;
 
 use constant    category    => "storage";
 

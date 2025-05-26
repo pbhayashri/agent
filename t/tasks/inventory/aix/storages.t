@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::AIX::Storages;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::AIX::Storages;
 
 my %lsdev_tests = (
     'aix-4.3.1-disk-scsi' => [
@@ -386,11 +386,11 @@ plan tests =>
     (scalar keys %lspv_tests)      +
     1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %lsdev_tests) {
     my $file = "resources/aix/lsdev/$test";
-    my @devices = GLPI::Agent::Task::Inventory::AIX::Storages::_parseLsdev(file => $file, pattern => qr/^(.+):(.+)/);
+    my @devices = AssetSync::Agent::Task::Inventory::AIX::Storages::_parseLsdev(file => $file, pattern => qr/^(.+):(.+)/);
     cmp_deeply(\@devices, $lsdev_tests{$test}, "lsdev parsing: $test");
     lives_ok {
         $inventory->addEntry(section => 'STORAGES', entry => $_)
@@ -401,8 +401,8 @@ foreach my $test (keys %lsdev_tests) {
 foreach my $test (keys %disk_tests) {
     my $lsvpd_file = "resources/aix/lsvpd/$test";
     my $lsdev_file = "resources/aix/lsdev/$test-disk-$disk_tests{$test}->{type}";
-    my $infos = GLPI::Agent::Task::Inventory::AIX::Storages::_getIndexedLsvpdInfos(file => $lsvpd_file);
-    my @disks = GLPI::Agent::Task::Inventory::AIX::Storages::_getDisks(file => $lsdev_file, infos => $infos);
+    my $infos = AssetSync::Agent::Task::Inventory::AIX::Storages::_getIndexedLsvpdInfos(file => $lsvpd_file);
+    my @disks = AssetSync::Agent::Task::Inventory::AIX::Storages::_getDisks(file => $lsdev_file, infos => $infos);
     cmp_deeply(\@disks, $disk_tests{$test}->{disks}, "disk extraction: $test");
     lives_ok {
         $inventory->addEntry(section => 'STORAGES', entry => $_) foreach @disks;
@@ -411,6 +411,6 @@ foreach my $test (keys %disk_tests) {
 
 foreach my $test (keys %lspv_tests) {
     my $file = "resources/aix/lspv/$test";
-    my $capacity = GLPI::Agent::Task::Inventory::AIX::Storages::_getVirtualCapacity(file => $file);
+    my $capacity = AssetSync::Agent::Task::Inventory::AIX::Storages::_getVirtualCapacity(file => $file);
     cmp_deeply($capacity, $lspv_tests{$test}, "lspv parsing: $test");
 }

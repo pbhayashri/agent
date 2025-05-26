@@ -1,21 +1,21 @@
-package GLPI::Agent::Task::Inventory::Win32::Bios;
+package AssetSync::Agent::Task::Inventory::Win32::Bios;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Win32;
-use GLPI::Agent::Tools::Generic;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Win32;
+use AssetSync::Agent::Tools::Generic;
 
 use constant    category    => "bios";
 
 # Only run this module if dmidecode has not been found
 our $runMeIfTheseChecksFailed =
-    ["GLPI::Agent::Task::Inventory::Generic::Dmidecode::Bios"];
+    ["AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Bios"];
 
 sub isEnabled {
     return 1;

@@ -1,9 +1,9 @@
-package GLPI::Agent::Tools::Screen::Samsung;
+package AssetSync::Agent::Tools::Screen::Samsung;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Tools::Screen';
+use parent 'AssetSync::Agent::Tools::Screen';
 
 # Well-known eisa_id for which wee need to revert serial and altserial
 my $eisa_id_match = qr/0572|0694|06b9|0833|0835|0978|09c6|09c7|0b66|0bc9|0c7b|0ca3|0ca5|0d1a|0e0f|0e1e/ ;

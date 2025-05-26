@@ -1,16 +1,16 @@
-package GLPI::Agent::Task::Inventory::Generic::Databases::DB2;
+package AssetSync::Agent::Task::Inventory::Generic::Databases::DB2;
 
 use English qw(-no_match_vars);
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Generic::Databases';
+use parent 'AssetSync::Agent::Task::Inventory::Generic::Databases';
 
 use File::Temp;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Inventory::DatabaseService;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Inventory::DatabaseService;
 
 sub isEnabled {
     return canRun('db2ls');
@@ -22,7 +22,7 @@ sub doInventory {
     my $inventory = $params{inventory};
 
     # Try to retrieve credentials updating params
-    GLPI::Agent::Task::Inventory::Generic::Databases::_credentials(\%params, "db2");
+    AssetSync::Agent::Task::Inventory::Generic::Databases::_credentials(\%params, "db2");
 
     my $dbservices = _getDatabaseService(
         logger      => $params{logger},
@@ -66,7 +66,7 @@ sub _getDatabaseService {
 
     my %instuser;
     foreach my $credential (@{$credentials}) {
-        GLPI::Agent::Task::Inventory::Generic::Databases::trying_credentials($params{logger}, $credential);
+        AssetSync::Agent::Task::Inventory::Generic::Databases::trying_credentials($params{logger}, $credential);
         $params{connect} = _db2Connect($credential) // "";
 
         # Search for instance users if required
@@ -104,7 +104,7 @@ sub _getDatabaseService {
                 %params
             );
 
-            my $dbs = GLPI::Agent::Inventory::DatabaseService->new(
+            my $dbs = AssetSync::Agent::Inventory::DatabaseService->new(
                 type            => "db2",
                 name            => $instance,
                 version         => $db2level,

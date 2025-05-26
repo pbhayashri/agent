@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::Expiration;
+package AssetSync::Agent::Tools::Expiration;
 
 use strict;
 use warnings;
@@ -36,7 +36,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Expiration - Expiration functions
+AssetSync::Agent::Expiration - Expiration functions
 
 =head1 DESCRIPTION
 

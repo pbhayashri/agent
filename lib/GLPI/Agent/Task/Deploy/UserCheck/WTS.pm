@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Deploy::UserCheck::WTS;
+package AssetSync::Agent::Task::Deploy::UserCheck::WTS;
 
 use strict;
 use warnings;
@@ -6,9 +6,9 @@ use warnings;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
-use GLPI::Agent::Tools::Win32::WTS;
+use AssetSync::Agent::Tools::Win32::WTS;
 
-use parent "GLPI::Agent::Task::Deploy::UserCheck";
+use parent "AssetSync::Agent::Task::Deploy::UserCheck";
 
 my %supported_events = (
     &IDOK       => 'ok',

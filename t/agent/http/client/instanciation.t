@@ -6,7 +6,7 @@ use warnings;
 use Test::More;
 use Test::Exception;
 
-use GLPI::Agent::HTTP::Client;
+use AssetSync::Agent::HTTP::Client;
 
 plan tests => 3;
 
@@ -15,7 +15,7 @@ my $client;
 # instanciations tests
 
 throws_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         config => {
             'ca-cert-file' => '/no/such/file',
         },
@@ -24,7 +24,7 @@ throws_ok {
 'instanciation: invalid ca cert file';
 
 throws_ok {
-    $client = GLPI::Agent::HTTP::Client->new(
+    $client = AssetSync::Agent::HTTP::Client->new(
         config => {
             'ca-cert-dir' => '/no/such/directory',
         },
@@ -33,5 +33,5 @@ throws_ok {
 'instanciation: invalid ca cert directory';
 
 lives_ok {
-    $client = GLPI::Agent::HTTP::Client->new();
+    $client = AssetSync::Agent::HTTP::Client->new();
 } 'instanciation: http';

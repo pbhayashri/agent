@@ -1,4 +1,4 @@
-package GLPI::Agent::HTTP::Server;
+package AssetSync::Agent::HTTP::Server;
 
 use strict;
 use warnings;
@@ -15,11 +15,11 @@ use URI;
 use Socket;
 use URI::Escape;
 
-use GLPI::Agent::Version;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Network;
-use GLPI::Agent::Event;
+use AssetSync::Agent::Version;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Network;
+use AssetSync::Agent::Event;
 
 # Expire trusted ip/ranges cache after a minute
 use constant TRUSTED_CACHE_TIMEOUT => 60;
@@ -34,7 +34,7 @@ sub new {
 
     my $self = {
         logger    => $params{logger} ||
-                     GLPI::Agent::Logger->new(),
+                     AssetSync::Agent::Logger->new(),
         agent     => $params{agent},
         htmldir   => $params{htmldir},
         ip        => $params{ip},
@@ -359,11 +359,11 @@ sub _handle_root {
 
     my @sessions = ();
     if ($trust && $logger && $logger->debug_level() > 1) {
-        GLPI::Agent::Target::Listener->require();
+        AssetSync::Agent::Target::Listener->require();
         if ($EVAL_ERROR) {
             $self->{logger}->debug($log_prefix . "Failed to load Listener target module: $EVAL_ERROR");
         } else {
-            my $listener = GLPI::Agent::Target::Listener->new(
+            my $listener = AssetSync::Agent::Target::Listener->new(
                 logger     => $self->{logger},
                 basevardir => $self->{agent}->{config}->{vardir},
             );
@@ -375,7 +375,7 @@ sub _handle_root {
     }
 
     my $hash = {
-        version        => $GLPI::Agent::Version::VERSION,
+        version        => $AssetSync::Agent::Version::VERSION,
         trust          => $trust,
         status         => $self->{agent}->getStatus(),
         httpd_plugins  => \@listening_plugins,
@@ -490,7 +490,7 @@ sub _handle_now {
             my %event = map { /^([^=]+)=(.*)$/ } grep { /[^=]=/ } split('&', $query);
             # Support runnow with partial set without category
             $event{runnow} = "yes" if empty($query) || !$event{"partial"} || !$event{category};
-            my $event = GLPI::Agent::Event->new(%event);
+            my $event = AssetSync::Agent::Event->new(%event);
             if ($event->runnow) {
                 $trace = "rescheduling next contact for all targets";
                 $trace .= $event->delay > 0 ? " in ".$event->delay."s" : " right now";
@@ -875,12 +875,12 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::HTTP::Server - An embedded HTTP server
+AssetSync::Agent::HTTP::Server - An embedded HTTP server
 
 =head1 DESCRIPTION
 
 This is the server used by the agent to listen on the network for messages sent
-by OCS or GLPI servers.
+by OCS or AssetSync servers.
 
 It is an HTTP server listening on port 62354 (by default). The following
 requests are accepted:

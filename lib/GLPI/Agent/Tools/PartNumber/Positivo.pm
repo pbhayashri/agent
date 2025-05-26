@@ -1,9 +1,9 @@
-package GLPI::Agent::Tools::PartNumber::Positivo;
+package AssetSync::Agent::Tools::PartNumber::Positivo;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Tools::PartNumber';
+use parent 'AssetSync::Agent::Tools::PartNumber';
 
 use constant match_re   => undef;
 

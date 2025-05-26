@@ -9,9 +9,9 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::SNMP::Mock;
-use GLPI::Agent::SNMP::Device;
-use GLPI::Agent::SNMP::MibSupport::Force10S;
+use AssetSync::Agent::SNMP::Mock;
+use AssetSync::Agent::SNMP::Device;
+use AssetSync::Agent::SNMP::MibSupport::Force10S;
 
 
 my $components = [
@@ -233,11 +233,11 @@ my $components = [
 
 plan tests => 2;
 
-my $snmp = GLPI::Agent::SNMP::Mock->new(
+my $snmp = AssetSync::Agent::SNMP::Mock->new(
     file => "resources/walks/force10s.walk"
 );
-my $device = GLPI::Agent::SNMP::Device->new('snmp' => $snmp);
-my $mibsupport = GLPI::Agent::SNMP::MibSupport::Force10S->new('device' => $device);
+my $device = AssetSync::Agent::SNMP::Device->new('snmp' => $snmp);
+my $mibsupport = AssetSync::Agent::SNMP::MibSupport::Force10S->new('device' => $device);
 
 cmp_bag(
     $components,

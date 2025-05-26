@@ -1,7 +1,7 @@
-package GLPI::Agent::Tools::Archive;
+package AssetSync::Agent::Tools::Archive;
 
 # This file is a copy of Archive::Extract v0.88 with few cleanup and updates to
-# adapt its usage to GLPI-Agent context
+# adapt its usage to AssetSync-Agent context
 # Original: https://github.com/jib/archive-extract/blob/0.88/lib/Archive/Extract.pm
 
 use strict;
@@ -14,7 +14,7 @@ use File::Spec;
 use File::Basename              qw[dirname basename];
 use UNIVERSAL::require;
 
-use GLPI::Agent::Logger;
+use AssetSync::Agent::Logger;
 
 ### solaris has silly /bin/tar output ###
 use constant ON_SOLARIS     => $^O eq 'solaris' ? 1 : 0;
@@ -134,7 +134,7 @@ my $Mapping = {  # binary program           # pure perl module
 
         my $self = {
             archive => $params{archive},
-            logger  => $params{logger} || GLPI::Agent::Logger->new(),
+            logger  => $params{logger} || AssetSync::Agent::Logger->new(),
             type    => $params{type} || "",
         };
 

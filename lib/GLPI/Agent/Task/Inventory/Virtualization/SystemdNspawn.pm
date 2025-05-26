@@ -1,14 +1,14 @@
-package GLPI::Agent::Task::Inventory::Virtualization::SystemdNspawn;
+package AssetSync::Agent::Task::Inventory::Virtualization::SystemdNspawn;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Linux;
-use GLPI::Agent::Tools::Network;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Linux;
+use AssetSync::Agent::Tools::Network;
+use AssetSync::Agent::Tools::Virtualization;
 
 sub isEnabled {
     return canRun("machinectl") && canRun("systemctl");

@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::Inventory::Generic::Screen;
+package AssetSync::Agent::Task::Inventory::Generic::Screen;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 use MIME::Base64;
@@ -11,9 +11,9 @@ use UNIVERSAL::require;
 
 use File::Find;
 use File::Basename;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Screen;
-use GLPI::Agent::Tools::Generic;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Screen;
+use AssetSync::Agent::Tools::Generic;
 
 use constant    category    => "monitor";
 
@@ -59,7 +59,7 @@ sub _getEdidInfo {
             $edid->{year} && $edid->{serial_number});
     }
 
-    my $screen = GLPI::Agent::Tools::Screen->new( %params, edid => $edid );
+    my $screen = AssetSync::Agent::Tools::Screen->new( %params, edid => $edid );
 
     my $info = {
         CAPTION      => $screen->caption || undef,
@@ -77,7 +77,7 @@ sub _getEdidInfo {
 sub _getScreensFromWindows {
     my (%params) = @_;
 
-    GLPI::Agent::Tools::Win32->use();
+    AssetSync::Agent::Tools::Win32->use();
 
     my @screens;
 
@@ -276,22 +276,22 @@ sub _getScreensFromMacOS {
     $logger->debug("retrieving AppleBacklightDisplay and AppleDisplay datas:")
         if $logger;
 
-    GLPI::Agent::Tools::MacOS->require();
+    AssetSync::Agent::Tools::MacOS->require();
 
     my @screens;
-    my @displays = GLPI::Agent::Tools::MacOS::getIODevices(
+    my @displays = AssetSync::Agent::Tools::MacOS::getIODevices(
         class   => 'AppleBacklightDisplay',
         options => '-r -lw0 -d 1',
         logger  => $logger,
     );
 
-    push @displays, GLPI::Agent::Tools::MacOS::getIODevices(
+    push @displays, AssetSync::Agent::Tools::MacOS::getIODevices(
         class   => 'AppleDisplay',
         options => '-r -lw0 -d 1',
         logger  => $logger,
     );
 
-    push @displays, GLPI::Agent::Tools::MacOS::getIODevices(
+    push @displays, AssetSync::Agent::Tools::MacOS::getIODevices(
         class   => 'AppleCLCD2',
         options => '-r -lw0 -d 1',
         logger  => $logger,

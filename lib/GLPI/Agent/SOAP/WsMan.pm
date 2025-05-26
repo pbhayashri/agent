@@ -1,46 +1,46 @@
-package GLPI::Agent::SOAP::WsMan;
+package AssetSync::Agent::SOAP::WsMan;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::HTTP::Client';
+use parent 'AssetSync::Agent::HTTP::Client';
 
 use HTTP::Request;
 use HTTP::Headers;
 use Encode qw(encode);
 
-use GLPI::Agent::XML;
+use AssetSync::Agent::XML;
 
-use GLPI::Agent::SOAP::WsMan::Envelope;
-use GLPI::Agent::SOAP::WsMan::Attribute;
-use GLPI::Agent::SOAP::WsMan::Namespace;
-use GLPI::Agent::SOAP::WsMan::Header;
-use GLPI::Agent::SOAP::WsMan::Identify;
-use GLPI::Agent::SOAP::WsMan::ResourceURI;
-use GLPI::Agent::SOAP::WsMan::To;
-use GLPI::Agent::SOAP::WsMan::ReplyTo;
-use GLPI::Agent::SOAP::WsMan::Action;
-use GLPI::Agent::SOAP::WsMan::MessageID;
-use GLPI::Agent::SOAP::WsMan::MaxEnvelopeSize;
-use GLPI::Agent::SOAP::WsMan::Locale;
-use GLPI::Agent::SOAP::WsMan::DataLocale;
-use GLPI::Agent::SOAP::WsMan::SessionId;
-use GLPI::Agent::SOAP::WsMan::OperationID;
-use GLPI::Agent::SOAP::WsMan::SequenceId;
-use GLPI::Agent::SOAP::WsMan::OperationTimeout;
-use GLPI::Agent::SOAP::WsMan::Enumerate;
-use GLPI::Agent::SOAP::WsMan::Pull;
-use GLPI::Agent::SOAP::WsMan::Option;
-use GLPI::Agent::SOAP::WsMan::OptionSet;
-use GLPI::Agent::SOAP::WsMan::Shell;
-use GLPI::Agent::SOAP::WsMan::Signal;
-use GLPI::Agent::SOAP::WsMan::Receive;
-use GLPI::Agent::SOAP::WsMan::Code;
-use GLPI::Agent::SOAP::WsMan::Filter;
-use GLPI::Agent::SOAP::WsMan::OptimizeEnumeration;
-use GLPI::Agent::SOAP::WsMan::MaxElements;
-use GLPI::Agent::SOAP::WsMan::SelectorSet;
-use GLPI::Agent::SOAP::WsMan::Selector;
+use AssetSync::Agent::SOAP::WsMan::Envelope;
+use AssetSync::Agent::SOAP::WsMan::Attribute;
+use AssetSync::Agent::SOAP::WsMan::Namespace;
+use AssetSync::Agent::SOAP::WsMan::Header;
+use AssetSync::Agent::SOAP::WsMan::Identify;
+use AssetSync::Agent::SOAP::WsMan::ResourceURI;
+use AssetSync::Agent::SOAP::WsMan::To;
+use AssetSync::Agent::SOAP::WsMan::ReplyTo;
+use AssetSync::Agent::SOAP::WsMan::Action;
+use AssetSync::Agent::SOAP::WsMan::MessageID;
+use AssetSync::Agent::SOAP::WsMan::MaxEnvelopeSize;
+use AssetSync::Agent::SOAP::WsMan::Locale;
+use AssetSync::Agent::SOAP::WsMan::DataLocale;
+use AssetSync::Agent::SOAP::WsMan::SessionId;
+use AssetSync::Agent::SOAP::WsMan::OperationID;
+use AssetSync::Agent::SOAP::WsMan::SequenceId;
+use AssetSync::Agent::SOAP::WsMan::OperationTimeout;
+use AssetSync::Agent::SOAP::WsMan::Enumerate;
+use AssetSync::Agent::SOAP::WsMan::Pull;
+use AssetSync::Agent::SOAP::WsMan::Option;
+use AssetSync::Agent::SOAP::WsMan::OptionSet;
+use AssetSync::Agent::SOAP::WsMan::Shell;
+use AssetSync::Agent::SOAP::WsMan::Signal;
+use AssetSync::Agent::SOAP::WsMan::Receive;
+use AssetSync::Agent::SOAP::WsMan::Code;
+use AssetSync::Agent::SOAP::WsMan::Filter;
+use AssetSync::Agent::SOAP::WsMan::OptimizeEnumeration;
+use AssetSync::Agent::SOAP::WsMan::MaxElements;
+use AssetSync::Agent::SOAP::WsMan::SelectorSet;
+use AssetSync::Agent::SOAP::WsMan::Selector;
 
 my $xml;
 my $wsman_debug = $ENV{WSMAN_DEBUG} ? 1 : 0;
@@ -64,7 +64,7 @@ sub new {
 
     bless $self, $class;
 
-    $xml = GLPI::Agent::XML->new(
+    $xml = AssetSync::Agent::XML->new(
         first_out   => [ 's:Header' ],
         no_xml_decl => '',
         xml_format  => 0,

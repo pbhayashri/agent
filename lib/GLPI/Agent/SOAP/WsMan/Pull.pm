@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::Pull;
+package AssetSync::Agent::SOAP::WsMan::Pull;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package
@@ -12,7 +12,7 @@ package
 use parent
     'Node';
 
-use GLPI::Agent::SOAP::WsMan::MaxElements;
+use AssetSync::Agent::SOAP::WsMan::MaxElements;
 
 use constant    xmlns   => 'n';
 

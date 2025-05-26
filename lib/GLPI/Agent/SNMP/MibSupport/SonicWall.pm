@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::SonicWall;
+package AssetSync::Agent::SNMP::MibSupport::SonicWall;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 use constant    mib2        => '.1.3.6.1.2.1' ;
 use constant    enterprises => '.1.3.6.1.4.1' ;
@@ -70,7 +70,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::SonicWall - Inventory module for SonicWall devices
+AssetSync::Agent::SNMP::MibSupport::SonicWall - Inventory module for SonicWall devices
 
 =head1 DESCRIPTION
 

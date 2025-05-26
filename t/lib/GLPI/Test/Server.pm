@@ -1,4 +1,4 @@
-package GLPI::Test::Server;
+package AssetSync::Test::Server;
 
 use warnings;
 use strict;
@@ -8,7 +8,7 @@ use English qw(-no_match_vars);
 use IO::Socket::SSL;
 use Socket;
 
-use GLPI::Test::Auth;
+use AssetSync::Test::Auth;
 
 my $dispatch_table = {};
 
@@ -45,7 +45,7 @@ sub new {
 
 sub authen_handler {
     my ($self) = @_;
-    return GLPI::Test::Auth->new(
+    return AssetSync::Test::Auth->new(
         user     => $self->{user},
         password => $self->{password}
     );

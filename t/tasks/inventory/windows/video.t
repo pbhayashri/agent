@@ -13,8 +13,8 @@ use Test::More;
 use Test::NoWarnings;
 use UNIVERSAL::require;
 
-use GLPI::Agent::Inventory;
-use GLPI::Test::Utils;
+use AssetSync::Agent::Inventory;
+use AssetSync::Test::Utils;
 
 BEGIN {
     # use mock modules for non-available ones
@@ -27,7 +27,7 @@ if (!$Config{usethreads} || $Config{usethreads} ne 'define') {
     plan skip_all => 'thread support required';
 }
 
-GLPI::Agent::Task::Inventory::Win32::Videos->require();
+AssetSync::Agent::Task::Inventory::Win32::Videos->require();
 
 my %tests = (
     'amd-radeon-rx6600xt' => [
@@ -75,14 +75,14 @@ my %tests = (
 
 plan tests => (2 * scalar keys %tests) + 1;
 
-my $inventory = GLPI::Agent::Inventory->new();
+my $inventory = AssetSync::Agent::Inventory->new();
 
 my $module = Test::MockModule->new(
-    'GLPI::Agent::Task::Inventory::Win32::Videos'
+    'AssetSync::Agent::Task::Inventory::Win32::Videos'
 );
 
 my $tools_module = Test::MockModule->new(
-    'GLPI::Agent::Tools::Win32'
+    'AssetSync::Agent::Tools::Win32'
 );
 
 foreach my $test (keys %tests) {
@@ -96,7 +96,7 @@ foreach my $test (keys %tests) {
         mockGetRegistryKey($test)
     );
 
-    my @videos = GLPI::Agent::Task::Inventory::Win32::Videos::_getVideos();
+    my @videos = AssetSync::Agent::Task::Inventory::Win32::Videos::_getVideos();
     cmp_deeply(
         \@videos,
         $tests{$test},

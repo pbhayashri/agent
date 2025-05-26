@@ -1,23 +1,23 @@
-package GLPI::Agent::Task::ESX;
+package AssetSync::Agent::Task::ESX;
 
 use strict;
 use warnings;
-use parent 'GLPI::Agent::Task';
+use parent 'AssetSync::Agent::Task';
 
 use UNIVERSAL::require;
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Config;
-use GLPI::Agent::HTTP::Client::Fusion;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Inventory;
-use GLPI::Agent::SOAP::VMware;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::UUID;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::HTTP::Client::Fusion;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Inventory;
+use AssetSync::Agent::SOAP::VMware;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::UUID;
 
-use GLPI::Agent::Task::ESX::Version;
+use AssetSync::Agent::Task::ESX::Version;
 
-our $VERSION = GLPI::Agent::Task::ESX::Version::VERSION;
+our $VERSION = AssetSync::Agent::Task::ESX::Version::VERSION;
 
 sub isEnabled {
     my ($self) = @_;
@@ -35,7 +35,7 @@ sub connect {
 
     my $url = 'https://' . $params{host} . '/sdk/vimService';
 
-    my $vpbs = GLPI::Agent::SOAP::VMware->new(
+    my $vpbs = AssetSync::Agent::SOAP::VMware->new(
         url     => $url,
         vcenter => 1,
         timeout => $self->timeout(),
@@ -57,15 +57,15 @@ sub createInventory {
 
     my $host = $vpbs->getHostFullInfo($id);
 
-    # Set known glpi version to enable or disable supported features
-    my $glpi_version = $self->{target}->isType('server') ? $self->{target}->getTaskVersion('inventory') : '';
-    $glpi_version = $self->{config}->{'glpi-version'} if empty($glpi_version);
-    $host->enableFeaturesForGlpiVersion($glpi_version);
+    # Set known assetsync version to enable or disable supported features
+    my $AssetSync_version = $self->{target}->isType('server') ? $self->{target}->getTaskVersion('inventory') : '';
+    $AssetSync_version = $self->{config}->{'assetsync-version'} if empty($AssetSync_version);
+    $host->enableFeaturesForAssetSyncVersion($AssetSync_version);
 
-    my $inventory = GLPI::Agent::Inventory->new(
+    my $inventory = AssetSync::Agent::Inventory->new(
         datadir  => $self->{datadir},
         logger   => $self->{logger},
-        glpi     => $glpi_version,
+        assetsync     => $AssetSync_version,
         tag      => $tag,
         itemtype => empty($self->{config}->{'esx-itemtype'}) ? "Computer" : $self->{config}->{'esx-itemtype'},
         # deviceid can be set and so reused from previous netscan
@@ -170,7 +170,7 @@ sub run {
     # Just reset event if run as an event to not trigger another one
     $self->resetEvent();
 
-    $self->{client} = GLPI::Agent::HTTP::Client::Fusion->new(
+    $self->{client} = AssetSync::Agent::HTTP::Client::Fusion->new(
         logger  => $self->{logger},
         config  => $self->{config},
     );
@@ -271,44 +271,44 @@ sub run {
 }
 
 sub serverInventory {
-    # $host_callback can be used to dump datas retrieved from ESX server as done by glpi-esx
+    # $host_callback can be used to dump datas retrieved from ESX server as done by assetsync-esx
     # and is only used for local target
     my ($self, $path, $host_callback, $deviceids) = @_;
 
-    # Initialize GLPI server submission if required
+    # Initialize AssetSync server submission if required
     if ($self->{target}->isType('server') && !$self->{serverclient}) {
-        if ($self->{target}->isGlpiServer()) {
-            GLPI::Agent::HTTP::Client::GLPI->require();
+        if ($self->{target}->isAssetSyncServer()) {
+            AssetSync::Agent::HTTP::Client::AssetSync->require();
             if ($EVAL_ERROR) {
-                $self->lastError("GLPI Protocol library can't be loaded");
+                $self->lastError("AssetSync Protocol library can't be loaded");
                 return;
             }
 
-            $self->{serverclient} = GLPI::Agent::HTTP::Client::GLPI->new(
+            $self->{serverclient} = AssetSync::Agent::HTTP::Client::AssetSync->new(
                 logger  => $self->{logger},
                 config  => $self->{config},
                 agentid => uuid_to_string($self->{agentid}),
             );
 
-            GLPI::Agent::Protocol::Inventory->require();
+            AssetSync::Agent::Protocol::Inventory->require();
             if ($EVAL_ERROR) {
-                $self->lastError("Can't load GLPI Protocol Inventory library");
+                $self->lastError("Can't load AssetSync Protocol Inventory library");
                 return;
             }
         } else {
             # Deprecated XML based protocol
-            GLPI::Agent::HTTP::Client::OCS->require();
+            AssetSync::Agent::HTTP::Client::OCS->require();
             if ($EVAL_ERROR) {
                 $self->lastError("OCS Protocol library can't be loaded");
                 return;
             }
 
-            $self->{serverclient} = GLPI::Agent::HTTP::Client::OCS->new(
+            $self->{serverclient} = AssetSync::Agent::HTTP::Client::OCS->new(
                 logger  => $self->{logger},
                 config  => $self->{config},
             );
 
-            GLPI::Agent::XML::Query::Inventory->require();
+            AssetSync::Agent::XML::Query::Inventory->require();
             if ($EVAL_ERROR) {
                 $$self->lastError("XML::Query::Inventory library can't be loaded");
                 return;
@@ -326,7 +326,7 @@ sub serverInventory {
 
         if ($self->{target}->isType('server')) {
             my $message;
-            if ($self->{target}->isGlpiServer()) {
+            if ($self->{target}->isAssetSyncServer()) {
                 $inventory->setFormat('json');
                 $message = $inventory->getContent(
                     server_version => $self->{target}->getTaskVersion('inventory')
@@ -334,7 +334,7 @@ sub serverInventory {
             } else {
                 # Deprecated XML based protocol
                 $inventory->setFormat('xml');
-                $message = GLPI::Agent::XML::Query::Inventory->new(
+                $message = AssetSync::Agent::XML::Query::Inventory->new(
                     deviceid => $self->{deviceid},
                     content  => $inventory->getContent()
                 );
@@ -397,7 +397,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SOAP::VMware - Access to VMware hypervisor
+AssetSync::Agent::SOAP::VMware - Access to VMware hypervisor
 
 =head1 DESCRIPTION
 
@@ -412,7 +412,7 @@ Connect the task to the VMware ESX, ESXi or vCenter.
 
 =head2 createInventory ( $self, $id, $tag )
 
-Returns an GLPI::Agent::Inventory object for a given
+Returns an AssetSync::Agent::Inventory object for a given
 host id.
 
 =head2 getHostIds

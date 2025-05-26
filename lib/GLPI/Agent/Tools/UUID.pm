@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::UUID;
+package AssetSync::Agent::Tools::UUID;
 
 use strict;
 use warnings;

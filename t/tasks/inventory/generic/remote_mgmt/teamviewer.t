@@ -11,9 +11,9 @@ use Test::More;
 use Test::MockModule;
 use Test::NoWarnings;
 
-use GLPI::Test::Utils;
+use AssetSync::Test::Utils;
 
-use GLPI::Agent::Task::Inventory::Generic::Remote_Mgmt::TeamViewer;
+use AssetSync::Agent::Task::Inventory::Generic::Remote_Mgmt::TeamViewer;
 
 BEGIN {
     # use mock modules for non-available ones
@@ -33,7 +33,7 @@ my %teamviewer_info = (
 plan tests => scalar(keys %teamviewer_win32) + scalar(keys %teamviewer_info) + 1;
 
 my $module = Test::MockModule->new(
-    'GLPI::Agent::Tools::Win32'
+    'AssetSync::Agent::Tools::Win32'
 );
 
 foreach my $test (keys %teamviewer_win32) {
@@ -41,17 +41,17 @@ foreach my $test (keys %teamviewer_win32) {
         '_getRegistryKey',
         _mockGetRegistryKey($test)
     );
-    my $teamViewerID = GLPI::Agent::Task::Inventory::Generic::Remote_Mgmt::TeamViewer::_getID(osname => "MSWin32");
+    my $teamViewerID = AssetSync::Agent::Task::Inventory::Generic::Remote_Mgmt::TeamViewer::_getID(osname => "MSWin32");
     is($teamViewerID, $teamviewer_win32{$test}, "TeamViewer win32 getID - $test");
 }
 
 foreach my $test (sort keys %teamviewer_info) {
     my $file = "resources/generic/teamviewer/teamviewer-info-$test";
-    my $teamViewerID = GLPI::Agent::Task::Inventory::Generic::Remote_Mgmt::TeamViewer::_getID(file => $file, osname => "linux");
+    my $teamViewerID = AssetSync::Agent::Task::Inventory::Generic::Remote_Mgmt::TeamViewer::_getID(file => $file, osname => "linux");
     is($teamViewerID, $teamviewer_info{$test}, "TeamViewer info getID - $test");
 }
 
-# Adapted from GLPI::Test::Utils mockGetRegistryKey()
+# Adapted from AssetSync::Test::Utils mockGetRegistryKey()
 sub _mockGetRegistryKey {
     my ($test) = @_;
 

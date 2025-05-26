@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::SequenceId;
+package AssetSync::Agent::SOAP::WsMan::SequenceId;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package
@@ -14,7 +14,7 @@ use parent
 
 use constant    xmlns   => 'p';
 
-use GLPI::Agent::SOAP::WsMan::Attribute;
+use AssetSync::Agent::SOAP::WsMan::Attribute;
 
 sub new {
     my ($class) = @_;

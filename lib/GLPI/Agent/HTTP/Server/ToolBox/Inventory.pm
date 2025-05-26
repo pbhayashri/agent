@@ -1,9 +1,9 @@
-package GLPI::Agent::HTTP::Server::ToolBox::Inventory;
+package AssetSync::Agent::HTTP::Server::ToolBox::Inventory;
 
 use strict;
 use warnings;
 
-use parent "GLPI::Agent::HTTP::Server::ToolBox";
+use parent "AssetSync::Agent::HTTP::Server::ToolBox";
 
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
@@ -13,9 +13,9 @@ use URI::Escape;
 use Time::HiRes qw(gettimeofday usleep);
 use Net::IP;
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Target;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Target;
 
 use constant    inventory   => "inventory";
 use constant    jobs        => "jobs";
@@ -37,7 +37,7 @@ sub new {
 
     my $self = {
         logger  => $params{toolbox}->{logger} ||
-                    GLPI::Agent::Logger->new(),
+                    AssetSync::Agent::Logger->new(),
         toolbox => $params{toolbox},
         name    => $name,
         tasks   => {},
@@ -47,8 +47,8 @@ sub new {
     };
 
     my $missingdep = 0;
-    $missingdep = 1 unless GLPI::Agent::Task::NetDiscovery->require();
-    $missingdep += 2 unless GLPI::Agent::Task::NetInventory->require();
+    $missingdep = 1 unless AssetSync::Agent::Task::NetDiscovery->require();
+    $missingdep += 2 unless AssetSync::Agent::Task::NetInventory->require();
     $self->{_missingdep} = $missingdep
         if $missingdep;
 
@@ -66,7 +66,7 @@ sub init {
     my $yaml_config = $self->yaml('configuration') || {};
     if (empty($yaml_config->{'networktask_save'}) || $yaml_config->{'networktask_save'} eq '.') {
         my $agent = $self->{toolbox}->{server}->{agent};
-        if (($OSNAME eq 'MSWin32' && ref($agent) eq 'GLPI::Agent::Daemon::Win32') || getppid() == 1) {
+        if (($OSNAME eq 'MSWin32' && ref($agent) eq 'AssetSync::Agent::Daemon::Win32') || getppid() == 1) {
             # We are running as a service and we must fix networktask_save to vardir
             $yaml_config->{'networktask_save'} = $agent->{vardir};
             $self->need_save("configuration");
@@ -428,7 +428,7 @@ sub _submit_update {
                 name    => $edit,
                 task    => $job->{type} eq 'local' ? "inventory" : "netscan",
             );
-            my $event = GLPI::Agent::Event->new(%event);
+            my $event = AssetSync::Agent::Event->new(%event);
             $self->{toolbox}->{target}->delEvent($event);
 
             # Reset edited entry
@@ -527,7 +527,7 @@ sub _submit_update {
             name    => $edit,
             task    => $job->{type} eq 'local' ? "inventory" : "netscan",
         );
-        my $event = GLPI::Agent::Event->new(%event);
+        my $event = AssetSync::Agent::Event->new(%event);
         my $rundate = $self->_get_next_run_date($edit, $job, $job->{last_run_date});
         $event->rundate($rundate);
         $job->{next_run_date} = $rundate;
@@ -626,7 +626,7 @@ sub _submit_enable {
                 name    => $name,
                 task    => $job->{type} eq 'local' ? "inventory" : "netscan",
             );
-            my $event = GLPI::Agent::Event->new(%event);
+            my $event = AssetSync::Agent::Event->new(%event);
             my $rundate = $self->_get_next_run_date($name, $job, $job->{last_run_date});
             $event->rundate($rundate);
             $job->{next_run_date} = $rundate;
@@ -676,7 +676,7 @@ sub _submit_runnow {
                 name    => $name,
                 task    => $job->{type} eq 'local' ? "inventory" : "netscan",
             );
-            my $event = GLPI::Agent::Event->new(%event);
+            my $event = AssetSync::Agent::Event->new(%event);
             # To find next run date, we need to reset not_before time by setting it to now/last_run_date
             my $rundate = $self->_get_next_run_date($name, $job, $job->{last_run_date});
             $event->rundate($rundate);
@@ -691,7 +691,7 @@ sub _submit_runnow {
 sub event_logger {
     my ($self) = @_;
 
-    my $logger = GLPI::Agent::Logger->new();
+    my $logger = AssetSync::Agent::Logger->new();
 
     # Setup logger with callback to collect logger messages at all level
     my $agent = $self->{toolbox}->{server}->{agent};
@@ -781,7 +781,7 @@ sub netscan {
                 $CRED = {
                     TYPE    => 'snmp',
                     # brackets are here cosmetic for task logs and will be filtered in
-                    # GLPI::Agent::HTTP::Server::ToolBox::Results::NetDiscovery
+                    # AssetSync::Agent::HTTP::Server::ToolBox::Results::NetDiscovery
                     ID      => "[$credential]",
                     VERSION =>
                         $cred->{snmpversion} eq 'v1'  ? '1'  :
@@ -811,7 +811,7 @@ sub netscan {
                     unless defined($cred->{password}) || $cred->{type} eq 'ssh';
                 $CRED = {
                     # brackets are here cosmetic for task logs and will be filtered in
-                    # GLPI::Agent::HTTP::Server::ToolBox::Results::NetDiscovery
+                    # AssetSync::Agent::HTTP::Server::ToolBox::Results::NetDiscovery
                     ID  => "[$credential]"
                 };
                 # Complete CRED with required and defined attributes
@@ -866,8 +866,8 @@ sub netscan {
         # Make sure path exists as folder
         mkdir $path unless -d $path;
 
-        GLPI::Agent::Target::Local->require();
-        $target = GLPI::Agent::Target::Local->new(
+        AssetSync::Agent::Target::Local->require();
+        $target = AssetSync::Agent::Target::Local->new(
             logger     => $logger,
             delaytime  => 1,
             basevardir => $agent->{vardir},
@@ -876,11 +876,11 @@ sub netscan {
 
         # When running as a service we need to use vardir as default local folder
         $target->setFullPath($agent->{vardir})
-            if $path eq '.' && (($OSNAME eq 'MSWin32' && ref($agent) eq 'GLPI::Agent::Daemon::Win32') || getppid() == 1);
+            if $path eq '.' && (($OSNAME eq 'MSWin32' && ref($agent) eq 'AssetSync::Agent::Daemon::Win32') || getppid() == 1);
     }
 
     # Create an NetDiscovery task
-    my $netdisco = GLPI::Agent::Task::NetDiscovery->new(
+    my $netdisco = AssetSync::Agent::Task::NetDiscovery->new(
         config      => $agent->{config},
         datadir     => $agent->{datadir},
         logger      => $logger,
@@ -915,8 +915,8 @@ sub netscan {
     }
 
     # Add job to task
-    GLPI::Agent::Task::NetDiscovery::Job->require();
-    push @{$netdisco->{jobs}}, GLPI::Agent::Task::NetDiscovery::Job->new(
+    AssetSync::Agent::Task::NetDiscovery::Job->require();
+    push @{$netdisco->{jobs}}, AssetSync::Agent::Task::NetDiscovery::Job->new(
         logger => $logger,
         params => {
             PID               => 1,
@@ -994,8 +994,8 @@ sub _run_local {
         # Make sure path exists as folder
         mkdir $path unless -d $path;
 
-        GLPI::Agent::Target::Local->require();
-        $target = GLPI::Agent::Target::Local->new(
+        AssetSync::Agent::Target::Local->require();
+        $target = AssetSync::Agent::Target::Local->new(
             logger     => $logger,
             delaytime  => 1,
             basevardir => $agent->{vardir},
@@ -1004,12 +1004,12 @@ sub _run_local {
 
         # When running as a service we need to use vardir as default local folder
         $target->setFullPath($agent->{vardir})
-            if $path eq '.' && (($OSNAME eq 'MSWin32' && ref($agent) eq 'GLPI::Agent::Daemon::Win32') || getppid() == 1);
+            if $path eq '.' && (($OSNAME eq 'MSWin32' && ref($agent) eq 'AssetSync::Agent::Daemon::Win32') || getppid() == 1);
     }
 
     # Create an Inventory task
-    GLPI::Agent::Task::Inventory->require();
-    my $inventory = GLPI::Agent::Task::Inventory->new(
+    AssetSync::Agent::Task::Inventory->require();
+    my $inventory = AssetSync::Agent::Task::Inventory->new(
         config      => $agent->{config},
         datadir     => $agent->{datadir},
         logger      => $logger,
@@ -1392,7 +1392,7 @@ sub _load_jobs {
             name    => $name,
             task    => $job->{type} eq 'local' ? "inventory" : "netscan",
         );
-        my $event = GLPI::Agent::Event->new(%event);
+        my $event = AssetSync::Agent::Event->new(%event);
         if ($job->{next_run_date} && $job->{next_run_date} > time) {
             $event->rundate($job->{next_run_date});
         } else {

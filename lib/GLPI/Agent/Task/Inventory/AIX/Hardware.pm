@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::AIX::Hardware;
+package AssetSync::Agent::Task::Inventory::AIX::Hardware;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant    category    => "hardware";
 

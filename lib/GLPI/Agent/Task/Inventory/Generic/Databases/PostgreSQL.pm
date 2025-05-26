@@ -1,14 +1,14 @@
-package GLPI::Agent::Task::Inventory::Generic::Databases::PostgreSQL;
+package AssetSync::Agent::Task::Inventory::Generic::Databases::PostgreSQL;
 
 use English qw(-no_match_vars);
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Generic::Databases';
+use parent 'AssetSync::Agent::Task::Inventory::Generic::Databases';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Inventory::DatabaseService;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Inventory::DatabaseService;
 
 sub isEnabled {
     return canRun('psql');
@@ -20,7 +20,7 @@ sub doInventory {
     my $inventory = $params{inventory};
 
     # Try to retrieve credentials updating params
-    GLPI::Agent::Task::Inventory::Generic::Databases::_credentials(\%params, "postgresql");
+    AssetSync::Agent::Task::Inventory::Generic::Databases::_credentials(\%params, "postgresql");
 
     my $dbservices = _getDatabaseService(%params);
 
@@ -44,7 +44,7 @@ sub _getDatabaseService {
     delete $ENV{PGPASSFILE};
 
     foreach my $credential (@{$credentials}) {
-        GLPI::Agent::Task::Inventory::Generic::Databases::trying_credentials($params{logger}, $credential);
+        AssetSync::Agent::Task::Inventory::Generic::Databases::trying_credentials($params{logger}, $credential);
         my $passfile = _psqlPgpassFile($credential);
         $ENV{PGPASSFILE} = $passfile->filename if $passfile;
 
@@ -80,7 +80,7 @@ sub _getDatabaseService {
             %params
         ));
 
-        my $dbs = GLPI::Agent::Inventory::DatabaseService->new(
+        my $dbs = AssetSync::Agent::Inventory::DatabaseService->new(
             type            => "postgresql",
             name            => $name,
             version         => $version,

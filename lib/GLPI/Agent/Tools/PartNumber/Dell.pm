@@ -1,9 +1,9 @@
-package GLPI::Agent::Tools::PartNumber::Dell;
+package AssetSync::Agent::Tools::PartNumber::Dell;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Tools::PartNumber';
+use parent 'AssetSync::Agent::Tools::PartNumber';
 
 use constant match_re       => qr/^([0-9A-Z]{6})([A-B]\d{2})$/;
 

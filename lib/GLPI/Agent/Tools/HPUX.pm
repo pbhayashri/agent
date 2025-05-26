@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::HPUX;
+package AssetSync::Agent::Tools::HPUX;
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use parent 'Exporter';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 our @EXPORT = qw(
     getInfoFromMachinfo
@@ -78,7 +78,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::HPUX - HPUX generic functions
+AssetSync::Agent::Tools::HPUX - HPUX generic functions
 
 =head1 DESCRIPTION
 

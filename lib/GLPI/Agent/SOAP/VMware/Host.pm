@@ -1,11 +1,11 @@
-package GLPI::Agent::SOAP::VMware::Host;
+package AssetSync::Agent::SOAP::VMware::Host;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Virtualization;
-use GLPI::Agent::Tools::UUID;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Virtualization;
+use AssetSync::Agent::Tools::UUID;
 
 sub new {
     my ($class, %params) = @_;
@@ -29,18 +29,18 @@ sub _asArray {
                             ()   ;
 }
 
-sub enableFeaturesForGlpiVersion {
+sub enableFeaturesForAssetSyncVersion {
     my ($self, $version) = @_;
 
     return if empty($version);
 
-    $self->{glpi} = glpiVersion($version);
+    $self->{assetsync} = AssetSyncVersion($version);
 }
 
-sub supportGlpiVersion {
+sub supportAssetSyncVersion {
     my ($self, $version) = @_;
 
-    return exists($self->{glpi}) && $self->{glpi} >= glpiVersion($version);
+    return exists($self->{assetsync}) && $self->{assetsync} >= AssetSyncVersion($version);
 }
 
 sub getBootTime {
@@ -423,8 +423,8 @@ sub getVirtualMachines {
             $vmInventory->{SERIAL} = "VMware-".join(' ', @uuid_parts[0..7]).'-'.join(' ', @uuid_parts[8..15]);
         }
 
-        # At least Glpi version 10.0.17 will include required schema to validate following fields
-        if ($self->supportGlpiVersion('10.0.17')) {
+        # At least AssetSync version 10.0.17 will include required schema to validate following fields
+        if ($self->supportAssetSyncVersion('10.0.17')) {
             $vmInventory->{IPADDRESS} = $machine->{summary}{guest}{ipAddress}
                 unless empty($machine->{summary}{guest}{ipAddress});
             unless (empty($machine->{summary}{guest}{guestFullName})) {
@@ -465,7 +465,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SOAP::VMware::Host - VMware Host abstraction layer
+AssetSync::Agent::SOAP::VMware::Host - VMware Host abstraction layer
 
 =head1 DESCRIPTION
 

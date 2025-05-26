@@ -1,9 +1,9 @@
-package GLPI::Agent::Tools::PartNumber::Samsung;
+package AssetSync::Agent::Tools::PartNumber::Samsung;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Tools::PartNumber';
+use parent 'AssetSync::Agent::Tools::PartNumber';
 
 # See https://www.samsung.com/semiconductor/global.semi/file/resource/2018/06/DDR4_Product_guide_May.18.pdf
 # https://www.samsung.com/semiconductor/global.semi/file/resource/2017/11/DDR3_Product_guide_Oct.16[2]-0.pdf

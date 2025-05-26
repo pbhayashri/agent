@@ -45,7 +45,7 @@ do
 Usage:
     netsim.sh [-h|--help] [start]
 
-    Manage a network devices simlator other dedicated ips and a GLPI Agent to
+    Manage a network devices simlator other dedicated ips and a AssetSync Agent to
     test NetDiscovery and NetInventory tasks.
 
 Options:
@@ -53,10 +53,10 @@ Options:
     -n --netsim         Dedicated folder to use as netsim environment
     -D --default        Set netsim as default netsim environment
     -S --system         Firstly use system agent in place of repository one
-    -s --server <URL>   Set GLPI Agent server target URL
-    -t --tag <TAG>      Set GLPI Agent tag
-    -p --port <PORT>    Set GLPI Agent port
-    --sudo              Start GLPI Agent with sudo
+    -s --server <URL>   Set AssetSync Agent server target URL
+    -t --tag <TAG>      Set AssetSync Agent tag
+    -p --port <PORT>    Set AssetSync Agent port
+    --sudo              Start AssetSync Agent with sudo
 
 Sub-commands:
     start               Start currently configured network or a default one
@@ -165,7 +165,7 @@ function _load_environment {
             stream "Using setup default environment"
             NETSIMDIR="$NETSIMDIRLINK"
         elif ! mkdir -p "$NETSIMDIR/etc/conf.d"; then
-            echo "Failed to create GLPI Agent conf folder in netsim environment under '$NETSIMDIR'" >&2
+            echo "Failed to create AssetSync Agent conf folder in netsim environment under '$NETSIMDIR'" >&2
             exit 1
         fi
     fi
@@ -246,20 +246,20 @@ function _setup_environment {
 
 function _start_agent {
     # Agent is expected to be started from a cloned repository
-    AGENT="bin/glpi-agent"
+    AGENT="bin/assetsync-agent"
     if (( SYSTEM )); then
-        AGENT=$( which glpi-agent )
+        AGENT=$( which assetsync-agent )
         if [ -z "$AGENT" ]; then
-            echo "No GLPI Agent installed on the system, please install one" >&2
+            echo "No AssetSync Agent installed on the system, please install one" >&2
             exit 1
         fi
     fi
     if [ ! -x "$AGENT" ]; then
-        if [ -e "netsim.sh" && -x "../bin/glpi-agent" ]; then
-            AGENT="bin/glpi-agent"
+        if [ -e "netsim.sh" && -x "../bin/assetsync-agent" ]; then
+            AGENT="bin/assetsync-agent"
             cd ..
         else
-            echo "Can't start GLPI Agent" >&2
+            echo "Can't start AssetSync Agent" >&2
             echo "Try to run this script from repository folder or install one and use -S option" >&2
             exit 1
         fi
@@ -418,50 +418,50 @@ function _debug {
         1|*) let DEBUG=1 ;;
     esac
     if (( CURRENT_DEBUG != DEBUG )); then
-        stream "Setting GLPI Agent debug level to $DEBUG..."
+        stream "Setting AssetSync Agent debug level to $DEBUG..."
         echo "debug = $DEBUG" >"$NETSIMDIR/etc/conf.d/debug.cfg"
         _reload_conf
     else
-        stream "GLPI Agent debug level still at $DEBUG"
+        stream "AssetSync Agent debug level still at $DEBUG"
     fi
 }
 
 function _server {
     if [ -n "$1" ]; then
         SERVER=$1
-        stream "Setting GLPI Agent server target to $SERVER..."
+        stream "Setting AssetSync Agent server target to $SERVER..."
         echo "server = $SERVER" >"$NETSIMDIR/etc/conf.d/server.cfg"
         _reload_conf
     elif [ -n "$SERVER" ]; then
-        stream "Current GLPI Agent server: $SERVER"
+        stream "Current AssetSync Agent server: $SERVER"
     else
-        stream "No server set in GLPI Agent configuration"
+        stream "No server set in AssetSync Agent configuration"
     fi
 }
 
 function _tag {
     if [ -n "$1" ]; then
         TAG=$1
-        stream "Setting GLPI Agent tag to $TAG..."
+        stream "Setting AssetSync Agent tag to $TAG..."
         echo "tag = $TAG" >"$NETSIMDIR/etc/conf.d/tag.cfg"
         _reload_conf
     elif [ -n "$TAG" ]; then
-        stream "Current GLPI Agent tag: $TAG"
+        stream "Current AssetSync Agent tag: $TAG"
     else
-        stream "No tag set in GLPI Agent configuration"
+        stream "No tag set in AssetSync Agent configuration"
     fi
 }
 
 function _port {
     if [ -n "$1" ]; then
         AGENTPORT=$1
-        stream "Setting GLPI Agent httpd port to $AGENTPORT..."
+        stream "Setting AssetSync Agent httpd port to $AGENTPORT..."
         echo "httpd-port = $AGENTPORT" >"$NETSIMDIR/etc/conf.d/port.cfg"
         _reload_conf
     elif [ -n "$AGENTPORT" ]; then
-        stream "Current GLPI Agent httpd port: $AGENTPORT"
+        stream "Current AssetSync Agent httpd port: $AGENTPORT"
     else
-        stream "No httpd port set in GLPI Agent configuration"
+        stream "No httpd port set in AssetSync Agent configuration"
     fi
 }
 
@@ -469,18 +469,18 @@ function _inventory {
     if [ -n "$1" -a "$1" != "$INVENTORY" ]; then
         INVENTORY=$1
         if (( "$INVENTORY" )); then
-            stream "Enabling GLPI Agent inventory task..."
+            stream "Enabling AssetSync Agent inventory task..."
             TASKS="inventory,netdiscovery,netinventory"
         else
-            stream "Disabling GLPI Agent inventory task..."
+            stream "Disabling AssetSync Agent inventory task..."
             TASKS="netdiscovery,netinventory"
         fi
         echo "tasks = $TASKS" >"$NETSIMDIR/etc/conf.d/tasks.cfg"
         _reload_conf
     elif (( "$INVENTORY" )); then
-        stream "GLPI Agent inventory task is enabled"
+        stream "AssetSync Agent inventory task is enabled"
     else
-        stream "GLPI Agent inventory task is disabled"
+        stream "AssetSync Agent inventory task is disabled"
     fi
 }
 
@@ -517,17 +517,17 @@ function _system {
         case $1 in
             sys)
                 if (( SYSTEM )); then
-                    stream "Still using system GLPI Agent"
+                    stream "Still using system AssetSync Agent"
                 else
                     let SYSTEM=1
-                    stream "Try to use GLPI Agent from the system"
+                    stream "Try to use AssetSync Agent from the system"
                 fi
                 ;;
             *)  unset SYSTEM
                 if (( SYSTEM )); then
-                    stream "Try to use GLPI Agent from current repository folder"
+                    stream "Try to use AssetSync Agent from current repository folder"
                 else
-                    stream "Still using GLPI Agent from current repository folder"
+                    stream "Still using AssetSync Agent from current repository folder"
                 fi
                 ;;
         esac
@@ -1048,20 +1048,20 @@ do
         help)        cat <<ONLINE_HELP
 Netsim supported sub-commands:
  - start|stop      Start or stop network simulator
- - run             Force GLPI Agent to run tasks
- - reload          Reload GLPI Agent configuration
- - debug [0|1|2]   Set GLPI Agent debug level to 0, 1 or 2
- - debug2          Set GLPI Agent debug level to 2
- - info            Reset GLPI Agent debug level to 0
- - server URL      Set URL as GLPI Agent server target
- - tag TAG         Set TAG as GLPI Agent server tag
- - port PORT       Set PORT as GLPI Agent httpd port
- - inventory       Enable inventory task in GLPI Agent (enabled by default)
- - noinventory     Disable inventory task in GLPI Agent
- - sudo            Use sudo to start GLPI Agent and snmp agents (enabled by default)
- - nosudo          Don't use sudo to start GLPI Agent and snmp agents
- - sys             Use GLPI Agent installed in the system (disabled by default)
- - nosys           Use GLPI Agent from the current repository folder
+ - run             Force AssetSync Agent to run tasks
+ - reload          Reload AssetSync Agent configuration
+ - debug [0|1|2]   Set AssetSync Agent debug level to 0, 1 or 2
+ - debug2          Set AssetSync Agent debug level to 2
+ - info            Reset AssetSync Agent debug level to 0
+ - server URL      Set URL as AssetSync Agent server target
+ - tag TAG         Set TAG as AssetSync Agent server tag
+ - port PORT       Set PORT as AssetSync Agent httpd port
+ - inventory       Enable inventory task in AssetSync Agent (enabled by default)
+ - noinventory     Disable inventory task in AssetSync Agent
+ - sudo            Use sudo to start AssetSync Agent and snmp agents (enabled by default)
+ - nosudo          Don't use sudo to start AssetSync Agent and snmp agents
+ - sys             Use AssetSync Agent installed in the system (disabled by default)
+ - nosys           Use AssetSync Agent from the current repository folder
  - quit            Quit
  - devices         List setup emulated devices
  - delete INDEX    Delete a device by INDEX

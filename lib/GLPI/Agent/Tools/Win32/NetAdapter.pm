@@ -1,11 +1,11 @@
-package GLPI::Agent::Tools::Win32::NetAdapter;
+package AssetSync::Agent::Tools::Win32::NetAdapter;
 
 use warnings;
 use strict;
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools::Network;
+use AssetSync::Agent::Tools::Network;
 
 sub new {
     my ($class, %params) = @_;
@@ -53,7 +53,7 @@ sub getBaseInterface {
 
     if ($self->{InterfaceType}) {
         # Interface type as defined by the Internet Assigned Names Authority (IANA)
-        # Same list as default GLPI supported types
+        # Same list as default AssetSync supported types
         my %types = qw(
             6   ethernet
             7   ethernet

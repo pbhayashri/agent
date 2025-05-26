@@ -12,8 +12,8 @@ use English;
 use UNIVERSAL::require;
 use Data::Dumper;
 
-use GLPI::Agent::Tools::MacOS;
-use GLPI::Agent::Task::Inventory::MacOS::Softwares;
+use AssetSync::Agent::Tools::MacOS;
+use AssetSync::Agent::Task::Inventory::MacOS::Softwares;
 
 my %system_profiler_tests = (
     '10.4-powerpc' => {
@@ -6656,7 +6656,7 @@ foreach my $test (keys %system_profiler_tests) {
 }
 
 foreach my $test (@ioregparsing) {
-    my $parsed = GLPI::Agent::Tools::MacOS::_parseIORegAttributes($test->{value});
+    my $parsed = AssetSync::Agent::Tools::MacOS::_parseIORegAttributes($test->{value});
     cmp_deeply($parsed, $test->{expect}, "$test->{name} ioreg parsing");
 }
 
@@ -6677,7 +6677,7 @@ foreach my $test (keys(%xmlparsing)) {
 
     if ($xmlparsing{$test}->{flatfile}) {
         my $flatFile = 'resources/macos/system_profiler/'.$xmlparsing{$test}->{flatfile};
-        my $softwaresFromFlatFile = GLPI::Agent::Tools::MacOS::getSystemProfilerInfos(file => $flatFile, type => $type);
+        my $softwaresFromFlatFile = AssetSync::Agent::Tools::MacOS::getSystemProfilerInfos(file => $flatFile, type => $type);
 
         ok (ref($softwaresFromFlatFile) eq 'HASH');
         cmp_deeply(
@@ -6692,7 +6692,7 @@ foreach my $test (keys(%xmlparsing)) {
     }
 
     my $xmlFile = 'resources/macos/system_profiler/'.$xmlparsing{$test}->{xmlfile};
-    my $softwaresFromXmlFile = GLPI::Agent::Tools::MacOS::getSystemProfilerInfos(
+    my $softwaresFromXmlFile = AssetSync::Agent::Tools::MacOS::getSystemProfilerInfos(
         file => $xmlFile,
         type => $type,
         format => 'xml',
@@ -6710,8 +6710,8 @@ foreach my $test (keys(%xmlparsing)) {
         "count: $softwaresFromXmlFileSize from XML file, expecting ".$xmlparsing{$test}->{count});
 
     # Test private API in the same way it is used via getSystemProfilerInfos()
-    my $content = GLPI::Agent::Tools::getAllLines(file => $xmlFile);
-    my $softs = GLPI::Agent::Tools::MacOS::_extractSoftwaresFromXml(
+    my $content = AssetSync::Agent::Tools::getAllLines(file => $xmlFile);
+    my $softs = AssetSync::Agent::Tools::MacOS::_extractSoftwaresFromXml(
         string          => $content,
         localTimeOffset => 7200
     );
@@ -6727,12 +6727,12 @@ foreach my $test (keys(%xmlparsing)) {
 }
 
 foreach my $date (keys(%dateconv)) {
-    my $convertedDate = GLPI::Agent::Tools::MacOS::_getOffsetDate($date, $dateconv{$date}->[0]);
+    my $convertedDate = AssetSync::Agent::Tools::MacOS::_getOffsetDate($date, $dateconv{$date}->[0]);
     ok ($convertedDate eq $dateconv{$date}->[1], $date . ': ' . $convertedDate . ' eq ' . $dateconv{$date}->[1] . ' ?');
 }
 
 for my $dateStr (keys(%datesStr)) {
-    my $formatted = GLPI::Agent::Tools::MacOS::_formatDate($dateStr);
+    my $formatted = AssetSync::Agent::Tools::MacOS::_formatDate($dateStr);
     ok ($formatted eq $datesStr{$dateStr}, "'" . $datesStr{$dateStr} ."' expected but got '" . $formatted . "'");
 }
 

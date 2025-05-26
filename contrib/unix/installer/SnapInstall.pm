@@ -15,13 +15,13 @@ use InstallerVersion;
 sub init {
     my ($self) = @_;
 
-    die "Can't install glpi-agent via snap without snap installed\n"
+    die "Can't install assetsync-agent via snap without snap installed\n"
         unless $self->which("snap");
 
-    $self->{_bin} = "/snap/bin/glpi-agent";
+    $self->{_bin} = "/snap/bin/assetsync-agent";
 
     # Store installation status of the current snap
-    my ($version) = qx{snap info glpi-agent 2>/dev/null} =~ /^installed:\s+(\S+)\s/m;
+    my ($version) = qx{snap info assetsync-agent 2>/dev/null} =~ /^installed:\s+(\S+)\s/m;
     return if $?;
     $self->{_snap}->{version} = $version;
 }
@@ -29,14 +29,14 @@ sub init {
 sub install {
     my ($self) = @_;
 
-    $self->verbose("Trying to install glpi-agent v".InstallerVersion::VERSION()." via snap on $self->{_release} release ($self->{_name}:$self->{_version})...");
+    $self->verbose("Trying to install assetsync-agent v".InstallerVersion::VERSION()." via snap on $self->{_release} release ($self->{_name}:$self->{_version})...");
 
     # Check installed packages
     if ($self->{_snap}) {
         if (InstallerVersion::VERSION() =~ /^$self->{_snap}->{version}/ ) {
-            $self->verbose("glpi-agent still installed and up-to-date");
+            $self->verbose("assetsync-agent still installed and up-to-date");
         } else {
-            $self->verbose("glpi-agent will be upgraded");
+            $self->verbose("assetsync-agent will be upgraded");
             delete $self->{_snap};
         }
     }
@@ -48,7 +48,7 @@ sub install {
         $self->verbose("Extracting $snap ...");
         die "Failed to extract $snap\n" unless $self->{_archive}->extract("pkg/snap/$snap");
         my $err = $self->run("snap install --classic --dangerous $snap");
-        die "Failed to install glpi-agent snap package\n" if $err;
+        die "Failed to install assetsync-agent snap package\n" if $err;
         $self->{_installed} = [ $snap ];
     } else {
         $self->{_installed} = 1;
@@ -62,67 +62,67 @@ sub configure {
     my ($self) = @_;
 
     # Call parent configure using snap folder
-    $self->SUPER::configure("/var/snap/glpi-agent/current");
+    $self->SUPER::configure("/var/snap/assetsync-agent/current");
 }
 
 sub uninstall {
     my ($self, $purge) = @_;
 
-    return $self->info("glpi-agent is not installed via snap")
+    return $self->info("assetsync-agent is not installed via snap")
         unless $self->{_snap};
 
-    $self->info("Uninstalling glpi-agent snap...");
-    my $command = "snap remove glpi-agent";
+    $self->info("Uninstalling assetsync-agent snap...");
+    my $command = "snap remove assetsync-agent";
     $command .= " --purge" if $purge;
     my $err = $self->run($command);
-    die "Failed to uninstall glpi-agent snap\n" if $err;
+    die "Failed to uninstall assetsync-agent snap\n" if $err;
 
     # Remove cron file if found
-    unlink "/etc/cron.hourly/glpi-agent" if -e "/etc/cron.hourly/glpi-agent";
+    unlink "/etc/cron.hourly/assetsync-agent" if -e "/etc/cron.hourly/assetsync-agent";
 
     delete $self->{_snap};
 }
 
 sub clean {
     my ($self) = @_;
-    die "Can't clean glpi-agent related files if it is currently installed\n" if $self->{_snap};
+    die "Can't clean assetsync-agent related files if it is currently installed\n" if $self->{_snap};
     $self->info("Cleaning...");
     # clean uninstall is mostly done using --purge option in uninstall
-    unlink "/etc/default/glpi-agent" if -e "/etc/default/glpi-agent";
+    unlink "/etc/default/assetsync-agent" if -e "/etc/default/assetsync-agent";
 }
 
 sub install_service {
     my ($self) = @_;
 
-    $self->info("Enabling glpi-agent service...");
+    $self->info("Enabling assetsync-agent service...");
 
-    my $ret = $self->run("snap start --enable glpi-agent" . ($self->verbose ? "" : " 2>/dev/null"));
-    return $self->info("Failed to enable glpi-agent service") if $ret;
+    my $ret = $self->run("snap start --enable assetsync-agent" . ($self->verbose ? "" : " 2>/dev/null"));
+    return $self->info("Failed to enable assetsync-agent service") if $ret;
 
     if ($self->{_runnow}) {
         # Still handle run now here to avoid calling systemctl in parent
         delete $self->{_runnow};
         $ret = $self->run($self->{_bin}." --set-forcerun" . ($self->verbose ? "" : " 2>/dev/null"));
-        return $self->info("Failed to ask glpi-agent service to run now") if $ret;
-        $ret = $self->run("snap restart glpi-agent" . ($self->verbose ? "" : " 2>/dev/null"));
-        $self->info("Failed to restart glpi-agent service on run now") if $ret;
+        return $self->info("Failed to ask assetsync-agent service to run now") if $ret;
+        $ret = $self->run("snap restart assetsync-agent" . ($self->verbose ? "" : " 2>/dev/null"));
+        $self->info("Failed to restart assetsync-agent service on run now") if $ret;
     }
 }
 
 sub install_cron {
     my ($self) = @_;
 
-    $self->info("glpi-agent will be run every hour via cron");
-    $self->verbose("Disabling glpi-agent service...");
-    my $ret = $self->run("snap stop --disable glpi-agent" . ($self->verbose ? "" : " 2>/dev/null"));
-    return $self->info("Failed to disable glpi-agent service") if $ret;
+    $self->info("assetsync-agent will be run every hour via cron");
+    $self->verbose("Disabling assetsync-agent service...");
+    my $ret = $self->run("snap stop --disable assetsync-agent" . ($self->verbose ? "" : " 2>/dev/null"));
+    return $self->info("Failed to disable assetsync-agent service") if $ret;
 
-    $self->verbose("Installin glpi-agent hourly cron file...");
-    my $cron = $self->open_os_file('/etc/cron.hourly/glpi-agent', '>')
-        or die "Can't create hourly crontab for glpi-agent: $!\n";
+    $self->verbose("Installin assetsync-agent hourly cron file...");
+    my $cron = $self->open_os_file('/etc/cron.hourly/assetsync-agent', '>')
+        or die "Can't create hourly crontab for assetsync-agent: $!\n";
     print $cron q{#!/bin/bash
 
-NAME=glpi-agent-cron
+NAME=assetsync-agent-cron
 LOG=/var/log/$NAME.log
 
 exec >>$LOG 2>&1
@@ -138,10 +138,10 @@ echo "[$(date '+%c')] Running $NAME $OPTIONS"
 echo "[$(date '+%c')] End of cron job ($PATH)"
 };
     $self->close_os_file();
-    unless ($self->os_file_exists('/etc/default/glpi-agent')) {
-        $self->verbose("Installin glpi-agent system default config...");
-        my $default = $self->open_os_file('/etc/default/glpi-agent', '>')
-            or die "Can't create system default config for glpi-agent: $!\n";
+    unless ($self->os_file_exists('/etc/default/assetsync-agent')) {
+        $self->verbose("Installin assetsync-agent system default config...");
+        my $default = $self->open_os_file('/etc/default/assetsync-agent', '>')
+            or die "Can't create system default config for assetsync-agent: $!\n";
         print $default q{
 # By default, ask agent to wait a random time
 OPTIONS="--wait 120"

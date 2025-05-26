@@ -11,23 +11,23 @@ use lib abs_path(File::Spec->rel2abs('../packaging', __FILE__));
 use PerlBuildJob;
 
 use lib 'lib';
-use GLPI::Agent::Version;
+use AssetSync::Agent::Version;
 
-# HACK: make "use Perl::Dist::GLPI::Agent::Step::XXX" works as included plugin
-map { $INC{"Perl/Dist/GLPI/Agent/Step/$_.pm"} = __FILE__ } qw(Test);
+# HACK: make "use Perl::Dist::AssetSync::Agent::Step::XXX" works as included plugin
+map { $INC{"Perl/Dist/AssetSync/Agent/Step/$_.pm"} = __FILE__ } qw(Test);
 
-my $provider = $GLPI::Agent::Version::PROVIDER;
+my $provider = $AssetSync::Agent::Version::PROVIDER;
 
 sub build_app {
     my ($arch) = @_;
 
-    my $app = Perl::Dist::GLPI::Agent->new(
+    my $app = Perl::Dist::AssetSync::Agent->new(
         arch            => $arch,
         _restore_step   => PERL_BUILD_STEPS,
     );
 
     $app->parse_options(
-        -job            => "glpi-agent built perl test",
+        -job            => "assetsync-agent built perl test",
         -image_dir      => "C:\\Strawberry-perl-for-$provider-Agent",
         -working_dir    => "C:\\Strawberry-perl-for-$provider-Agent_build",
         -nointeractive,
@@ -65,7 +65,7 @@ print "Tests processing passed\n";
 exit(0);
 
 package
-    Perl::Dist::GLPI::Agent::Step::Test;
+    Perl::Dist::AssetSync::Agent::Step::Test;
 
 use parent 'Perl::Dist::Strawberry::Step';
 
@@ -128,7 +128,7 @@ sub test {
 }
 
 package
-    Perl::Dist::GLPI::Agent;
+    Perl::Dist::AssetSync::Agent;
 
 use parent qw(Perl::Dist::Strawberry);
 
@@ -242,9 +242,9 @@ sub load_jobfile {
     return {
         bits            => $self->global->{arch} eq 'x64' ? 64 : 32,
         build_job_steps => [
-            ### STEP 0 Run GLPI Agent test suite ##############################
+            ### STEP 0 Run AssetSync Agent test suite ##############################
             {
-                plugin      => 'Perl::Dist::GLPI::Agent::Step::Test',
+                plugin      => 'Perl::Dist::AssetSync::Agent::Step::Test',
                 # By default all possible test will be run
                 test_files  => [
                     qw(t/*.t t/*/*.t t/*/*/*.t t/*/*/*/*.t t/*/*/*/*/*.t t/*/*/*/*/*/*.t)

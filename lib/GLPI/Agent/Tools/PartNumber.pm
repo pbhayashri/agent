@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::PartNumber;
+package AssetSync::Agent::Tools::PartNumber;
 
 use strict;
 use warnings;
@@ -6,8 +6,8 @@ use warnings;
 use File::Glob;
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Logger;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Logger;
 
 use constant category       => "";
 use constant manufacturer   => "";
@@ -21,7 +21,7 @@ my @subclasses;
 sub new {
     my ($class, %params) = @_;
 
-    my $logger = $params{logger} || GLPI::Agent::Logger->new();
+    my $logger = $params{logger} || AssetSync::Agent::Logger->new();
 
     unless (@subclasses) {
         my %priority = ();
@@ -34,7 +34,7 @@ sub new {
             $file =~ s{\\}{/}g if $OSNAME eq 'MSWin32';
             my ($class) = $file =~ $subclass_path_re
                 or next;
-            my $module = "GLPI::Agent::Tools::PartNumber::" . $class;
+            my $module = "AssetSync::Agent::Tools::PartNumber::" . $class;
             $module->require();
             if ($EVAL_ERROR) {
                 $logger->debug("Failed to load PartNumber::$class");
@@ -113,7 +113,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::PartNumber - PartNumber class
+AssetSync::Agent::Tools::PartNumber - PartNumber class
 
 =head1 DESCRIPTION
 

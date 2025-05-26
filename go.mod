@@ -1,4 +1,4 @@
-module github.com/glpi-project/glpi-agent
+module github.com/assetsync-project/assetsync-agent
 
 go 1.20
 

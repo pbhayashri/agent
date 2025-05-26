@@ -1,12 +1,12 @@
-package GLPI::Agent::SNMP::MibSupport::DefencePro;
+package AssetSync::Agent::SNMP::MibSupport::DefencePro;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::SNMP::MibSupportTemplate';
+use parent 'AssetSync::Agent::SNMP::MibSupportTemplate';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::SNMP;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::SNMP;
 
 use constant defencepro             => '.1.3.6.1.4.1.89';
 use constant model                  => defencepro . '.2.14.0';
@@ -51,7 +51,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP::MibSupport::DefencePro - Inventory module for DefencePro appliance
+AssetSync::Agent::SNMP::MibSupport::DefencePro - Inventory module for DefencePro appliance
 
 =head1 DESCRIPTION
 

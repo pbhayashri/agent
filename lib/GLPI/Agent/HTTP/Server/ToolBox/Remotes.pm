@@ -1,19 +1,19 @@
-package GLPI::Agent::HTTP::Server::ToolBox::Remotes;
+package AssetSync::Agent::HTTP::Server::ToolBox::Remotes;
 
 use strict;
 use warnings;
 
-use parent "GLPI::Agent::HTTP::Server::ToolBox";
+use parent "AssetSync::Agent::HTTP::Server::ToolBox";
 
 use English qw(-no_match_vars);
 use Encode qw(encode);
 use HTML::Entities;
 use Time::HiRes qw(gettimeofday);
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Task::RemoteInventory::Remote;
-use GLPI::Agent::Task::RemoteInventory::Remotes;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Task::RemoteInventory::Remote;
+use AssetSync::Agent::Task::RemoteInventory::Remotes;
 
 use constant    remotes => "remotes";
 
@@ -34,7 +34,7 @@ sub new {
 
     my $self = {
         logger  => $params{toolbox}->{logger} ||
-                    GLPI::Agent::Logger->new(),
+                    AssetSync::Agent::Logger->new(),
         toolbox => $params{toolbox},
         name    => $name
     };
@@ -62,7 +62,7 @@ sub _update_remotes {
 
     $self->{_count} = 0;
     foreach my $targetid (@{$self->{targets}}) {
-        my $remotes = $self->{remotes}->{$targetid} = GLPI::Agent::Task::RemoteInventory::Remotes->new(
+        my $remotes = $self->{remotes}->{$targetid} = AssetSync::Agent::Task::RemoteInventory::Remotes->new(
             config  => $agent->{config},
             storage => $self->{target}->{$targetid}->getStorage()
         );
@@ -224,7 +224,7 @@ sub _submit_add {
     }
 
     my $agent = $self->{toolbox}->{server}->{agent};
-    my $remote = GLPI::Agent::Task::RemoteInventory::Remote->new(
+    my $remote = AssetSync::Agent::Task::RemoteInventory::Remote->new(
         url     => $form->{'input/url'},
         config  => $agent->{config},
         logger  => $self->{logger}
@@ -263,7 +263,7 @@ sub _submit_update {
     my $expiration = $remote->expiration();
 
     my $agent = $self->{toolbox}->{server}->{agent};
-    $remote = GLPI::Agent::Task::RemoteInventory::Remote->new(
+    $remote = AssetSync::Agent::Task::RemoteInventory::Remote->new(
         url     => $form->{'input/url'},
         config  => $agent->{config},
         logger  => $self->{logger}
@@ -364,13 +364,13 @@ sub _submit_start {
     $agent->{config}->{'remote-workers'} = $workers || 1;
     $agent->{config}->{'remote-scheduling'} = 1;
 
-    GLPI::Agent::Task::RemoteInventory->require();
+    AssetSync::Agent::Task::RemoteInventory->require();
 
     foreach my $target (@{$self->{targets}}) {
         $logger->info("Running $taskid task for $target target...");
 
         # Create an RemoteInventory task
-        my $remoteinventory = GLPI::Agent::Task::RemoteInventory->new(
+        my $remoteinventory = AssetSync::Agent::Task::RemoteInventory->new(
             config       => $agent->{config},
             datadir      => $agent->{datadir},
             logger       => $logger,

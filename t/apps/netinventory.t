@@ -10,19 +10,19 @@ use Test::More;
 use UNIVERSAL::require;
 use Config;
 
-use GLPI::Test::Utils;
+use AssetSync::Test::Utils;
 
-use GLPI::Agent::XML;
+use AssetSync::Agent::XML;
 
 my @sampleWalkResult = (4, 6);
 
 plan tests => 12 + 3 * @sampleWalkResult;
 
-GLPI::Agent::Task::NetInventory->use();
+AssetSync::Agent::Task::NetInventory->use();
 
 my ($out, $err, $rc);
 
-($out, $err, $rc) = run_executable('glpi-netinventory', '--help');
+($out, $err, $rc) = run_executable('assetsync-netinventory', '--help');
 ok($rc == 0, '--help exit status');
 like(
     $out,
@@ -31,17 +31,17 @@ like(
 );
 is($err, '', '--help stderr');
 
-($out, $err, $rc) = run_executable('glpi-netinventory', '--version');
+($out, $err, $rc) = run_executable('assetsync-netinventory', '--version');
 ok($rc == 0, '--version exit status');
 is($err, '', '--version stderr');
 like(
     $out,
-    qr/$GLPI::Agent::Task::NetInventory::VERSION/,
+    qr/$AssetSync::Agent::Task::NetInventory::VERSION/,
     '--version stdout'
 );
 
 ($out, $err, $rc) = run_executable(
-    'glpi-netinventory',
+    'assetsync-netinventory',
     ''
 );
 ok($rc == 2, 'no target exit status');
@@ -54,20 +54,20 @@ is($out, '', 'no target stdout');
 
 foreach my $walk (@sampleWalkResult) {
     ($out, $err, $rc) = run_executable(
-        'glpi-netinventory',
+        'assetsync-netinventory',
         '--host 127.0.0.1 --file resources/walks/sample'.$walk.'.walk'
     );
     ok($rc == 0, 'success exit status sample'.$walk);
 
-    my $content = GLPI::Agent::XML->new(string => $out)->dump_as_hash();
+    my $content = AssetSync::Agent::XML->new(string => $out)->dump_as_hash();
     ok($content, 'valid output sample'.$walk);
 
-    my $result  = GLPI::Agent::XML->new(
+    my $result  = AssetSync::Agent::XML->new(
         file => "resources/walks/sample$walk.result"
     )->dump_as_hash();
 
     # Fix version before comparing
-    $result->{REQUEST}->{CONTENT}->{MODULEVERSION} = $GLPI::Agent::Task::NetInventory::VERSION;
+    $result->{REQUEST}->{CONTENT}->{MODULEVERSION} = $AssetSync::Agent::Task::NetInventory::VERSION;
 
     # Fix deviceid before comparing
     $result->{REQUEST}->{DEVICEID} = 'foo';
@@ -77,7 +77,7 @@ foreach my $walk (@sampleWalkResult) {
 
 # Check multi-threading support
 my $files = join(" ", map { "--file resources/walks/sample1.walk" } 1..10 ) ;
-($out, $err, $rc) = run_executable('glpi-netinventory', "$files --debug --threads 10");
+($out, $err, $rc) = run_executable('assetsync-netinventory', "$files --debug --threads 10");
 ok($rc == 0, '10 threads started to scan on loopback');
 like(
     $out,

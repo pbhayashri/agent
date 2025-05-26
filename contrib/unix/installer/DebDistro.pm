@@ -18,26 +18,26 @@ my $DEBVERSION = InstallerVersion::VERSION();
 $DEBVERSION .= "-$DEBREVISION" unless $DEBVERSION =~ /-.+$/;
 
 my %DebPackages = (
-    "glpi-agent"                => qr/^inventory$/i,
-    "glpi-agent-task-network"   => qr/^netdiscovery|netinventory|network$/i,
-    "glpi-agent-task-collect"   => qr/^collect$/i,
-    "glpi-agent-task-esx"       => qr/^esx$/i,
-    "glpi-agent-task-deploy"    => qr/^deploy$/i,
-    #"glpi-agent-task-wakeonlan" => qr/^wakeonlan|wol$/i,
+    "assetsync-agent"                => qr/^inventory$/i,
+    "assetsync-agent-task-network"   => qr/^netdiscovery|netinventory|network$/i,
+    "assetsync-agent-task-collect"   => qr/^collect$/i,
+    "assetsync-agent-task-esx"       => qr/^esx$/i,
+    "assetsync-agent-task-deploy"    => qr/^deploy$/i,
+    #"assetsync-agent-task-wakeonlan" => qr/^wakeonlan|wol$/i,
 );
 
 my %DebInstallTypes = (
     all     => [ qw(
-        glpi-agent
-        glpi-agent-task-network
-        glpi-agent-task-collect
-        glpi-agent-task-esx
-        glpi-agent-task-deploy
+        assetsync-agent
+        assetsync-agent-task-network
+        assetsync-agent-task-collect
+        assetsync-agent-task-esx
+        assetsync-agent-task-deploy
     ) ],
-    typical => [ qw(glpi-agent) ],
+    typical => [ qw(assetsync-agent) ],
     network => [ qw(
-        glpi-agent
-        glpi-agent-task-network
+        assetsync-agent
+        assetsync-agent-task-network
     ) ],
 );
 
@@ -84,10 +84,10 @@ sub _extract_deb {
 sub install {
     my ($self) = @_;
 
-    $self->verbose("Trying to install glpi-agent v$DEBVERSION on $self->{_release} release ($self->{_name}:$self->{_version})...");
+    $self->verbose("Trying to install assetsync-agent v$DEBVERSION on $self->{_release} release ($self->{_name}:$self->{_version})...");
 
     my $type = $self->{_type} // "typical";
-    my %pkgs = qw( glpi-agent 1 );
+    my %pkgs = qw( assetsync-agent 1 );
     if ($DebInstallTypes{$type}) {
         map { $pkgs{$_} = 1 } @{$DebInstallTypes{$type}};
     } else {
@@ -148,7 +148,7 @@ sub install {
         push @options, "--allow-downgrades" if $self->downgradeAllowed();
         my $command = "apt @options install @debs 2>/dev/null";
         my $err = $self->run($command);
-        die "Failed to install glpi-agent\n" if $err;
+        die "Failed to install assetsync-agent\n" if $err;
         $self->{_installed} = \@debs;
     } else {
         $self->{_installed} = 1;
@@ -163,22 +163,22 @@ sub uninstall {
 
     my @debs = sort keys(%{$self->{_packages}});
 
-    return $self->info("glpi-agent is not installed")
+    return $self->info("assetsync-agent is not installed")
         unless @debs;
 
     $self->uninstall_service();
 
     $self->info(
-        @debs == 1 ? "Uninstalling glpi-agent package..." :
-            "Uninstalling ".scalar(@debs)." glpi-agent related packages..."
+        @debs == 1 ? "Uninstalling assetsync-agent package..." :
+            "Uninstalling ".scalar(@debs)." assetsync-agent related packages..."
     );
     my $err = $self->run("apt -y purge --autoremove @debs 2>/dev/null");
-    die "Failed to uninstall glpi-agent\n" if $err;
+    die "Failed to uninstall assetsync-agent\n" if $err;
 
     map { delete $self->{_packages}->{$_} } @debs;
 
     # Also remove cron file if found
-    unlink "/etc/cron.hourly/glpi-agent" if -e "/etc/cron.hourly/glpi-agent";
+    unlink "/etc/cron.hourly/assetsync-agent" if -e "/etc/cron.hourly/assetsync-agent";
 }
 
 sub clean {
@@ -186,26 +186,26 @@ sub clean {
 
     $self->SUPER::clean();
 
-    unlink "/etc/default/glpi-agent" if -e "/etc/default/glpi-agent";
+    unlink "/etc/default/assetsync-agent" if -e "/etc/default/assetsync-agent";
 }
 
 sub install_cron {
     my ($self) = @_;
 
-    $self->info("glpi-agent will be run every hour via cron");
-    $self->verbose("Disabling glpi-agent service...");
-    my $ret = $self->run("systemctl disable glpi-agent" . ($self->verbose ? "" : " 2>/dev/null"));
-    return $self->info("Failed to disable glpi-agent service") if $ret;
-    $self->verbose("Stopping glpi-agent service if running...");
-    $ret = $self->run("systemctl stop glpi-agent" . ($self->verbose ? "" : " 2>/dev/null"));
-    return $self->info("Failed to stop glpi-agent service") if $ret;
+    $self->info("assetsync-agent will be run every hour via cron");
+    $self->verbose("Disabling assetsync-agent service...");
+    my $ret = $self->run("systemctl disable assetsync-agent" . ($self->verbose ? "" : " 2>/dev/null"));
+    return $self->info("Failed to disable assetsync-agent service") if $ret;
+    $self->verbose("Stopping assetsync-agent service if running...");
+    $ret = $self->run("systemctl stop assetsync-agent" . ($self->verbose ? "" : " 2>/dev/null"));
+    return $self->info("Failed to stop assetsync-agent service") if $ret;
 
-    $self->verbose("Installing glpi-agent hourly cron file...");
-    my $cron = $self->open_os_file('/etc/cron.hourly/glpi-agent', '>')
-        or die "Can't create hourly crontab for glpi-agent: $!\n";
+    $self->verbose("Installing assetsync-agent hourly cron file...");
+    my $cron = $self->open_os_file('/etc/cron.hourly/assetsync-agent', '>')
+        or die "Can't create hourly crontab for assetsync-agent: $!\n";
     print $cron q{#!/bin/bash
 
-NAME=glpi-agent
+NAME=assetsync-agent
 LOG=/var/log/$NAME-cron.log
 
 exec >>$LOG 2>&1
@@ -221,11 +221,11 @@ echo "[$(date '+%c')] Running $NAME $OPTIONS"
 echo "[$(date '+%c')] End of cron job ($PATH)"
 };
     $self->close_os_file();
-    $self->chmod_os_file(0755, '/etc/cron.hourly/glpi-agent');
-    unless ($self->os_file_exists('/etc/default/glpi-agent')) {
-        $self->verbose("Installing glpi-agent system default config...");
-        my $default = $self->open_os_file('/etc/default/glpi-agent', '>')
-            or die "Can't create system default config for glpi-agent: $!\n";
+    $self->chmod_os_file(0755, '/etc/cron.hourly/assetsync-agent');
+    unless ($self->os_file_exists('/etc/default/assetsync-agent')) {
+        $self->verbose("Installing assetsync-agent system default config...");
+        my $default = $self->open_os_file('/etc/default/assetsync-agent', '>')
+            or die "Can't create system default config for assetsync-agent: $!\n";
         print $default q{
 # By default, ask agent to wait a random time
 OPTIONS="--wait 120"

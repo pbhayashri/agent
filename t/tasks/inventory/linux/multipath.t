@@ -9,7 +9,7 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Tools::Linux;
+use AssetSync::Agent::Tools::Linux;
 
 my %multipath_tests = (
     multipath1 => {
@@ -38,7 +38,7 @@ plan tests => (scalar keys %multipath_tests) + 1;
 
 foreach my $test (keys %multipath_tests) {
     my $file = "resources/linux/multipath/$test";
-    my @names = GLPI::Agent::Tools::Linux::_filterMultipath(
+    my @names = AssetSync::Agent::Tools::Linux::_filterMultipath(
         file  => $file,
         names => $multipath_tests{$test}->{names_in}
     );

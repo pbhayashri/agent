@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::Solaris;
+package AssetSync::Agent::Tools::Solaris;
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use parent 'Exporter';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 our @EXPORT = qw(
     getZone
@@ -417,7 +417,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::Solaris - Solaris generic functions
+AssetSync::Agent::Tools::Solaris - Solaris generic functions
 
 =head1 DESCRIPTION
 

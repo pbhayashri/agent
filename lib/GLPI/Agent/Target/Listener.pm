@@ -1,11 +1,11 @@
-package GLPI::Agent::Target::Listener;
+package AssetSync::Agent::Target::Listener;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Target';
+use parent 'AssetSync::Agent::Target';
 
-use GLPI::Agent::HTTP::Session;
+use AssetSync::Agent::HTTP::Session;
 
 use constant STORE_SESSION_TIMEOUT => 10;
 
@@ -72,7 +72,7 @@ sub session {
         delete $params{remoteid};
     }
 
-    $session = GLPI::Agent::HTTP::Session->new(
+    $session = AssetSync::Agent::HTTP::Session->new(
         logger  => $self->{logger},
         timeout => $params{timeout},
         sid     => $params{remoteid},
@@ -138,7 +138,7 @@ sub _restore_sessions {
         my $data = $datas->{$remoteid};
         next unless $remoteid && ref($data) eq 'HASH';
         my %datas = map { $_ => $data->{$_} } grep { /^_/ } keys(%{$data});
-        $sessions->{$remoteid} = GLPI::Agent::HTTP::Session->new(
+        $sessions->{$remoteid} = AssetSync::Agent::HTTP::Session->new(
             logger => $self->{logger},
             timer  => $data->{timer},
             nonce  => $data->{nonce},
@@ -192,7 +192,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Target::Listen - Listen target
+AssetSync::Agent::Target::Listen - Listen target
 
 =head1 DESCRIPTION
 
@@ -203,7 +203,7 @@ This is a target to serve execution result on a listening port.
 =head2 new(%params)
 
 The constructor. The allowed parameters are the ones from the base class
-C<GLPI::Agent::Target>.
+C<AssetSync::Agent::Target>.
 
 =head2 getName()
 
@@ -225,7 +225,7 @@ Set or retrieve an inventory XML to be used by an HTTP plugin
 
 =head2 session(%params)
 
-Create or retrieve a GLPI::Agent::HTTP::Session object keeping it
+Create or retrieve a AssetSync::Agent::HTTP::Session object keeping it
 stored in a local storage.
 
 Supported parameters:

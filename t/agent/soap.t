@@ -13,10 +13,10 @@ use Test::Exception;
 use Test::MockObject::Extends;
 use Test::MockModule;
 
-use GLPI::Agent::Inventory;
-use GLPI::Agent::XML;
-use GLPI::Agent::SOAP::VMware;
-use GLPI::Agent::Tools::Virtualization;
+use AssetSync::Agent::Inventory;
+use AssetSync::Agent::XML;
+use AssetSync::Agent::SOAP::VMware;
+use AssetSync::Agent::Tools::Virtualization;
 
 my %tests = (
     'esx-4.1.0-1' => {
@@ -494,7 +494,7 @@ foreach my $test (keys %tests) {
             my ($action) =
                 $request->header('soapaction') =~ /"urn:vim25#(\S+)"/;
 
-            my $tree = GLPI::Agent::XML->new(string => $request->content())->dump_as_hash();
+            my $tree = AssetSync::Agent::XML->new(string => $request->content())->dump_as_hash();
             my $body = $tree->{'soapenv:Envelope'}->{'soapenv:Body'};
             if ($body->{RetrieveProperties}) {
                 my $obj = $body->{RetrieveProperties}->{specSet}->{objectSet}->{obj};
@@ -517,7 +517,7 @@ foreach my $test (keys %tests) {
     # ensure a call to LWP::UserAgent->new() return our mock agent
     $module->mock(new => sub { return $mock; });
 
-    my $vpbs = GLPI::Agent::SOAP::VMware->new(
+    my $vpbs = AssetSync::Agent::SOAP::VMware->new(
         user => 'foo',
     );
 

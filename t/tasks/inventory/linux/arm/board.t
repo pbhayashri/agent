@@ -9,9 +9,9 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
+use AssetSync::Test::Inventory;
 
-use GLPI::Agent::Task::Inventory::Linux::ARM::Board;
+use AssetSync::Agent::Task::Inventory::Linux::ARM::Board;
 
 my %arm = (
     'linux-armel-1' => [
@@ -82,14 +82,14 @@ my %arm = (
 
 plan tests => (3 * scalar keys %arm) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %arm) {
     my $file = "resources/linux/proc/cpuinfo/$test";
-    my $board = GLPI::Agent::Task::Inventory::Linux::ARM::Board::_getBoardFromProc(file => $file)
+    my $board = AssetSync::Agent::Task::Inventory::Linux::ARM::Board::_getBoardFromProc(file => $file)
         || { 'not-a-board' => 1 };
     cmp_deeply($board, $arm{$test}[0], $test);
-    my $bios = GLPI::Agent::Task::Inventory::Linux::ARM::Board::_getBios(board => $board)
+    my $bios = AssetSync::Agent::Task::Inventory::Linux::ARM::Board::_getBios(board => $board)
         || { MMODEL => 'not-a-board' };
     cmp_deeply($bios, $arm{$test}[1], $test);
     lives_ok {

@@ -1,11 +1,11 @@
-package GLPI::Agent::SNMP;
+package AssetSync::Agent::SNMP;
 
 use strict;
 use warnings;
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 our $VERSION = '1.2';
 
@@ -29,7 +29,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::SNMP - Base class for SNMP client
+AssetSync::Agent::SNMP - Base class for SNMP client
 
 =head1 DESCRIPTION
 

@@ -1,4 +1,4 @@
-name: GLPI Agent CI
+name: AssetSync Agent CI
 
 # Perl lib caches are updated at least once a week
 # but you can update last-cache-validation-date to invalidate perl lib caches
@@ -79,7 +79,7 @@ jobs:
         path: |
             C:\Strawberry\perl\site\lib
             C:\Strawberry\perl\site\bin
-        key: windows-test-perl-${{ steps.check-version.outputs.cache-version }}-lib-cache-${{ hashFiles('Makefile.PL', '.github/workflows/glpi-agent-ci.yml') }}
+        key: windows-test-perl-${{ steps.check-version.outputs.cache-version }}-lib-cache-${{ hashFiles('Makefile.PL', '.github/workflows/assetsync-agent-ci.yml') }}
     - name: Install Module::Install
       if: steps.cache.outputs.cache-hit != 'true'
       run: cpan -T Module::Install
@@ -112,15 +112,15 @@ jobs:
     - uses: actions/checkout@v4
     - name: Create folders for cached datas
       run: |
-        mkdir C:\Strawberry-perl-for-GLPI-Agent_build\restore
+        mkdir C:\Strawberry-perl-for-AssetSync-Agent_build\restore
       shell: cmd
     - name: Restore built perl from packaging cache
       uses: actions/cache/restore@v4
       id: built-perl-cache
       with:
         path: |
-            C:/Strawberry-perl-for-GLPI-Agent_build/restore
-        key: windows-packaging-perl-cache-x64-${{ hashFiles('contrib\windows\glpi-agent-extlibs-build.pl', 'contrib\windows\glpi-agent-packaging.pl', 'contrib\windows\packaging\*') }}
+            C:/Strawberry-perl-for-AssetSync-Agent_build/restore
+        key: windows-packaging-perl-cache-x64-${{ hashFiles('contrib\windows\assetsync-agent-extlibs-build.pl', 'contrib\windows\assetsync-agent-packaging.pl', 'contrib\windows\packaging\*') }}
     - name: Log warning on cache miss
       if: steps.built-perl-cache.outputs.cache-hit != 'true'
       run: |
@@ -133,7 +133,7 @@ jobs:
         path: |
             C:\Strawberry\perl\site\lib
             C:\Strawberry\perl\site\bin
-        key: built-perl-windows-test-perl-site-cache-x64-${{ hashFiles('contrib\windows\glpi-agent-extlibs-build.pl', 'contrib\windows\glpi-agent-packaging.pl', 'contrib\windows\packaging\*') }}
+        key: built-perl-windows-test-perl-site-cache-x64-${{ hashFiles('contrib\windows\assetsync-agent-extlibs-build.pl', 'contrib\windows\assetsync-agent-packaging.pl', 'contrib\windows\packaging\*') }}
     - name: Update environment
       if: steps.built-perl-cache.outputs.cache-hit == 'true'
       run: |
@@ -156,14 +156,14 @@ jobs:
       shell: cmd
     - name: Run tests script
       if: steps.built-perl-cache.outputs.cache-hit == 'true'
-      run: perl contrib/windows/glpi-agent-built-perl-tests.pl
+      run: perl contrib/windows/assetsync-agent-built-perl-tests.pl
       shell: cmd
     - name: Upload windows built artifacts
       if: success() || failure()
       uses: actions/upload-artifact@v4
       with:
         name: Built-Perl-Windows-Test-Debug
-        path: C:\Strawberry-perl-for-GLPI-Agent_build\output
+        path: C:\Strawberry-perl-for-AssetSync-Agent_build\output
 
   macos-test:
 
@@ -195,7 +195,7 @@ jobs:
         path: |
             /usr/local/Cellar/perl/*/lib/perl5/site_perl
             /usr/local/Cellar/perl/*/bin
-        key: macos-test-perl-${{ steps.check-version.outputs.cache-version }}-lib-cache-${{ hashFiles('Makefile.PL', '.github/workflows/glpi-agent-ci.yml') }}
+        key: macos-test-perl-${{ steps.check-version.outputs.cache-version }}-lib-cache-${{ hashFiles('Makefile.PL', '.github/workflows/assetsync-agent-ci.yml') }}
     - name: Install Module::Install
       if: steps.cache.outputs.cache-hit != 'true'
       run: |

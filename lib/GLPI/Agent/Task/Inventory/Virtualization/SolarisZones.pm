@@ -1,12 +1,12 @@
-package GLPI::Agent::Task::Inventory::Virtualization::SolarisZones;
+package AssetSync::Agent::Task::Inventory::Virtualization::SolarisZones;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Solaris;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Solaris;
 
 sub isEnabled {
     return

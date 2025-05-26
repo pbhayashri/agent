@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::Win32;
+package AssetSync::Agent::Tools::Win32;
 
 use strict;
 use warnings;
@@ -46,10 +46,10 @@ use Win32::TieRegistry (
     ArrayValues => 0,
 );
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Expiration;
-use GLPI::Agent::Tools::Win32::NetAdapter;
-use GLPI::Agent::Version;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Expiration;
+use AssetSync::Agent::Tools::Win32::NetAdapter;
+use AssetSync::Agent::Version;
 
 my $localCodepage;
 
@@ -109,7 +109,7 @@ sub getLocalCodepage {
 
 sub getWMIObjects {
 
-    my $remote = $GLPI::Agent::Tools::remote;
+    my $remote = $AssetSync::Agent::Tools::remote;
     return $remote->getWMIObjects(@_) if $remote;
 
     my $win32_ole_dependent_api = {
@@ -127,10 +127,10 @@ sub _getWMIObjects {
         @_
     );
 
-    GLPI::Agent::Logger->require();
+    AssetSync::Agent::Logger->require();
 
     my $logthat = "";
-    my $logger  = $params{logger} || GLPI::Agent::Logger->new();
+    my $logger  = $params{logger} || AssetSync::Agent::Logger->new();
 
     my $expiration = getExpirationTime();
 
@@ -165,7 +165,7 @@ sub _getWMIObjects {
         }
 
         # Handle Win32::OLE object method, see _getLoggedUsers() method in
-        # GLPI::Agent::Task::Inventory::Win32::Users as example to
+        # AssetSync::Agent::Task::Inventory::Win32::Users as example to
         # use or enhance this feature
         if ($params{method}) {
             my @invokes = ( $params{method} );
@@ -236,7 +236,7 @@ sub getRegistryValue {
         return;
     }
 
-    my $remote = $GLPI::Agent::Tools::remote;
+    my $remote = $AssetSync::Agent::Tools::remote;
     return $remote->getRemoteRegistryValue(%params) if $remote;
 
     my ($root, $keyName, $valueName);
@@ -286,7 +286,7 @@ sub getRegistryKeyValue {
 
     # Required for RemoteInventory or tests
     return $withType ? [ $key->{"/$valueName"}, $key->{"/$valueName"} =~ /^0x/ ? 4 : 1 ] : $key->{"/$valueName"}
-        if $GLPI::Agent::Tools::remote || !Win32API::Registry->require();
+        if $AssetSync::Agent::Tools::remote || !Win32API::Registry->require();
 
     my ($valType, $valData, $dLen) = (0, "", 0);
 
@@ -387,7 +387,7 @@ sub getRegistryKey {
         return;
     }
 
-    my $remote = $GLPI::Agent::Tools::remote;
+    my $remote = $AssetSync::Agent::Tools::remote;
     return $remote->getRemoteRegistryKey(%params) if $remote;
 
     return _getRegistryKey(
@@ -432,7 +432,7 @@ sub loadUserHive {
 
     return unless $params{sid} && $params{file} && has_file($params{file});
 
-    my $remote = $GLPI::Agent::Tools::remote;
+    my $remote = $AssetSync::Agent::Tools::remote;
     return $remote->loadRemoteUserHive(%params) if $remote;
 
     my $rootKey = _getRegistryRoot(root => 'HKEY_USERS')
@@ -451,7 +451,7 @@ sub loadUserHive {
 sub cleanupPrivileges {
 
     # When doing remote inventories, we better need to unload loaded hives
-    my $remote = $GLPI::Agent::Tools::remote;
+    my $remote = $AssetSync::Agent::Tools::remote;
     return $remote->unloadRemoteLoadedUserHives() if $remote;
 
     # Unset required privilege for Users hive loading
@@ -523,7 +523,7 @@ sub runCommand {
     my $winCwd = Cwd::getcwd();
     $winCwd =~ s{/}{\\}g;
 
-    my $provider = lc($GLPI::Agent::Version::PROVIDER);
+    my $provider = lc($AssetSync::Agent::Version::PROVIDER);
     my $template = $ENV{TEMP}."\\".$provider."XXXXXXXXXXX";
     my ($fh, $filename) = File::Temp::tempfile( $template, SUFFIX => '.bat');
     print $fh "cd \"".$winCwd."\"\r\n";
@@ -562,7 +562,7 @@ sub runCommand {
 sub runPowerShell {
     my (%params) = @_;
 
-    my $remote = $GLPI::Agent::Tools::remote;
+    my $remote = $AssetSync::Agent::Tools::remote;
 
     my $script = delete $params{script}
         or return;
@@ -656,7 +656,7 @@ sub getInterfaces {
     my @interfaces;
 
     foreach my $wmiNetAdapter (@networkAdapter) {
-        my $netAdapter = GLPI::Agent::Tools::Win32::NetAdapter->new(
+        my $netAdapter = AssetSync::Agent::Tools::Win32::NetAdapter->new(
             WMI             => $wmiNetAdapter,
             configurations  => \@configurations
         ) or next;
@@ -941,7 +941,7 @@ sub setupWorkerLogger {
     my (%params) = @_;
 
     # Just create a new Logger object in worker to update default module configuration
-    return defined(GLPI::Agent::Logger->new(%params))
+    return defined(AssetSync::Agent::Logger->new(%params))
         unless $worker;
 
     return call_not_thread_safe_api_on_win32({
@@ -978,7 +978,7 @@ sub _keepOleLastError {
         # Don't report not accurate and not failure error
         if ($error != 0x80004005 && $error != 0x80020003) {
             $worker_lasterror = [ $error, $known_ole_errors{$error} ];
-            my $logger = GLPI::Agent::Logger->new();
+            my $logger = AssetSync::Agent::Logger->new();
             $logger->debug2("Win32::OLE ERROR: ".($known_ole_errors{$error}||$lasterror));
         }
     } else {
@@ -1210,7 +1210,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::Win32 - Windows generic functions
+AssetSync::Agent::Tools::Win32 - Windows generic functions
 
 =head1 DESCRIPTION
 

@@ -1,14 +1,14 @@
-package GLPI::Agent::Task::Inventory::Virtualization::Libvirt;
+package AssetSync::Agent::Task::Inventory::Virtualization::Libvirt;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::XML;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::XML;
 
 sub isEnabled {
     return canRun('virsh');
@@ -113,7 +113,7 @@ sub _parseDumpxml {
 
     my $data;
     eval {
-        $data = GLPI::Agent::XML->new(string => $xml)->dump_as_hash();
+        $data = AssetSync::Agent::XML->new(string => $xml)->dump_as_hash();
     };
     if ($EVAL_ERROR) {
         $params{logger}->error("Failed to parse XML output");

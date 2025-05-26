@@ -1,17 +1,17 @@
-package GLPI::Agent::Task::Inventory::Generic::Batteries::Acpiconf;
+package AssetSync::Agent::Task::Inventory::Generic::Batteries::Acpiconf;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Batteries;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Batteries;
 
 # Define some kind of priority so we can update batteries inventory
 our $runAfterIfEnabled = [ qw(
-    GLPI::Agent::Task::Inventory::Generic::Dmidecode::Battery
-    GLPI::Agent::Task::Inventory::Generic::Batteries::Upower
+    AssetSync::Agent::Task::Inventory::Generic::Dmidecode::Battery
+    AssetSync::Agent::Task::Inventory::Generic::Batteries::Upower
 )];
 
 sub isEnabled {

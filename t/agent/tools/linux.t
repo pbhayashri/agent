@@ -7,7 +7,7 @@ use Test::Deep;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Tools::Linux;
+use AssetSync::Agent::Tools::Linux;
 
 my %udev_tests = (
     'ssd' => {
@@ -1178,7 +1178,7 @@ plan tests => 1 +
 
 foreach my $test (keys %udev_tests) {
     my $file = "resources/linux/udev/$test";
-    my $result = GLPI::Agent::Tools::Linux::_parseUdevEntry(
+    my $result = AssetSync::Agent::Tools::Linux::_parseUdevEntry(
         file => $file, device => 'sda'
     );
     cmp_deeply($result, $udev_tests{$test}, "$test udev parsing");

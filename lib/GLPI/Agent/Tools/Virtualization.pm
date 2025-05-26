@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::Virtualization;
+package AssetSync::Agent::Tools::Virtualization;
 
 use strict;
 use warnings;

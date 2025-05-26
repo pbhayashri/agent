@@ -10,11 +10,11 @@ use Test::Deep;
 use Test::Exception;
 use Test::More;
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Version;
-use GLPI::Agent::XML::Response;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Version;
+use AssetSync::Agent::XML::Response;
 
-use GLPI::Agent::Protocol::Contact;
+use AssetSync::Agent::Protocol::Contact;
 
 my %answers = (
     # each case: [
@@ -152,7 +152,7 @@ my %answers = (
 
 plan tests => 7 + 3 * (keys %answers);
 
-my $logger = GLPI::Agent::Logger->new(
+my $logger = AssetSync::Agent::Logger->new(
     logger => [ 'Test' ]
 );
 
@@ -164,7 +164,7 @@ my $installed_tasks = [ "Task1", "Task2", "TaskX" ];
 my $enabled_tasks   = [ "Task1", "Task2" ];
 
 lives_ok {
-    $contact = GLPI::Agent::Protocol::Contact->new(
+    $contact = AssetSync::Agent::Protocol::Contact->new(
         logger      => $logger,
         deviceid    => $deviceid,
         tag         => $tag,
@@ -173,7 +173,7 @@ lives_ok {
     );
 } "CONTACT request";
 
-isa_ok($contact, "GLPI::Agent::Protocol::Contact");
+isa_ok($contact, "AssetSync::Agent::Protocol::Contact");
 
 is($contact->get("tag"), $tag, "Contact request: get tag");
 is($contact->get("deviceid"), $deviceid, "Contact request: get deviceid");
@@ -189,8 +189,8 @@ lives_ok {
 } "Contact request: content must be a JSON";
 
 my $expected_content = {
-    name                => $GLPI::Agent::Version::PROVIDER . "-Agent",
-    version             => $GLPI::Agent::Version::VERSION,
+    name                => $AssetSync::Agent::Version::PROVIDER . "-Agent",
+    version             => $AssetSync::Agent::Version::VERSION,
     deviceid            => $deviceid,
     tag                 => $tag,
     action              => "contact",
@@ -201,8 +201,8 @@ my $expected_content = {
 cmp_deeply($decoded_content, $expected_content, "Contact request: content check");
 
 # CONTACT answers are used in:
-# 1. GLPI::Agent                     when contacting a GLPI server
-# 2. GLPI::Agent::HTTP::Client::OCS  when interpreting a GLPI server answer
+# 1. AssetSync::Agent                     when contacting a AssetSync server
+# 2. AssetSync::Agent::HTTP::Client::OCS  when interpreting a AssetSync server answer
 
 my $answer;
 foreach my $case (keys(%answers)) {
@@ -212,20 +212,20 @@ foreach my $case (keys(%answers)) {
     # Message must fail being a XML response
     if ($case !~ /^unexpected-xml/) {
         dies_ok {
-            $answer = GLPI::Agent::XML::Response->new(
+            $answer = AssetSync::Agent::XML::Response->new(
                 content => $message,
             );
         } "CONTACT answer not an XML: $case";
     } else {
         lives_ok {
-            $answer = GLPI::Agent::XML::Response->new(
+            $answer = AssetSync::Agent::XML::Response->new(
                 content => $message,
             );
         } "CONTACT answer is an XML: $case";
     }
     if ($lives) {
         lives_ok {
-            $answer = GLPI::Agent::Protocol::Contact->new(
+            $answer = AssetSync::Agent::Protocol::Contact->new(
                 logger  => $logger,
                 message => $message,
             );
@@ -233,7 +233,7 @@ foreach my $case (keys(%answers)) {
         ok($answer->is_valid_message == $valid, "Contact answer $case");
     } else {
         dies_ok {
-            $answer = GLPI::Agent::Protocol::Contact->new(
+            $answer = AssetSync::Agent::Protocol::Contact->new(
                 logger  => $logger,
                 message => $message,
             );

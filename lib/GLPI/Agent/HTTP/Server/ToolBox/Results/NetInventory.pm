@@ -1,9 +1,9 @@
-package GLPI::Agent::HTTP::Server::ToolBox::Results::NetInventory;
+package AssetSync::Agent::HTTP::Server::ToolBox::Results::NetInventory;
 
 use strict;
 use warnings;
 
-use parent "GLPI::Agent::HTTP::Server::ToolBox::Results::Fields";
+use parent "AssetSync::Agent::HTTP::Server::ToolBox::Results::Fields";
 
 use Memoize;
 

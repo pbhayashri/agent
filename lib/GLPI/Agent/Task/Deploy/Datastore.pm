@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Deploy::Datastore;
+package AssetSync::Agent::Task::Deploy::Datastore;
 
 use strict;
 use warnings;
@@ -9,11 +9,11 @@ use File::Spec;
 use File::Path qw(make_path);
 use UNIVERSAL::require;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Storage;
-use GLPI::Agent::Task::Deploy::Datastore::WorkDir;
-use GLPI::Agent::Task::Deploy::DiskFree;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Storage;
+use AssetSync::Agent::Task::Deploy::Datastore::WorkDir;
+use AssetSync::Agent::Task::Deploy::DiskFree;
 
 sub new {
     my ($class, %params) = @_;
@@ -24,7 +24,7 @@ sub new {
         config => $params{config},
         path   => File::Spec->rel2abs($params{path}),
         logger => $params{logger} ||
-                  GLPI::Agent::Logger->new(),
+                  AssetSync::Agent::Logger->new(),
     };
 
     die("$class: No datastore path\n") unless $self->{path};
@@ -85,7 +85,7 @@ sub createWorkDir {
     make_path($path);
     return unless -d $path;
 
-    return GLPI::Agent::Task::Deploy::Datastore::WorkDir->new(
+    return AssetSync::Agent::Task::Deploy::Datastore::WorkDir->new(
         path => $path,
         logger => $self->{logger}
     );
@@ -117,7 +117,7 @@ sub getP2PNet {
     my ($self) = @_;
 
     if (!$self->{p2pnetstorage}) {
-        $self->{p2pnetstorage} = GLPI::Agent::Storage->new(
+        $self->{p2pnetstorage} = AssetSync::Agent::Storage->new(
             logger    => $self->{logger},
             directory => $self->{config}->{vardir}
         );

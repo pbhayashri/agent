@@ -1,4 +1,4 @@
-package GLPI::Agent::Task;
+package AssetSync::Agent::Task;
 
 use strict;
 use warnings;
@@ -6,8 +6,8 @@ use warnings;
 use English qw(-no_match_vars);
 use File::Find;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Logger;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Logger;
 
 sub new {
     my ($class, %params) = @_;
@@ -16,7 +16,7 @@ sub new {
 
     my $self = {
         logger       => $params{logger} ||
-                        GLPI::Agent::Logger->new(),
+                        AssetSync::Agent::Logger->new(),
         config       => $params{config},
         datadir      => $params{datadir},
         event        => $params{event},
@@ -149,7 +149,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Task - Base class for agent task
+AssetSync::Agent::Task - Base class for agent task
 
 =head1 DESCRIPTION
 

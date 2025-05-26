@@ -7,31 +7,31 @@ use Test::Deep;
 use Test::Exception;
 use Test::More;
 
-use GLPI::Agent::XML;
-use GLPI::Agent::XML::Query;
+use AssetSync::Agent::XML;
+use AssetSync::Agent::XML::Query;
 
 plan tests => 8;
 
 my $message;
 throws_ok {
-    $message = GLPI::Agent::XML::Query->new(
+    $message = AssetSync::Agent::XML::Query->new(
         deviceid => 'foo',
     );
 } qr/^no query/, 'no query type';
 
 lives_ok {
-    $message = GLPI::Agent::XML::Query->new(
+    $message = AssetSync::Agent::XML::Query->new(
         deviceid => 'foo',
         query    => 'TEST',
         foo      => 'foo',
     );
 } 'everything OK';
 
-isa_ok($message, 'GLPI::Agent::XML::Query');
+isa_ok($message, 'AssetSync::Agent::XML::Query');
 
-my $xml = GLPI::Agent::XML->new(string => $message->getContent());
+my $xml = AssetSync::Agent::XML->new(string => $message->getContent());
 
-isa_ok($xml, 'GLPI::Agent::XML');
+isa_ok($xml, 'AssetSync::Agent::XML');
 
 cmp_deeply(
     $xml->dump_as_hash(),
@@ -46,7 +46,7 @@ cmp_deeply(
 );
 
 lives_ok {
-    $message = GLPI::Agent::XML::Query->new(
+    $message = AssetSync::Agent::XML::Query->new(
         deviceid => 'foo',
         query    => 'TEST',
         foo => 'foo',
@@ -63,7 +63,7 @@ lives_ok {
     );
 } 'everything OK';
 
-isa_ok($message, 'GLPI::Agent::XML::Query');
+isa_ok($message, 'AssetSync::Agent::XML::Query');
 
 cmp_deeply(
     $xml->string($message->getContent())->dump_as_hash(),

@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::Network;
+package AssetSync::Agent::Tools::Network;
 
 use strict;
 use warnings;
@@ -9,7 +9,7 @@ use Net::IP qw(:PROC);
 use Net::hostent;
 use Socket;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 our @EXPORT = qw(
     $mac_address_pattern
@@ -290,7 +290,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::Network - Network-related patterns and functions
+AssetSync::Agent::Tools::Network - Network-related patterns and functions
 
 =head1 DESCRIPTION
 

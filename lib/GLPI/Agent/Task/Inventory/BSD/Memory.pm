@@ -1,11 +1,11 @@
-package GLPI::Agent::Task::Inventory::BSD::Memory;
+package AssetSync::Agent::Task::Inventory::BSD::Memory;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant    category    => "memory";
 

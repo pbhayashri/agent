@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::Inventory::Win32::CPU;
+package AssetSync::Agent::Task::Inventory::Win32::CPU;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 ################################################################################
 #### Needed to support this module under other platforms than MSWin32 ##########
@@ -20,9 +20,9 @@ BEGIN {
 use English qw(-no_match_vars);
 use Win32;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Win32;
-use GLPI::Agent::Tools::Generic;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Win32;
+use AssetSync::Agent::Tools::Generic;
 
 use constant    category    => "cpu";
 

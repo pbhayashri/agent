@@ -1,17 +1,17 @@
-package GLPI::Agent::Task::Inventory::Provider;
+package AssetSync::Agent::Task::Inventory::Provider;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use Config;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
-use GLPI::Agent::Version;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Version;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Tools;
 
 use constant    category    => "provider";
 
@@ -29,14 +29,14 @@ sub doInventory {
     my $logger = $params{logger};
 
     my $provider = {
-        NAME            => $GLPI::Agent::Version::PROVIDER,
-        VERSION         => $GLPI::Agent::Version::VERSION,
+        NAME            => $AssetSync::Agent::Version::PROVIDER,
+        VERSION         => $AssetSync::Agent::Version::VERSION,
         PROGRAM         => $PROGRAM || "$PROGRAM_NAME",
         PERL_EXE        => "$EXECUTABLE_NAME",
         PERL_VERSION    => "$PERL_VERSION"
     };
 
-    my $COMMENTS = $GLPI::Agent::Version::COMMENTS || [];
+    my $COMMENTS = $AssetSync::Agent::Version::COMMENTS || [];
     foreach my $comment (@{$COMMENTS}) {
         push @{$provider->{COMMENTS}}, $comment;
     }
@@ -53,8 +53,8 @@ sub doInventory {
         ];
         $provider->{PERL_INC} = join(":",@INC);
 
-        $provider->{PERL_ARGS} = "@{$GLPI::Agent::Tools::ARGV}"
-            if @{$GLPI::Agent::Tools::ARGV};
+        $provider->{PERL_ARGS} = "@{$AssetSync::Agent::Tools::ARGV}"
+            if @{$AssetSync::Agent::Tools::ARGV};
 
         my @modules = ();
         foreach my $module (qw(

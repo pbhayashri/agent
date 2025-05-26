@@ -1,14 +1,14 @@
-package GLPI::Agent::Task::Inventory::Generic::Firewall::Systemd;
+package AssetSync::Agent::Task::Inventory::Generic::Firewall::Systemd;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools::Constants;
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools::Constants;
+use AssetSync::Agent::Tools;
 
-our $runMeIfTheseChecksFailed = ["GLPI::Agent::Task::Inventory::Generic::Firewall::Ufw"];
+our $runMeIfTheseChecksFailed = ["AssetSync::Agent::Task::Inventory::Generic::Firewall::Ufw"];
 
 sub isEnabled {
     return

@@ -6,7 +6,7 @@ use warnings;
 use Test::Deep;
 use Test::More;
 
-use GLPI::Agent::SNMP::Mock;
+use AssetSync::Agent::SNMP::Mock;
 
 my %walks = (
     sample1 => {
@@ -63,7 +63,7 @@ foreach my $test (keys %walks) {
 plan tests => $testCpt;
 
 foreach my $walk (keys %walks) {
-    my $snmp = GLPI::Agent::SNMP::Mock->new(
+    my $snmp = AssetSync::Agent::SNMP::Mock->new(
         file => "resources/walks/$walk.walk"
     );
 

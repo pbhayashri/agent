@@ -1,4 +1,4 @@
-package GLPI::Agent::Daemon;
+package AssetSync::Agent::Daemon;
 
 use strict;
 use warnings;
@@ -20,16 +20,16 @@ use constant IPC_EVENT  => 'EVENT';
 use constant IPC_ABORT  => 'ABORT';
 use constant IPC_EFILE  => 'EFILE';
 
-use parent 'GLPI::Agent';
+use parent 'AssetSync::Agent';
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Version;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Generic;
-use GLPI::Agent::Protocol::Contact;
-use GLPI::Agent::Event;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Version;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Generic;
+use AssetSync::Agent::Protocol::Contact;
+use AssetSync::Agent::Event;
 
-my $PROVIDER = $GLPI::Agent::Version::PROVIDER;
+my $PROVIDER = $AssetSync::Agent::Version::PROVIDER;
 
 # Avoid being killed on early SIGUSR1 signal
 my $runnow = 0;
@@ -144,10 +144,10 @@ sub run {
 
             # Contact server if required and cache responses
             if ($event->taskrun) {
-                if ((!ref($responses) || !$responses->{CONTACT}) && $target->isGlpiServer()) {
+                if ((!ref($responses) || !$responses->{CONTACT}) && $target->isAssetSyncServer()) {
                     $responses->{CONTACT} = $self->getContact($target, [$target->plannedTasks()]);
                 }
-                if ((!ref($responses) || !$responses->{PROLOG}) && $target->isType('server') && (!$target->isGlpiServer() || $event->task =~ /^net(discovery|inventory)$/i)) {
+                if ((!ref($responses) || !$responses->{PROLOG}) && $target->isType('server') && (!$target->isAssetSyncServer() || $event->task =~ /^net(discovery|inventory)$/i)) {
                     $responses->{PROLOG} = $self->getProlog($target);
                 }
                 if ($target->isType('server')) {
@@ -285,9 +285,9 @@ sub runTargetEvent {
         my $server_response = $responses->{PROLOG};
         if ($responses->{CONTACT}) {
             # Be sure to use expected response for task
-            my $task_server = $target->getTaskServer($task) // 'glpi';
+            my $task_server = $target->getTaskServer($task) // 'assetsync';
             $server_response = $responses->{CONTACT}
-                if $task_server eq 'glpi';
+                if $task_server eq 'assetsync';
         }
         eval {
             $self->runTask($target, $realtask, $server_response);
@@ -297,7 +297,7 @@ sub runTargetEvent {
 
     } else {
         # Simulate CONTACT server response
-        my $contact = GLPI::Agent::Protocol::Contact->new(
+        my $contact = AssetSync::Agent::Protocol::Contact->new(
             tasks => { $task => { params => [ $event->params ] }}
         );
         eval {
@@ -357,8 +357,8 @@ sub handleTaskCache {
 
     # Try to cache data provided by the task if the next run can require it
     my $cachedata = $task->cachedata();
-    if (defined($cachedata) && GLPI::Agent::Protocol::Message->require()) {
-        my $data = GLPI::Agent::Protocol::Message->new(message => $cachedata);
+    if (defined($cachedata) && AssetSync::Agent::Protocol::Message->require()) {
+        my $data = AssetSync::Agent::Protocol::Message->new(message => $cachedata);
         $self->forked_process_event("AGENTCACHE,$name,".$data->getRawContent());
     }
 }
@@ -366,10 +366,10 @@ sub handleTaskCache {
 sub handleTaskEvent {
     my ($self, $name, $task) = @_;
 
-    return unless $task && GLPI::Agent::Protocol::Message->require();
+    return unless $task && AssetSync::Agent::Protocol::Message->require();
 
     foreach my $event ($task->events()) {
-        my $message = GLPI::Agent::Protocol::Message->new(message => $event->dump_for_message());
+        my $message = AssetSync::Agent::Protocol::Message->new(message => $event->dump_for_message());
         $self->forked_process_event("TASKEVENT,".($event->task||$name).",".$message->getRawContent());
     }
 }
@@ -501,12 +501,12 @@ sub events_cb {
     my ($type, $task, $dump) = $event =~ /^(AGENTCACHE|TASKEVENT),([^,]*),(.*)$/ms
         or return 0;
 
-    if ($type eq 'AGENTCACHE' && $dump =~ /^\{/ && GLPI::Agent::Protocol::Message->require()) {
-        my $data = GLPI::Agent::Protocol::Message->new(message => $dump);
+    if ($type eq 'AGENTCACHE' && $dump =~ /^\{/ && AssetSync::Agent::Protocol::Message->require()) {
+        my $data = AssetSync::Agent::Protocol::Message->new(message => $dump);
         $self->{_cache}->{$task} = $data->get;
-    } elsif ($type eq 'TASKEVENT' && $dump =~ /^\{/ && GLPI::Agent::Protocol::Message->require()) {
-        my $message = GLPI::Agent::Protocol::Message->new(message => $dump);
-        my $event = GLPI::Agent::Event->new(from_message => $message->get);
+    } elsif ($type eq 'TASKEVENT' && $dump =~ /^\{/ && AssetSync::Agent::Protocol::Message->require()) {
+        my $message = AssetSync::Agent::Protocol::Message->new(message => $dump);
+        my $event = AssetSync::Agent::Event->new(from_message => $message->get);
         my $targetid = $event->target;
         my @targets = grep { !$targetid || $_->id() eq $targetid } $self->getTargets();
         map { $_->addEvent($event) } @targets;
@@ -549,7 +549,7 @@ sub handleChildren {
                         $size = unpack("S", $size)
                             if $child->{in}->sysread($size, 2);
                         if ($child->{in}->sysread($file, $len-2)) {
-                            $event = GLPI::Agent::Tools::Win32::readEventFile($file, $size);
+                            $event = AssetSync::Agent::Tools::Win32::readEventFile($file, $size);
                             if (!defined($event) || length($event) != $size) {
                                 # Limit log rate of IPC_EVENT event read failure from IPC_EFILE
                                 if (!$self->{_efile_logger_failure_timeout} || time > $self->{_efile_logger_failure_timeout}) {
@@ -646,8 +646,8 @@ sub fork {
                 $ipc_poller = IO::Poll->new();
             }
         } else {
-            GLPI::Agent::Tools::Win32->require();
-            $ipc_poller = GLPI::Agent::Tools::Win32::newPoller();
+            AssetSync::Agent::Tools::Win32->require();
+            $ipc_poller = AssetSync::Agent::Tools::Win32::newPoller();
         }
     }
 
@@ -679,7 +679,7 @@ sub fork {
                     } :
                     sub {
                         my ($poller) = @_;
-                        return GLPI::Agent::Tools::Win32::getPoller($poller);
+                        return AssetSync::Agent::Tools::Win32::getPoller($poller);
                     };
             }
             $self->{_fork}->{$pid}->{in}  = $child_ipc;
@@ -743,17 +743,17 @@ sub forked_process_event {
         return if $type eq 'LOGGER';
 
         # Convert event to efile: event content in a file
-        my $file = GLPI::Agent::Tools::Win32::getEventFile($self->{vardir}, $event);
+        my $file = AssetSync::Agent::Tools::Win32::getEventFile($self->{vardir}, $event);
         my $efile = pack("S", length($event)).$file;
         $self->{_ipc_out}->syswrite(IPC_EFILE.pack("S", length($efile)).$efile);
-        GLPI::Agent::Tools::Win32::setPoller($self->{_ipc_pollin});
+        AssetSync::Agent::Tools::Win32::setPoller($self->{_ipc_pollin});
         return;
     }
 
     # Send IPC_EVENT in one message to prevent concurrent syswrite() calls from
     # Parallel::ForkManager children to mix up messages
     $self->{_ipc_out}->syswrite(IPC_EVENT.pack("S", length($event)).$event);
-    GLPI::Agent::Tools::Win32::setPoller($self->{_ipc_pollin})
+    AssetSync::Agent::Tools::Win32::setPoller($self->{_ipc_pollin})
         if $OSNAME eq 'MSWin32';
 }
 
@@ -767,7 +767,7 @@ sub abort_child {
         next unless $forked->{id} && $forked->{id} eq $id;
         $self->{logger}->debug("aborting $pid child");
         $forked->{out}->syswrite(IPC_ABORT);
-        GLPI::Agent::Tools::Win32::setPoller($forked->{pollin})
+        AssetSync::Agent::Tools::Win32::setPoller($forked->{pollin})
             if $OSNAME eq 'MSWin32';
         kill 'TERM', $pid;
         return;
@@ -844,11 +844,11 @@ sub loadHttpInterface {
         delete $self->{server};
     }
 
-    GLPI::Agent::HTTP::Server->require();
+    AssetSync::Agent::HTTP::Server->require();
     if ($EVAL_ERROR) {
         $logger->error("Failed to load HTTP server: $EVAL_ERROR");
     } else {
-        $self->{server} = GLPI::Agent::HTTP::Server->new(%server_config);
+        $self->{server} = AssetSync::Agent::HTTP::Server->new(%server_config);
         $self->{server}->init();
     }
 }

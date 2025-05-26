@@ -7,7 +7,7 @@ use Test::Deep;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Tools::License;
+use AssetSync::Agent::Tools::License;
 
 my %adobe_tests = (
     'sample1' => [

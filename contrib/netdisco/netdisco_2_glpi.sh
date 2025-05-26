@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# netdisco_2_glpi.sh - make fusioninventory-compatible xml from netdisco data
-# format is netdisco_2_glpi.sh target
+# netdisco_2_AssetSync.sh - make fusioninventory-compatible xml from netdisco data
+# format is netdisco_2_AssetSync.sh target
 
 # POC Netdisco-to-Fusioninventory XML generator
 
@@ -54,7 +54,7 @@ echo -e  "        <COMMENTS>$COMMENTS</COMMENTS>"
         export CONTACT=`echo -e  "select contact from device where ip = '$IP' " | psql -Aqt `
 echo -e  "        <CONTACT>$CONTACT</CONTACT>"
 echo -e  "        <FIRMWARE>$VERSION</FIRMWARE>"
-## this is the GLPI device ID - leave at zero and let GLPI find it.
+## this is the AssetSync device ID - leave at zero and let AssetSync find it.
 echo -e  "        <ID>0</ID>"
 echo -e  "        <IPS>"                                                                                                                                                                                                                     
   for DEVIP in `echo -e  "select alias from device_ip where ip = '$IP' order by alias asc " | psql -Aqt `                                                                                                                                    
@@ -83,7 +83,7 @@ echo -e  "        <NAME>$NAME</NAME>"
 ## Huawei Cloudengines. 
 ### .1.3.6.1.2.1.47.1.1.1.1.11.
 #Local kludge: This is a stack. If the Stack Master changes then so does the reported SN 
-# (and the system MAC) which means that Fusion/GLPI treats it as a different (new) switch.
+# (and the system MAC) which means that Fusion/AssetSync treats it as a different (new) switch.
 #
 # There's a PR in train to handle this better
 #
@@ -295,7 +295,7 @@ echo -e  "          <IFNUMBER>$IFNUMBER</IFNUMBER>"
 #### #############################################################
 
 
-### ND can tell if the neighbour is a "upstream" (switch), but glpi doesn't know how to handle that
+### ND can tell if the neighbour is a "upstream" (switch), but assetsync doesn't know how to handle that
 
 ## TRUNK == "More than one VLAN"
         export TRUNK=`echo -e  "select count(vlan) from device_port_vlan where ip = '$IP' and port= '$PORT' " | psql -Aqt `
@@ -312,7 +312,7 @@ echo -e  "          <IFNUMBER>$IFNUMBER</IFNUMBER>"
         export VLANNAME=`echo -e "select description from device_vlan where ip = '$IP' and vlan= '$VLAN' " | psql -Aqt `
 
 ## If you have gvrp, vlans keep appearing on various switches without descriptions 
-## and this adds bogons to GLPI. This just forcibly cleans that up
+## and this adds bogons to AssetSync. This just forcibly cleans that up
 
    case "$VLANNAME" in
     default)

@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Deploy::UserCheck;
+package AssetSync::Agent::Task::Deploy::UserCheck;
 
 use strict;
 use warnings;
@@ -279,7 +279,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Task::Deploy::UserCheck - Deploy task user checks
+AssetSync::Agent::Task::Deploy::UserCheck - Deploy task user checks
 
 =head1 DESCRIPTION
 
@@ -302,7 +302,7 @@ While instanciated, the
 
 =head2 PACKAGE->new(%params)
 
-Returns a newly created GLPI::Agent::Task::Deploy::UserCheck
+Returns a newly created AssetSync::Agent::Task::Deploy::UserCheck
 object.
 
 Availables parameters:

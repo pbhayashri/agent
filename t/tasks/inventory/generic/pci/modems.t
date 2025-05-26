@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Generic::PCI::Modems;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Generic::PCI::Modems;
 
 my %tests = (
     'dell-xt2' => [],
@@ -19,11 +19,11 @@ my %tests = (
 
 plan tests => (2 * scalar keys %tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %tests) {
     my $file = "resources/generic/lspci/$test";
-    my @modems = GLPI::Agent::Task::Inventory::Generic::PCI::Modems::_getModems(file => $file);
+    my @modems = AssetSync::Agent::Task::Inventory::Generic::PCI::Modems::_getModems(file => $file);
     cmp_deeply(\@modems, $tests{$test}, $test);
     lives_ok {
         $inventory->addEntry(section => 'MODEMS', entry => $_)

@@ -1,15 +1,15 @@
-package GLPI::Agent::Task::Inventory::Generic::OS;
+package AssetSync::Agent::Task::Inventory::Generic::OS;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use English qw(-no_match_vars);
 use Net::Domain qw(hostfqdn hostdomain);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Hostname;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Hostname;
 
 use constant    category    => "os";
 

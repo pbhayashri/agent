@@ -11,12 +11,12 @@ use Getopt::Long;
 use File::Temp;
 use Pod::Usage;
 
-use GLPI::Agent::Task::Inventory;
-use GLPI::Agent::Target::Local;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Config;
-use GLPI::Agent::Event;
-use GLPI::Agent::Version;
+use AssetSync::Agent::Task::Inventory;
+use AssetSync::Agent::Target::Local;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Config;
+use AssetSync::Agent::Event;
+use AssetSync::Agent::Version;
 
 my $options = {
     debug  => 0,
@@ -29,7 +29,7 @@ GetOptions(
     'additional-content=s',
     'backend-collect-timeout=s',
     'credentials=s@',
-    'glpi_version=s',
+    'AssetSync_version=s',
     'html',
     'itemtype=s',
     'json',
@@ -46,11 +46,11 @@ GetOptions(
 ) or pod2usage(-verbose => 0);
 
 if ($options->{version}) {
-    my $PROVIDER = $GLPI::Agent::Version::PROVIDER;
+    my $PROVIDER = $AssetSync::Agent::Version::PROVIDER;
     map { print $_."\n" }
-        "$PROVIDER Inventory task $GLPI::Agent::Task::Inventory::VERSION",
-        "based on $PROVIDER Agent v$GLPI::Agent::Version::VERSION",
-        @{$GLPI::Agent::Version::COMMENTS}
+        "$PROVIDER Inventory task $AssetSync::Agent::Task::Inventory::VERSION",
+        "based on $PROVIDER Agent v$AssetSync::Agent::Version::VERSION",
+        @{$AssetSync::Agent::Version::COMMENTS}
         ;
     exit 0;
 }
@@ -63,7 +63,7 @@ if ($options->{partial}) {
     $options->{partial} = join(",", $options->{partial}, $options->{"required-category"})
         if $options->{"required-category"};
 
-    $event = GLPI::Agent::Event->new(
+    $event = AssetSync::Agent::Event->new(
         task        => "inventory",
         partial     => 1,
         category    => $options->{partial},
@@ -71,19 +71,19 @@ if ($options->{partial}) {
     );
 }
 
-my $config = GLPI::Agent::Config->new(
+my $config = AssetSync::Agent::Config->new(
     options => $options,
 );
 
-my $inventory = GLPI::Agent::Task::Inventory->new(
-    target => GLPI::Agent::Target::Local->new(
+my $inventory = AssetSync::Agent::Task::Inventory->new(
+    target => AssetSync::Agent::Target::Local->new(
         path       => '-',
         html       => $options->{html},
         json       => $options->{json},
         basevardir => File::Temp->newdir(CLEANUP => 1),
-        glpi       => $options->{"glpi-version"},
+        assetsync       => $options->{"assetsync-version"},
     ),
-    logger  => GLPI::Agent::Logger->new(config => $config),
+    logger  => AssetSync::Agent::Logger->new(config => $config),
     datadir => $setup{datadir},
     event   => $event,
     config  => $config
@@ -100,11 +100,11 @@ __END__
 
 =head1 NAME
 
-glpi-inventory - Standalone inventory
+assetsync-inventory - Standalone inventory
 
 =head1 SYNOPSIS
 
-glpi-inventory [options]
+assetsync-inventory [options]
 
   Options:
     --scan-homedirs                scan use home directories (false)
@@ -119,8 +119,8 @@ glpi-inventory [options]
     -t --tag=TAG                   mark the machine with given tag
     --backend-collect-timeout=TIME timeout for inventory modules
                                      execution (30)
-    --glpi-version=VERSION         set targeted glpi version to enable supported features
-    --itemtype=TYPE                set asset type for target supporting genericity like GLPI 11+
+    --assetsync-version=VERSION         set targeted assetsync version to enable supported features
+    --itemtype=TYPE                set asset type for target supporting genericity like AssetSync 11+
     --additional-content=FILE      additional inventory content file
     --assetname-support=1|2        [unix/linux only] set the asset name depending on the given value:
                                     - 1 (the default), the short hostname is used as asset name
@@ -133,5 +133,5 @@ glpi-inventory [options]
 
 =head1 DESCRIPTION
 
-F<glpi-inventory> can be used to run an inventory task without a GLPI
+F<assetsync-inventory> can be used to run an inventory task without a AssetSync
 server.

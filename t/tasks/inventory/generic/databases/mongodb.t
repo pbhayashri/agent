@@ -11,9 +11,9 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Logger;
-use GLPI::Agent::Task::Inventory::Generic::Databases::MongoDB;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Task::Inventory::Generic::Databases::MongoDB;
 
 $Data::Dumper::Indent    = 1;
 $Data::Dumper::Terse     = 1;
@@ -99,10 +99,10 @@ my %credentials = (
 
 plan tests => (2 * scalar keys %db_tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
-my $logger = GLPI::Agent::Logger->new(
-    config => GLPI::Agent::Config->new(
+my $logger = AssetSync::Agent::Logger->new(
+    config => AssetSync::Agent::Config->new(
         options => {
             config => 'none',
             logger => 'Test'
@@ -113,7 +113,7 @@ my $logger = GLPI::Agent::Logger->new(
 foreach my $test (keys %db_tests) {
     my $file  = "resources/generic/databases/$test";
     my ($version) = $test =~ /^mongodb-(\d+)\./;
-    my $dbs   = GLPI::Agent::Task::Inventory::Generic::Databases::MongoDB::_getDatabaseService(
+    my $dbs   = AssetSync::Agent::Task::Inventory::Generic::Databases::MongoDB::_getDatabaseService(
         logger      => $logger,
         file        => $file,
         credentials => $credentials{$test} // [{}],

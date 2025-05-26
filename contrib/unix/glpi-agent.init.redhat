@@ -1,35 +1,35 @@
 #!/bin/sh
 #
 # chkconfig: - 88 12
-# description:  GLPI Agent
-# processname: glpi-agent
-# config: /etc/sysconfig/glpi-agent
-# pidfile: /var/run/glpi-agent.pid
+# description:  AssetSync Agent
+# processname: assetsync-agent
+# config: /etc/sysconfig/assetsync-agent
+# pidfile: /var/run/assetsync-agent.pid
 ### BEGIN INIT INFO
-# Provides: glpi-agent
+# Provides: assetsync-agent
 # Required-Start: $remote_fs $network $named $syslog
 # Required-Stop: $remote_fs $network $named $syslog
 # Default-Start: 3 5
 # Default-Stop: 0 1 6
-# Short-Description: GLPI agent
-# Description: GLPI agent
+# Short-Description: AssetSync agent
+# Description: AssetSync agent
 ### END INIT INFO
 
 # source function library
 . /etc/rc.d/init.d/functions
 
-desc="GLPI Agent"
-prog=glpi-agent
+desc="AssetSync Agent"
+prog=assetsync-agent
 lockfile=/var/lock/subsys/$prog
 pidfile=/var/run/$prog.pid
 
-if [ -r /etc/sysconfig/glpi-agent ]; then
-    . /etc/sysconfig/glpi-agent
+if [ -r /etc/sysconfig/assetsync-agent ]; then
+    . /etc/sysconfig/assetsync-agent
 fi
 
 start() {
     echo -n "Starting $prog: "
-    daemon glpi-agent --daemon $OPTIONS --pidfile $pidfile 2>/dev/null
+    daemon assetsync-agent --daemon $OPTIONS --pidfile $pidfile 2>/dev/null
     RETVAL=$?
     echo
     [ $RETVAL -eq 0 ] && touch $lockfile

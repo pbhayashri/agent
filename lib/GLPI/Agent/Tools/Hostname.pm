@@ -1,4 +1,4 @@
-package GLPI::Agent::Tools::Hostname;
+package AssetSync::Agent::Tools::Hostname;
 
 use strict;
 use warnings;
@@ -14,7 +14,7 @@ our @EXPORT = qw(
     getRemoteHostdomain
 );
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 BEGIN {
     if ($OSNAME eq 'MSWin32') {
@@ -32,7 +32,7 @@ sub getHostname {
 
     my $hostname;
 
-    my $remote = $GLPI::Agent::Tools::remote;
+    my $remote = $AssetSync::Agent::Tools::remote;
     if ($remote) {
         if ($params{fqdn}) {
             $hostname = $remote->getRemoteFQDN()
@@ -89,12 +89,12 @@ sub _getHostnameWindows {
 }
 
 sub getRemoteFqdn {
-    my $remote = $GLPI::Agent::Tools::remote;
+    my $remote = $AssetSync::Agent::Tools::remote;
     return $remote->getRemoteFQDN() if $remote;
 }
 
 sub getRemoteHostdomain {
-    my $remote = $GLPI::Agent::Tools::remote;
+    my $remote = $AssetSync::Agent::Tools::remote;
     return $remote->getRemoteHostDomain() if $remote;
 }
 
@@ -103,7 +103,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Tools::Hostname - OS-independent hostname computing
+AssetSync::Agent::Tools::Hostname - OS-independent hostname computing
 
 =head1 DESCRIPTION
 

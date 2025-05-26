@@ -1,14 +1,14 @@
-package GLPI::Agent::Task::Inventory::Generic::Hostname;
+package AssetSync::Agent::Task::Inventory::Generic::Hostname;
 
 use English qw(-no_match_vars);
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Hostname;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Hostname;
 
 use constant    category    => "hardware";
 

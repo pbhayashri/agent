@@ -3,9 +3,9 @@
 use strict;
 use warnings;
 
-use GLPI::Agent::Tools::Constants;
-use GLPI::Agent::Task::Inventory::Generic::Firewall::Ufw;
-use GLPI::Agent::Task::Inventory::Generic::Firewall::Systemd;
+use AssetSync::Agent::Tools::Constants;
+use AssetSync::Agent::Task::Inventory::Generic::Firewall::Ufw;
+use AssetSync::Agent::Task::Inventory::Generic::Firewall::Systemd;
 
 use Test::More;
 
@@ -23,14 +23,14 @@ plan tests => scalar (keys %$expectedUbuntu)
         + scalar (keys %$expectedFedora);
 
 for my $testfile (keys %$expectedUbuntu) {
-    my $statusGot = GLPI::Agent::Task::Inventory::Generic::Firewall::Ufw::_getFirewallStatus(
+    my $statusGot = AssetSync::Agent::Task::Inventory::Generic::Firewall::Ufw::_getFirewallStatus(
         file => 'resources/linux/firewall/' . $testfile
     );
     ok ($statusGot eq $expectedUbuntu->{$testfile});
 }
 
 for my $testfile (keys %$expectedFedora) {
-    my $statusGot = GLPI::Agent::Task::Inventory::Generic::Firewall::Systemd::_getFirewallStatus(
+    my $statusGot = AssetSync::Agent::Task::Inventory::Generic::Firewall::Systemd::_getFirewallStatus(
         file => 'resources/linux/firewall/' . $testfile
     );
     ok ($statusGot eq $expectedFedora->{$testfile}, $testfile . ' : ' . $statusGot . ' eq ' . $expectedFedora->{$testfile} . ' ?');

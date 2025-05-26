@@ -8,8 +8,8 @@ use Test::Deep qw(cmp_deeply);
 use Test::Exception;
 use Test::More;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::XML::Response;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::XML::Response;
 
 my %tests = (
     message1 => {
@@ -159,7 +159,7 @@ plan tests => 2 * (scalar keys %tests);
 foreach my $test (keys %tests) {
     my $file = "resources/xml/response/$test.xml";
     my $string = getAllLines(file => $file);
-    my $message = GLPI::Agent::XML::Response->new(
+    my $message = AssetSync::Agent::XML::Response->new(
         content => $string
     );
 

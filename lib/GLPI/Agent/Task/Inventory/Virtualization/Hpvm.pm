@@ -1,13 +1,13 @@
-package GLPI::Agent::Task::Inventory::Virtualization::Hpvm;
+package AssetSync::Agent::Task::Inventory::Virtualization::Hpvm;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Virtualization;
-use GLPI::Agent::XML;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Virtualization;
+use AssetSync::Agent::XML;
 
 sub isEnabled {
     return canRun('hpvmstatus');
@@ -32,7 +32,7 @@ sub _getMachines {
     my $xml = getAllLines(@_);
     return unless $xml;
 
-    my $data = GLPI::Agent::XML->new(string => $xml)->dump_as_hash();
+    my $data = AssetSync::Agent::XML->new(string => $xml)->dump_as_hash();
     my $mvs = $data->{pman}->{virtual_machine};
 
     my %units = (

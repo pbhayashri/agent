@@ -15,10 +15,10 @@ use Pod::Usage;
 use Cpanel::JSON::XS;
 use Data::UUID;
 
-use GLPI::Agent::XML;
+use AssetSync::Agent::XML;
 
 my $options = {
-    useragent => 'GLPI-Injector'
+    useragent => 'AssetSync-Injector'
 };
 
 my @failedFiles;
@@ -144,7 +144,7 @@ sub sendContent {
     if ($options->{"xml-ua"} || $options->{"json-ua"}) {
         if ($content =~ /^<\?xml/) {
             undef $agentid;
-            my $xml = GLPI::Agent::XML->new(string => $content);
+            my $xml = AssetSync::Agent::XML->new(string => $content);
             my $tree = $xml->dump_as_hash();
             $useragent = $tree->{REQUEST}->{CONTENT}->{VERSIONCLIENT}
                 if $tree && $tree->{REQUEST} && $tree->{REQUEST}->{CONTENT} &&
@@ -243,7 +243,7 @@ sub sendContent {
     );
 
     if ($agentid) {
-        $request->header('GLPI-Agent-ID' => $agentid);
+        $request->header('AssetSync-Agent-ID' => $agentid);
     }
 
     if ($bearer_token) {
@@ -253,7 +253,7 @@ sub sendContent {
     if ($options->{debug}) {
         my $requestid = join('', map { sprintf("%02X", int(rand(256))) } 1..4);
         print "[$requestid] ";
-        $request->header('GLPI-Request-ID' => $requestid);
+        $request->header('AssetSync-Request-ID' => $requestid);
         print "[agentid:$agentid] " if $agentid;
     }
 
@@ -267,7 +267,7 @@ sub sendContent {
             print "DEBUG: Uncompressing received content\n" if $options->{debug};
             $content = uncompress($content);
         }
-        my $xml = GLPI::Agent::XML->new(string => $content);
+        my $xml = AssetSync::Agent::XML->new(string => $content);
         my $tree = $xml->dump_as_hash()
             or die "Not an XML\n";
         $error = $tree->{REPLY}->{ERROR}
@@ -285,13 +285,13 @@ sub sendContent {
                 } elsif ($json->{status} eq "error") {
                     $error = $json->{message} // "Server failed to import" .
                         ($options->{debug} ? "" : ", use --debug option to debug");
-                } elsif ($json->{status} eq "pending" && $res->header('GLPI-Request-ID')) {
+                } elsif ($json->{status} eq "pending" && $res->header('AssetSync-Request-ID')) {
                     print "DEBUG, CONTENT: $content\n" if defined($content) && $options->{debug};
                     print "waiting for proxy, ";
                     # Next request should be a GET with expected RequestID and no content
                     $request->method("GET");
                     $request->content("");
-                    $request->header("GLPI-Request-ID" => $res->header('GLPI-Request-ID'));
+                    $request->header("AssetSync-Request-ID" => $res->header('AssetSync-Request-ID'));
                     my $max_pending_request = 12;
                     while ($max_pending_request--) {
                         my $expiration = $json->{expiration} // "";
@@ -317,7 +317,7 @@ sub sendContent {
                 }
             };
             if ($EVAL_ERROR) {
-                $error = "Failed to parse GLPI JSON answer" .
+                $error = "Failed to parse AssetSync JSON answer" .
                     ($options->{debug} ? "" : ", use --debug option to debug");
             }
         } else {
@@ -345,11 +345,11 @@ __END__
 
 =head1 NAME
 
-glpi-injector - A tool to push inventory in an OCS Inventory or compatible server.
+assetsync-injector - A tool to push inventory in an OCS Inventory or compatible server.
 
 =head1 SYNOPSIS
 
-glpi-injector [-h|--help] [-R|--recursive] [-r|--remove] [-v|--verbose] [--debug]
+assetsync-injector [-h|--help] [-R|--recursive] [-r|--remove] [-v|--verbose] [--debug]
     [--useragent <user-agent>|-x|--xml-ua|--json-ua] [-C|--no-compression]
     [--no-ssl-check] [--ssl-cert-file <private certificate file>] [[-P|--proxy] <proxy url>]
     [[-f|--file] <file>|[-d|--directory] <directory>|--stdin] [-u|--url] <url>
@@ -377,8 +377,8 @@ glpi-injector [-h|--help] [-R|--recursive] [-r|--remove] [-v|--verbose] [--debug
                    oauth client secret to request oauth access token
 
   Examples:
-    glpi-injector -v -f /tmp/toto-2010-09-10-11-42-22.json --url https://login:pw@example/
-    glpi-injector -v -R -d /srv/ftp/fusion --url https://login:pw@example/
+    assetsync-injector -v -f /tmp/toto-2010-09-10-11-42-22.json --url https://login:pw@example/
+    assetsync-injector -v -R -d /srv/ftp/fusion --url https://login:pw@example/
 
 =head1 DESCRIPTION
 

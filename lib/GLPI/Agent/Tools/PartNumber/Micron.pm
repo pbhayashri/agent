@@ -1,9 +1,9 @@
-package GLPI::Agent::Tools::PartNumber::Micron;
+package AssetSync::Agent::Tools::PartNumber::Micron;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Tools::PartNumber';
+use parent 'AssetSync::Agent::Tools::PartNumber';
 
 # https://www.micron.com/products/dram-modules/rdimm/part-catalog
 

@@ -9,8 +9,8 @@ use Test::Exception;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Linux::Networks::FibreChannel;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Linux::Networks::FibreChannel;
 
 my %tests = (
     'sample1' => [
@@ -33,11 +33,11 @@ my %tests = (
 
 plan tests => (2 * scalar keys %tests) + 1;
 
-my $inventory = GLPI::Test::Inventory->new();
+my $inventory = AssetSync::Test::Inventory->new();
 
 foreach my $test (keys %tests) {
     my $file = "resources/linux/systool/$test";
-    my @interfaces = GLPI::Agent::Task::Inventory::Linux::Networks::FibreChannel::_getInterfacesFromFcHost(file => $file);
+    my @interfaces = AssetSync::Agent::Task::Inventory::Linux::Networks::FibreChannel::_getInterfacesFromFcHost(file => $file);
     cmp_deeply(\@interfaces, $tests{$test}, "$test: parsing");
     lives_ok {
         $inventory->addEntry(section => 'NETWORKS', entry => $_) foreach @interfaces;

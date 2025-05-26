@@ -7,7 +7,7 @@ use Test::Deep;
 use Test::More;
 use Test::NoWarnings;
 
-use GLPI::Agent::Tools::Solaris;
+use AssetSync::Agent::Tools::Solaris;
 
 my %prtconf_tests = (
     sparc1 => {

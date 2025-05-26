@@ -8,18 +8,18 @@ use English qw(-no_match_vars);
 use File::Temp;
 use Test::More;
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::XML;
-use GLPI::Test::Utils;
-use GLPI::Agent::Version;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::XML;
+use AssetSync::Test::Utils;
+use AssetSync::Agent::Version;
 
-my $PROVIDER = $GLPI::Agent::Version::PROVIDER;
+my $PROVIDER = $AssetSync::Agent::Version::PROVIDER;
 
 plan tests => 36;
 
 my ($content, $out, $err, $rc);
 
-($out, $err, $rc) = run_executable('glpi-agent', '--help');
+($out, $err, $rc) = run_executable('assetsync-agent', '--help');
 ok($rc == 0, '--help exit status');
 is($err, '', '--help stderr');
 like(
@@ -28,7 +28,7 @@ like(
     '--help stdout'
 );
 
-($out, $err, $rc) = run_executable('glpi-agent', '--version');
+($out, $err, $rc) = run_executable('assetsync-agent', '--version');
 ok($rc == 0, '--version exit status');
 is($err, '', '--version stderr');
 like(
@@ -37,7 +37,7 @@ like(
     '--version stdout'
 );
 
-($out, $err, $rc) = run_executable('glpi-agent', '--config none');
+($out, $err, $rc) = run_executable('assetsync-agent', '--config none');
 ok($rc == 1, 'no target exit status');
 like(
     $err,
@@ -47,7 +47,7 @@ like(
 is($out, '', 'no target stdout');
 
 ($out, $err, $rc) = run_executable(
-    'glpi-agent',
+    'assetsync-agent',
     '--config none --conf-file /foo/bar'
 );
 ok($rc == 1, 'incompatible options exit status');
@@ -66,7 +66,7 @@ $base_options .= " --vardir $vardir";
 
 # first inventory
 ($out, $err, $rc) = run_executable(
-    'glpi-agent',
+    'assetsync-agent',
     "$base_options --local - --no-category printer"
 );
 
@@ -97,7 +97,7 @@ ok(
 
 # second inventory, without software
 ($out, $err, $rc) = run_executable(
-    'glpi-agent',
+    'assetsync-agent',
     "$base_options --local - --no-category printer,software"
 );
 
@@ -133,7 +133,7 @@ EOF
 close($file);
 
 ($out, $err, $rc) = run_executable(
-    'glpi-agent',
+    'assetsync-agent',
     "$base_options --local - --no-category printer,software --additional-content $file"
 );
 subtest "third inventory execution and content" => sub {
@@ -168,7 +168,7 @@ my $name = $OSNAME eq 'MSWin32' ? 'OS' : 'PATH';
 my $value = $ENV{$name};
 
 ($out, $err, $rc) = run_executable(
-    'glpi-agent',
+    'assetsync-agent',
     "$base_options --local - --no-category printer,software"
 );
 
@@ -196,7 +196,7 @@ ok(
 );
 
 ($out, $err, $rc) = run_executable(
-    'glpi-agent',
+    'assetsync-agent',
     "$base_options --local - --no-category printer,software,environment"
 );
 
@@ -218,7 +218,7 @@ ok(
 # output location tests
 my $dir = File::Temp->newdir(CLEANUP => 1);
 ($out, $err, $rc) = run_executable(
-    'glpi-agent',
+    'assetsync-agent',
     "$base_options --local $dir"
 );
 subtest "--local <directory> inventory execution" => sub {
@@ -227,7 +227,7 @@ subtest "--local <directory> inventory execution" => sub {
 ok(<$dir/*.xml>, '--local <directory> result file presence');
 
 ($out, $err, $rc) = run_executable(
-    'glpi-agent', "$base_options --local $dir/foo"
+    'assetsync-agent', "$base_options --local $dir/foo"
 );
 subtest "--local <file> inventory execution" => sub {
     check_execution_ok($err, $rc);
@@ -236,7 +236,7 @@ ok(-f "$dir/foo", '--local <file> result file presence');
 
 # consecutive lazy inventory with fake server target, no inventory and no failure
 ($out, $err, $rc) = run_executable(
-    'glpi-agent',
+    'assetsync-agent',
     "$base_options --lazy --server=http://localhost/plugins/fusioninventory"
 );
 
@@ -245,7 +245,7 @@ subtest "second inventory execution and content" => sub {
 };
 
 ($out, $err, $rc) = run_executable(
-    'glpi-agent',
+    'assetsync-agent',
     "$base_options --lazy --server=http://localhost/plugins/fusioninventory"
 );
 
@@ -286,6 +286,6 @@ sub check_content_ok {
         'output has correct encoding'
     );
 
-    $content = GLPI::Agent::XML->new(string => $out)->dump_as_hash();
+    $content = AssetSync::Agent::XML->new(string => $out)->dump_as_hash();
     ok($content, 'output is valid XML');
 }

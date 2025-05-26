@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::Action;
+package AssetSync::Agent::SOAP::WsMan::Action;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package
@@ -14,8 +14,8 @@ use parent
 
 use constant    xmlns   => 'a';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::SOAP::WsMan::Attribute;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::SOAP::WsMan::Attribute;
 
 my %actions = (
     command             => "http://schemas.microsoft.com/wbem/wsman/1/windows/shell/Command",

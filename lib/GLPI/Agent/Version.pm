@@ -1,10 +1,10 @@
-package GLPI::Agent::Version;
+package AssetSync::Agent::Version;
 
 use strict;
 use warnings;
 
 our $VERSION = "1.15-dev";
-our $PROVIDER = "GLPI";
+our $PROVIDER = "AssetSync";
 our $COMMENTS = [];
 
 1;
@@ -13,7 +13,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Version - GLPI Agent version
+AssetSync::Agent::Version - AssetSync Agent version
 
 =head1 DESCRIPTION
 
@@ -31,5 +31,5 @@ agent issue is reported.
 One very useful information should be first defined like in that example:
 
 our $COMMENTS = [
-    "Based on GLPI Agent 1.15-dev"
+    "Based on AssetSync Agent 1.15-dev"
 ];

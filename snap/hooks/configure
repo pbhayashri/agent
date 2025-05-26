@@ -75,9 +75,9 @@ logfacility = LOG_DAEMON
 DEFAULT_CONF
 
 if [ -n "$RESTART" ]; then
-    set x$(snapctl services glpi-agent.daemon | tail -1)x
+    set x$(snapctl services assetsync-agent.daemon | tail -1)x
     if [ "$3" == "active" ]; then
-        snapctl restart glpi-agent.daemon
+        snapctl restart assetsync-agent.daemon
     fi
 fi
 

@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::ESX::Version;
+package AssetSync::Agent::Task::ESX::Version;
 
 use strict;
 use warnings;

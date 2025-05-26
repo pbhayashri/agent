@@ -1,9 +1,9 @@
-package GLPI::Agent::SOAP::WsMan::CommandState;
+package AssetSync::Agent::SOAP::WsMan::CommandState;
 
 use strict;
 use warnings;
 
-use GLPI::Agent::SOAP::WsMan::Node;
+use AssetSync::Agent::SOAP::WsMan::Node;
 
 ## no critic (ProhibitMultiplePackages)
 package
@@ -12,7 +12,7 @@ package
 use parent
     'Node';
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 use constant    xmlns   => 'rsp';
 

@@ -11,8 +11,8 @@ use Test::NoWarnings;
 
 use Data::Dumper;
 
-use GLPI::Test::Inventory;
-use GLPI::Agent::Task::Inventory::Generic::Ipmi::Fru::Controllers;
+use AssetSync::Test::Inventory;
+use AssetSync::Agent::Task::Inventory::Generic::Ipmi::Fru::Controllers;
 
 my %tests = (
     'dell-r630' => [
@@ -124,10 +124,10 @@ plan tests => 2 * (scalar keys %tests) + 1;
 
 foreach my $test (keys %tests) {
     my $file = "resources/generic/ipmitool/fru/$test";
-    my $inventory = GLPI::Test::Inventory->new();
+    my $inventory = AssetSync::Test::Inventory->new();
 
     lives_ok {
-        GLPI::Agent::Task::Inventory::Generic::Ipmi::Fru::Controllers::doInventory(
+        AssetSync::Agent::Task::Inventory::Generic::Ipmi::Fru::Controllers::doInventory(
             inventory => $inventory,
             file      => $file
         );

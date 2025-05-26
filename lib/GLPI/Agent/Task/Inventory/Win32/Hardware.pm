@@ -1,15 +1,15 @@
-package GLPI::Agent::Task::Inventory::Win32::Hardware;
+package AssetSync::Agent::Task::Inventory::Win32::Hardware;
 
 use strict;
 use warnings;
 use integer;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Hostname;
-use GLPI::Agent::Tools::License;
-use GLPI::Agent::Tools::Win32;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Hostname;
+use AssetSync::Agent::Tools::License;
+use AssetSync::Agent::Tools::Win32;
 
 use constant    category    => "hardware";
 

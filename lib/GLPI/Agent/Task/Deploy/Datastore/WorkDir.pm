@@ -1,4 +1,4 @@
-package GLPI::Agent::Task::Deploy::Datastore::WorkDir;
+package AssetSync::Agent::Task::Deploy::Datastore::WorkDir;
 
 use strict;
 use warnings;
@@ -9,8 +9,8 @@ use File::Spec;
 use UNIVERSAL::require;
 use Encode qw(encode is_utf8);
 
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Archive;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Archive;
 
 sub new {
     my ($class, %params) = @_;
@@ -49,8 +49,8 @@ sub prepare {
         $file->{name_local} = $file->{name};
 
         if ($OSNAME eq 'MSWin32') {
-            GLPI::Agent::Tools::Win32->require;
-            my $localCodepage = GLPI::Agent::Tools::Win32::getLocalCodepage();
+            AssetSync::Agent::Tools::Win32->require;
+            my $localCodepage = AssetSync::Agent::Tools::Win32::getLocalCodepage();
             $file->{name_local} = encode($localCodepage, $file->{name})
                 if is_utf8($file->{name});
         }
@@ -122,7 +122,7 @@ sub prepare {
                     unlink($tarballpath);
                 }
             } else {
-                my $archive = GLPI::Agent::Tools::Archive->new( archive => $finalFilePath );
+                my $archive = AssetSync::Agent::Tools::Archive->new( archive => $finalFilePath );
                 if (!$archive) {
                     $logger->info("Failed to create Archive object");
                 } elsif (!$archive->extract( to => $self->{path} )) {

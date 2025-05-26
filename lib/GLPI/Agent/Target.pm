@@ -1,13 +1,13 @@
-package GLPI::Agent::Target;
+package AssetSync::Agent::Target;
 
 use strict;
 use warnings;
 
 use English qw(-no_match_vars);
 
-use GLPI::Agent::Logger;
-use GLPI::Agent::Storage;
-use GLPI::Agent::Event;
+use AssetSync::Agent::Logger;
+use AssetSync::Agent::Storage;
+use AssetSync::Agent::Event;
 
 my $errMaxDelay = 0;
 
@@ -25,11 +25,11 @@ sub new {
 
     my $self = {
         logger       => $params{logger} ||
-                        GLPI::Agent::Logger->new(),
+                        AssetSync::Agent::Logger->new(),
         maxDelay     => $params{maxDelay} || 3600,
         errMaxDelay  => $errMaxDelay,
         initialDelay => $params{delaytime},
-        _glpi        => $params{glpi} // '',
+        _AssetSync        => $params{assetsync} // '',
         _events      => [],
         _next_event  => {},
     };
@@ -49,7 +49,7 @@ sub _init {
     # Initialize logger prefix
     $self->{_logprefix} = "[target $self->{id}]";
 
-    $self->{storage} = GLPI::Agent::Storage->new(
+    $self->{storage} = AssetSync::Agent::Storage->new(
         logger    => $self->{logger},
         oldvardir => $params{oldvardir} // "",
         directory => $params{vardir}
@@ -166,7 +166,7 @@ sub triggerTaskInitEvents {
     return unless $self->{tasks} && @{$self->{tasks}};
 
     foreach my $task (@{$self->{tasks}}) {
-        push @{$self->{_events}}, GLPI::Agent::Event->new(
+        push @{$self->{_events}}, AssetSync::Agent::Event->new(
             task    => $task,
             init    => "yes",
             rundate => time+10,
@@ -213,7 +213,7 @@ sub triggerRunTasksNow {
             }
         }
 
-        $self->addEvent(GLPI::Agent::Event->new(%event), 1);
+        $self->addEvent(AssetSync::Agent::Event->new(%event), 1);
     }
 
     # Also reset cached responses
@@ -377,7 +377,7 @@ sub isType {
     return "$type" eq "$testtype";
 }
 
-sub isGlpiServer {
+sub isAssetSyncServer {
     return 0;
 }
 
@@ -415,8 +415,8 @@ sub _loadState {
         maxDelay nextRunDate id baseRunDate
     /;
 
-    # Update us as GLPI server is recognized as so before
-    $self->isGlpiServer(1) if $data->{is_glpi_server};
+    # Update us as AssetSync server is recognized as so before
+    $self->isAssetSyncServer(1) if $data->{is_AssetSync_server};
 }
 
 sub _saveState {
@@ -426,19 +426,19 @@ sub _saveState {
         maxDelay    => $self->{maxDelay},
         nextRunDate => $self->{nextRunDate},
         baseRunDate => $self->{baseRunDate},
-        type        => $self->getType(),                 # needed by glpi-remote
-        id          => $self->id(),                      # needed by glpi-remote
+        type        => $self->getType(),                 # needed by assetsync-remote
+        id          => $self->id(),                      # needed by assetsync-remote
     };
 
     if ($self->isType('server')) {
-        # Add a flag if we are a GLPI server target
-        $data->{is_glpi_server} = 1 if $self->isGlpiServer();
+        # Add a flag if we are a AssetSync server target
+        $data->{is_AssetSync_server} = 1 if $self->isAssetSyncServer();
         my $url = $self->getUrl();
         if (ref($url) =~ /^URI/) {
-            $data->{url} = $url->as_string;              # needed by glpi-remote
+            $data->{url} = $url->as_string;              # needed by assetsync-remote
         }
     } elsif ($self->isType('local')) {
-        $data->{path} = $self->getPath();                # needed by glpi-remote
+        $data->{path} = $self->getPath();                # needed by assetsync-remote
     }
 
     $self->{storage}->save(
@@ -461,7 +461,7 @@ sub _needToReloadState {
 sub getTaskVersion {
     my ($self) = @_;
 
-    return $self->{_glpi};
+    return $self->{_AssetSync};
 }
 
 sub responses {
@@ -475,7 +475,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Target - Abstract target
+AssetSync::Agent::Target - Abstract target
 
 =head1 DESCRIPTION
 

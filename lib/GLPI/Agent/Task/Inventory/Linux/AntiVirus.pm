@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::Inventory::Linux::AntiVirus;
+package AssetSync::Agent::Task::Inventory::Linux::AntiVirus;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task::Inventory::Module';
+use parent 'AssetSync::Agent::Task::Inventory::Module';
 
 use constant    category    => "antivirus";
 

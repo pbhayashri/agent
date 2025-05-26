@@ -1,4 +1,4 @@
-package GLPI::Agent::Config;
+package AssetSync::Agent::Config;
 
 use strict;
 use warnings;
@@ -9,9 +9,9 @@ use Cwd qw(abs_path);
 use Getopt::Long;
 use UNIVERSAL::require;
 
-use GLPI::Agent::Version;
+use AssetSync::Agent::Version;
 
-use GLPI::Agent::Tools;
+use AssetSync::Agent::Tools;
 
 my $default = {
     'additional-content'      => undef,
@@ -23,7 +23,7 @@ my $default = {
     'debug'                   => undef,
     'delaytime'               => 3600,
     'esx-itemtype'            => undef,
-    'glpi-version'            => undef,
+    'assetsync-version'            => undef,
     'itemtype'                => undef,
     'remote-scheduling'       => 0,
     'remote-workers'          => 1,
@@ -198,7 +198,7 @@ sub _loadFromRegistry {
         Access => Win32::TieRegistry::KEY_READ()
     }) or die "Config: Can't open HKEY_LOCAL_MACHINE key: $EXTENDED_OS_ERROR\n";
 
-    my $provider = $GLPI::Agent::Version::PROVIDER;
+    my $provider = $AssetSync::Agent::Version::PROVIDER;
     my $settings = $machKey->{"SOFTWARE/$provider-Agent"};
 
     foreach my $rawKey (keys %$settings) {
@@ -416,11 +416,11 @@ sub getTargets {
 
     # create target list
     if ($self->{local}) {
-        GLPI::Agent::Target::Local->require();
-        GLPI::Agent::Target::Local->reset();
+        AssetSync::Agent::Target::Local->require();
+        AssetSync::Agent::Target::Local->reset();
         foreach my $path (@{$self->{local}}) {
             push @targets,
-                GLPI::Agent::Target::Local->new(
+                AssetSync::Agent::Target::Local->new(
                     logger     => $params{logger},
                     maxDelay   => $self->{delaytime},
                     delaytime  => $self->{delaytime} > 3600 ? 3600 : $self->{delaytime},
@@ -428,22 +428,22 @@ sub getTargets {
                     path       => $path,
                     html       => $self->{html},
                     json       => $self->{json},
-                    glpi       => $self->{"glpi-version"},
+                    assetsync       => $self->{"assetsync-version"},
                 );
         }
     }
 
     if ($self->{server}) {
-        GLPI::Agent::Target::Server->require();
-        GLPI::Agent::Target::Server->reset();
+        AssetSync::Agent::Target::Server->require();
+        AssetSync::Agent::Target::Server->reset();
         foreach my $url (@{$self->{server}}) {
-            push @targets, GLPI::Agent::Target::Server->new(
+            push @targets, AssetSync::Agent::Target::Server->new(
                 logger     => $params{logger},
                 delaytime  => $self->{delaytime},
                 basevardir => $params{vardir},
                 url        => $url,
                 tag        => $self->{tag},
-                glpi       => $self->{"glpi-version"},
+                assetsync       => $self->{"assetsync-version"},
             );
         }
     }
@@ -451,16 +451,16 @@ sub getTargets {
     # Only add listener target if no other target has been defined and
     # httpd daemon is enabled. And anyway only one listener should be enabled
     if ($self->{listen} && !@targets && !$self->{'no-httpd'}) {
-        GLPI::Agent::Target::Listener->require();
+        AssetSync::Agent::Target::Listener->require();
         if ($EVAL_ERROR) {
-            die "Config: Failure while loading GLPI::Agent::Target::Listener: $EVAL_ERROR\n";
+            die "Config: Failure while loading AssetSync::Agent::Target::Listener: $EVAL_ERROR\n";
         }
         push @targets,
-            GLPI::Agent::Target::Listener->new(
+            AssetSync::Agent::Target::Listener->new(
                 logger     => $params{logger},
                 delaytime  => $self->{delaytime},
                 basevardir => $params{vardir},
-                glpi       => $self->{"glpi-version"},
+                assetsync       => $self->{"assetsync-version"},
             );
     }
 
@@ -472,7 +472,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Config - Agent configuration
+AssetSync::Agent::Config - Agent configuration
 
 =head1 DESCRIPTION
 

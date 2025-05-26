@@ -11,7 +11,7 @@
              Languages='1033' SummaryCodepage="1252" Comments="$(var.PkgComments)"
              InstallerVersion='200' Compressed='yes' InstallPrivileges='elevated' InstallScope="perMachine" />
 
-    <Media Id='1' Cabinet='GLPIAgent.cab' CompressionLevel='high' EmbedCab='yes' />
+    <Media Id='1' Cabinet='AssetSyncAgent.cab' CompressionLevel='high' EmbedCab='yes' />
 
     <Property Id="ARPCOMMENTS" Value="$(var.ProductName)" />
     <Property Id="ARPCONTACT" Value="$(var.Manufacturer)" />
@@ -377,11 +377,11 @@
     <SetProperty Id="CMDLINE_FULL_INVENTORY_POSTPONE" Before="AppSearch" Value="[FULL_INVENTORY_POSTPONE]" />
     <SetProperty Id="FULL_INVENTORY_POSTPONE"         After="AppSearch"  Value="[CMDLINE_FULL_INVENTORY_POSTPONE]"><![CDATA[CMDLINE_FULL_INVENTORY_POSTPONE<>"" OR CMDLINE_CONFIG="reset"]]></SetProperty>
 
-    <Property Id="GLPI_VERSION" Secure="yes">
-      <RegistrySearch Id="GlpiVersion" Root="HKLM" Key="[%agent_regpath%]" Name="glpi-version" Type="raw"/>
+    <Property Id="AssetSync_VERSION" Secure="yes">
+      <RegistrySearch Id="AssetSyncVersion" Root="HKLM" Key="[%agent_regpath%]" Name="assetsync-version" Type="raw"/>
     </Property>
-    <SetProperty Id="CMDLINE_GLPI_VERSION" Before="AppSearch" Value="[GLPI_VERSION]" />
-    <SetProperty Id="GLPI_VERSION"         After="AppSearch"  Value="[CMDLINE_GLPI_VERSION]"><![CDATA[CMDLINE_GLPI_VERSION<>"" OR CMDLINE_CONFIG="reset"]]></SetProperty>
+    <SetProperty Id="CMDLINE_AssetSync_VERSION" Before="AppSearch" Value="[AssetSync_VERSION]" />
+    <SetProperty Id="AssetSync_VERSION"         After="AppSearch"  Value="[CMDLINE_AssetSync_VERSION]"><![CDATA[CMDLINE_AssetSync_VERSION<>"" OR CMDLINE_CONFIG="reset"]]></SetProperty>
 
     <!-- Configuration defaults after handling command line and registry checks -->
     <SetProperty Id="DEBUG"                   Action="DEBUG_Default"                    After="LaunchConditions"  Value="0"><![CDATA[NOT DEBUG OR (DEBUG<>"1" AND DEBUG<>"2")]]></SetProperty>
@@ -478,7 +478,7 @@
     <CustomAction Id="CA_GetARPInstallLoc" Property="INSTALLDIR"         Value="[UPGRADEDIR]" Execute="immediate" />
     <CustomAction Id="CA_SetARPInstallLoc" Property="ARPINSTALLLOCATION" Value="[INSTALLDIR]" Execute="immediate" />
 
-    <CustomAction Id="SetDefaultLogFile"   Property="LOGFILE" Value="[INSTALLDIR]logs\glpi-agent.log" Execute="firstSequence" />
+    <CustomAction Id="SetDefaultLogFile"   Property="LOGFILE" Value="[INSTALLDIR]logs\assetsync-agent.log" Execute="firstSequence" />
     <CustomAction Id="SetDefaultVarDir"    Property="VARDIR"  Value="[INSTALLDIR]var" Execute="firstSequence" />
 
 [%- IF bits==32 %]
@@ -500,7 +500,7 @@
 [%- END %]
     <CustomAction Id="AddFirewallExceptionOut" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no"/>
 
-    <!-- GLPI Agent 1.0 to 1.2 installers was creating wrongly named firewall rules, prepare CustomAction to clean up them -->
+    <!-- AssetSync Agent 1.0 to 1.2 installers was creating wrongly named firewall rules, prepare CustomAction to clean up them -->
 [%- IF bits==32 %]
     <CustomAction Id="SetDeleteWrongFirewallRuleInCmd"  Property="DeleteFirewallWrongIn"  Value="&quot;[SystemFolder]netsh.exe&quot; advfirewall firewall delete rule name=&quot;program=description= embedded HTTP server incoming traffic&quot;" Execute="immediate" />
 [%- ELSE %]
@@ -520,9 +520,9 @@
 [%- END %]
     <CustomAction Id="DeleteFirewallWrongExe" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no"/>
 
-    <CustomAction Id="SetForceRun" Property="ForceRun" Value="&quot;[#f_glpiagent]&quot; --set-forcerun" Execute="immediate" />
+    <CustomAction Id="SetForceRun" Property="ForceRun" Value="&quot;[#f_AssetSyncagent]&quot; --set-forcerun" Execute="immediate" />
     <CustomAction Id="ForceRun" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no"/>
-    <CustomAction Id="SetRunNow" Property="RunNow" Value="&quot;[#f_glpiagent]&quot; --force" Execute="immediate" />
+    <CustomAction Id="SetRunNow" Property="RunNow" Value="&quot;[#f_AssetSyncagent]&quot; --force" Execute="immediate" />
     <CustomAction Id="RunNow" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no"/>
 
 [%- IF bits==32 %]
@@ -538,21 +538,21 @@
 [%- END %]
     <CustomAction Id="DeleteTask" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no"/>
 [%- IF bits==32 %]
-    <CustomAction Id="SetTaskMinute" Property="TaskMinute" Value="&quot;[SystemFolder]schtasks.exe&quot; /f /tn &quot;$(var.AgentName)&quot; /create /ru system /tr '&quot;[#f_glpiagent]&quot;' /sc minute /mo [TASK_MINUTE_MODIFIER]" Execute="immediate" />
+    <CustomAction Id="SetTaskMinute" Property="TaskMinute" Value="&quot;[SystemFolder]schtasks.exe&quot; /f /tn &quot;$(var.AgentName)&quot; /create /ru system /tr '&quot;[#f_AssetSyncagent]&quot;' /sc minute /mo [TASK_MINUTE_MODIFIER]" Execute="immediate" />
 [%- ELSE %]
-    <CustomAction Id="SetTaskMinute" Property="TaskMinute" Value="&quot;[System64Folder]schtasks.exe&quot; /f /tn &quot;$(var.AgentName)&quot; /create /ru system /tr '&quot;[#f_glpiagent]&quot;' /sc minute /mo [TASK_MINUTE_MODIFIER]" Execute="immediate" />
+    <CustomAction Id="SetTaskMinute" Property="TaskMinute" Value="&quot;[System64Folder]schtasks.exe&quot; /f /tn &quot;$(var.AgentName)&quot; /create /ru system /tr '&quot;[#f_AssetSyncagent]&quot;' /sc minute /mo [TASK_MINUTE_MODIFIER]" Execute="immediate" />
 [%- END %]
     <CustomAction Id="TaskMinute" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no"/>
 [%- IF bits==32 %]
-    <CustomAction Id="SetTaskHourly" Property="TaskHourly" Value="&quot;[SystemFolder]schtasks.exe&quot; /f /tn &quot;$(var.AgentName)&quot; /create /ru system /tr '&quot;[#f_glpiagent]&quot;' /sc hourly /mo [TASK_HOURLY_MODIFIER]" Execute="immediate" />
+    <CustomAction Id="SetTaskHourly" Property="TaskHourly" Value="&quot;[SystemFolder]schtasks.exe&quot; /f /tn &quot;$(var.AgentName)&quot; /create /ru system /tr '&quot;[#f_AssetSyncagent]&quot;' /sc hourly /mo [TASK_HOURLY_MODIFIER]" Execute="immediate" />
 [%- ELSE %]
-    <CustomAction Id="SetTaskHourly" Property="TaskHourly" Value="&quot;[System64Folder]schtasks.exe&quot; /f /tn &quot;$(var.AgentName)&quot; /create /ru system /tr '&quot;[#f_glpiagent]&quot;' /sc hourly /mo [TASK_HOURLY_MODIFIER]" Execute="immediate" />
+    <CustomAction Id="SetTaskHourly" Property="TaskHourly" Value="&quot;[System64Folder]schtasks.exe&quot; /f /tn &quot;$(var.AgentName)&quot; /create /ru system /tr '&quot;[#f_AssetSyncagent]&quot;' /sc hourly /mo [TASK_HOURLY_MODIFIER]" Execute="immediate" />
 [%- END %]
     <CustomAction Id="TaskHourly" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no"/>
 [%- IF bits==32 %]
-    <CustomAction Id="SetTaskDaily" Property="TaskDaily" Value="&quot;[SystemFolder]schtasks.exe&quot; /f /tn &quot;$(var.AgentName)&quot; /create /ru system /tr '&quot;[#f_glpiagent]&quot;' /sc daily /mo [TASK_DAILY_MODIFIER]" Execute="immediate" />
+    <CustomAction Id="SetTaskDaily" Property="TaskDaily" Value="&quot;[SystemFolder]schtasks.exe&quot; /f /tn &quot;$(var.AgentName)&quot; /create /ru system /tr '&quot;[#f_AssetSyncagent]&quot;' /sc daily /mo [TASK_DAILY_MODIFIER]" Execute="immediate" />
 [%- ELSE %]
-    <CustomAction Id="SetTaskDaily" Property="TaskDaily" Value="&quot;[System64Folder]schtasks.exe&quot; /f /tn &quot;$(var.AgentName)&quot; /create /ru system /tr '&quot;[#f_glpiagent]&quot;' /sc daily /mo [TASK_DAILY_MODIFIER]" Execute="immediate" />
+    <CustomAction Id="SetTaskDaily" Property="TaskDaily" Value="&quot;[System64Folder]schtasks.exe&quot; /f /tn &quot;$(var.AgentName)&quot; /create /ru system /tr '&quot;[#f_AssetSyncagent]&quot;' /sc daily /mo [TASK_DAILY_MODIFIER]" Execute="immediate" />
 [%- END %]
     <CustomAction Id="TaskDaily" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no"/>
 
@@ -631,7 +631,7 @@
       <Custom Action="SetRunNow" Before="RunNow"><![CDATA[RUNNOW=1 AND NOT EXECMODE=1 AND NOT REMOVE~="ALL"]]></Custom>
       <Custom Action="RunNow" Before="InstallFinalize"><![CDATA[RUNNOW=1 AND NOT EXECMODE=1 AND NOT REMOVE~="ALL"]]></Custom>
 
-      <!-- GLPI Agent 1.0 to 1.2 installers was creating wrongly named firewall rules, be sure to clean up them on any new install -->
+      <!-- AssetSync Agent 1.0 to 1.2 installers was creating wrongly named firewall rules, be sure to clean up them on any new install -->
       <Custom Action="SetDeleteWrongFirewallRuleInCmd" Before="DeleteFirewallWrongIn" />
       <Custom Action="DeleteFirewallWrongIn" Before="InstallFiles" />
       <Custom Action="SetDeleteWrongFirewallRuleOutCmd" Before="DeleteFirewallWrongOut" />
@@ -844,7 +844,7 @@
         <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.BrowseLocalDlgTitle)" />
       </Dialog>
 
-      <!-- Dedicated dialog to setup GLPI server SSL options -->
+      <!-- Dedicated dialog to setup AssetSync server SSL options -->
       <Dialog Id="ServerSSLSetupDlg" Width="370" Height="270" Title="!(loc.ServerSSLSetupDlgTitle)">
         <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" Text="Bmp_MainBanner" TabSkip="no" />
         <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
@@ -1183,9 +1183,9 @@
     </Directory>     <!-- TARGETDIR -->
 
 [%- IF bits==32 %]
-    <util:CloseApplication Id="CloseGlpiAgentMonitor" Target="GLPI-AgentMonitor-x86.exe" TerminateProcess="0" RebootPrompt="no"></util:CloseApplication>
+    <util:CloseApplication Id="CloseAssetSyncAgentMonitor" Target="AssetSync-AgentMonitor-x86.exe" TerminateProcess="0" RebootPrompt="no"></util:CloseApplication>
 [%- ELSE %]
-    <util:CloseApplication Id="CloseGlpiAgentMonitor" Target="GLPI-AgentMonitor-x64.exe" TerminateProcess="0" RebootPrompt="no"></util:CloseApplication>
+    <util:CloseApplication Id="CloseAssetSyncAgentMonitor" Target="AssetSync-AgentMonitor-x64.exe" TerminateProcess="0" RebootPrompt="no"></util:CloseApplication>
 [%- END %]
 
     <Feature Id="feat_MSI"  Title="!(loc.ProductTitle)" Description="!(loc.ProductDescription)" Level="1" Display="expand" Absent="disallow">

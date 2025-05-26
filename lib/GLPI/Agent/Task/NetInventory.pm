@@ -1,9 +1,9 @@
-package GLPI::Agent::Task::NetInventory;
+package AssetSync::Agent::Task::NetInventory;
 
 use strict;
 use warnings;
 
-use parent 'GLPI::Agent::Task';
+use parent 'AssetSync::Agent::Task';
 
 use English qw(-no_match_vars);
 use Time::HiRes qw(usleep);
@@ -11,19 +11,19 @@ use UNIVERSAL::require;
 use Parallel::ForkManager;
 use File::Path qw(mkpath);
 
-use GLPI::Agent::Version;
-use GLPI::Agent::Tools;
-use GLPI::Agent::Tools::Hardware;
-use GLPI::Agent::Tools::Network;
-use GLPI::Agent::Tools::Expiration;
-use GLPI::Agent::HTTP::Client::OCS;
+use AssetSync::Agent::Version;
+use AssetSync::Agent::Tools;
+use AssetSync::Agent::Tools::Hardware;
+use AssetSync::Agent::Tools::Network;
+use AssetSync::Agent::Tools::Expiration;
+use AssetSync::Agent::HTTP::Client::OCS;
 # We need to preload MibSupport configuration before running threads
-use GLPI::Agent::SNMP::MibSupport;
+use AssetSync::Agent::SNMP::MibSupport;
 
-use GLPI::Agent::Task::NetInventory::Version;
-use GLPI::Agent::Task::NetInventory::Job;
+use AssetSync::Agent::Task::NetInventory::Version;
+use AssetSync::Agent::Task::NetInventory::Job;
 
-our $VERSION = GLPI::Agent::Task::NetInventory::Version::VERSION;
+our $VERSION = AssetSync::Agent::Task::NetInventory::Version::VERSION;
 
 sub isEnabled {
     my ($self, $contact) = @_;
@@ -33,8 +33,8 @@ sub isEnabled {
         return;
     }
 
-    if (ref($contact) ne 'GLPI::Agent::XML::Response') {
-        # TODO Support NetInventory task via GLPI Agent Protocol
+    if (ref($contact) ne 'AssetSync::Agent::XML::Response') {
+        # TODO Support NetInventory task via AssetSync Agent Protocol
         $self->{logger}->debug("NetInventory task not supported by server");
         return;
     }
@@ -86,7 +86,7 @@ sub isEnabled {
             next;
         }
 
-        push @jobs, GLPI::Agent::Task::NetInventory::Job->new(
+        push @jobs, AssetSync::Agent::Task::NetInventory::Job->new(
             logger      => $self->{logger},
             params      => $params,
             credentials => $option->{AUTHENTICATION},
@@ -114,7 +114,7 @@ sub run {
     $SIG{TERM} = sub { $abort = 1; };
 
     # Preload MibSupport
-    GLPI::Agent::SNMP::MibSupport::preload(
+    AssetSync::Agent::SNMP::MibSupport::preload(
         config  => $self->{config},
         logger  => $self->{logger}
     );
@@ -134,7 +134,7 @@ sub run {
     my $skip_start_stop = 0;
     foreach my $job (@{$self->{jobs}}) {
         $devices_count += $job->count();
-        # Support glpi-netdiscovery --control option
+        # Support assetsync-netdiscovery --control option
         $self->{_control} = $job->control;
         # newer server won't need START message if PID is provided on <DEVICE/>
         next if $skip_start_stop;
@@ -345,10 +345,10 @@ sub _logExpirationHours {
 sub _sendMessage {
     my ($self, $content, $ip) = @_;
 
-    # Load GLPI::Agent::XML::Query as late as possible
-    return unless GLPI::Agent::XML::Query->require();
+    # Load AssetSync::Agent::XML::Query as late as possible
+    return unless AssetSync::Agent::XML::Query->require();
 
-    my $message = GLPI::Agent::XML::Query->new(
+    my $message = AssetSync::Agent::XML::Query->new(
         deviceid => $self->{deviceid} || 'foo',
         query    => 'SNMPQUERY',
         content  => $content
@@ -384,7 +384,7 @@ sub _sendMessage {
 
     } elsif ($self->{target}->isType('server')) {
         unless ($self->{client}) {
-            $self->{client} = GLPI::Agent::HTTP::Client::OCS->new(
+            $self->{client} = AssetSync::Agent::HTTP::Client::OCS->new(
                 logger  => $self->{logger},
                 config  => $self->{config},
             );
@@ -403,7 +403,7 @@ sub _sendStartMessage {
     $self->_sendMessage({
         AGENT => {
             START        => 1,
-            AGENTVERSION => $GLPI::Agent::Version::VERSION,
+            AGENTVERSION => $AssetSync::Agent::Version::VERSION,
         },
         MODULEVERSION => $VERSION,
         PROCESSNUMBER => $pid
@@ -465,9 +465,9 @@ sub _queryDevice {
 
     my $snmp;
     if ($device->{FILE}) {
-        GLPI::Agent::SNMP::Mock->require();
+        AssetSync::Agent::SNMP::Mock->require();
         eval {
-            $snmp = GLPI::Agent::SNMP::Mock->new(
+            $snmp = AssetSync::Agent::SNMP::Mock->new(
                 ip   => $device->{IP},
                 file => $device->{FILE}
             );
@@ -475,9 +475,9 @@ sub _queryDevice {
         die "SNMP emulation error: $EVAL_ERROR" if $EVAL_ERROR;
     } else {
         eval {
-            GLPI::Agent::SNMP::Live->require();
-            # AUTHPASSPHRASE & PRIVPASSPHRASE are deprecated but still used by FusionInventory for GLPI plugin
-            $snmp = GLPI::Agent::SNMP::Live->new(
+            AssetSync::Agent::SNMP::Live->require();
+            # AUTHPASSPHRASE & PRIVPASSPHRASE are deprecated but still used by FusionInventory for AssetSync plugin
+            $snmp = AssetSync::Agent::SNMP::Live->new(
                 version      => $credential->{VERSION},
                 hostname     => $device->{IP},
                 port         => $device->{PORT},
@@ -496,8 +496,8 @@ sub _queryDevice {
         die "SNMP communication error: $EVAL_ERROR" if $EVAL_ERROR;
     }
 
-    my $glpi_version = $self->{target}->isType('server') ? $self->{target}->getTaskVersion('inventory') : '';
-    $glpi_version = $self->{config}->{'glpi-version'} if empty($glpi_version);
+    my $AssetSync_version = $self->{target}->isType('server') ? $self->{target}->getTaskVersion('inventory') : '';
+    $AssetSync_version = $self->{config}->{'assetsync-version'} if empty($AssetSync_version);
 
     my $result = getDeviceFullInfo(
         id      => $device->{ID},
@@ -505,8 +505,8 @@ sub _queryDevice {
         snmp    => $snmp,
         config  => $self->{config},
         logger  => $self->{logger},
-        # Include glpi version if known so modules can verify it for supported feature
-        glpi    => $glpi_version,
+        # Include assetsync version if known so modules can verify it for supported feature
+        assetsync    => $AssetSync_version,
         datadir => $self->{datadir}
     );
 
@@ -522,7 +522,7 @@ __END__
 
 =head1 NAME
 
-GLPI::Agent::Task::NetInventory - Remote inventory support for GLPI Agent
+AssetSync::Agent::Task::NetInventory - Remote inventory support for AssetSync Agent
 
 =head1 DESCRIPTION
 
@@ -545,4 +545,4 @@ relations between devices and router/switch ports
 
 =back
 
-This task requires a GLPI server with a FusionInventory compatible plugin.
+This task requires a AssetSync server with a FusionInventory compatible plugin.

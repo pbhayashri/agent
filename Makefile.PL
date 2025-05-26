@@ -7,11 +7,11 @@ BEGIN {
 
 use inc::Module::Install;
 use English qw(-no_match_vars);
-use lib::GLPI::Agent::Version;
+use lib::AssetSync::Agent::Version;
 
-name 'GLPI-Agent';
+name 'AssetSync-Agent';
 include 'Module::AutoInstall';
-abstract 'GLPI unified Agent for UNIX, Linux, Windows and MacOSX';
+abstract 'AssetSync unified Agent for UNIX, Linux, Windows and MacOSX';
 license 'gpl';
 repository 'https://github.com/glpi-project/glpi-agent';
 version '1.15-dev';
@@ -19,9 +19,9 @@ perl_version '5.008';
 authors 'Teclib Editions';
 
 provides
-    'GLPI::Agent' => {
-        file    => 'lib/GLPI/Agent.pm',
-        version => $GLPI::Agent::Version::VERSION
+    'AssetSync::Agent' => {
+        file    => 'lib/AssetSync/Agent.pm',
+        version => $AssetSync::Agent::Version::VERSION
     };
 
 # mandatory dependencies
@@ -100,21 +100,21 @@ recommends 'Thread::Queue' => '2.01';
 # Wake-On-LAN
 recommends 'Net::Write::Layer2' => '0';
 
-install_script 'bin/glpi-agent';
-install_script 'bin/glpi-win32-service' if $OSNAME eq 'MSWin32';
-install_script 'bin/glpi-injector';
-install_script 'bin/glpi-inventory';
-install_script 'bin/glpi-wakeonlan';
-install_script 'bin/glpi-netdiscovery';
-install_script 'bin/glpi-netinventory';
-install_script 'bin/glpi-esx';
-install_script 'bin/glpi-remote';
+install_script 'bin/assetsync-agent';
+install_script 'bin/assetsync-win32-service' if $OSNAME eq 'MSWin32';
+install_script 'bin/assetsync-injector';
+install_script 'bin/assetsync-inventory';
+install_script 'bin/assetsync-wakeonlan';
+install_script 'bin/assetsync-netdiscovery';
+install_script 'bin/assetsync-netinventory';
+install_script 'bin/assetsync-esx';
+install_script 'bin/assetsync-remote';
 
 resources
-    homepage    => "http://glpi-project.org/",
+    homepage    => "http://assetsync-project.org/",
     bugtracker  => "https://github.com/glpi-project/glpi-agent/issues",
     repository  => "https://github.com/glpi-project/glpi-agent/",
-    IRC         => "irc://irc.freenode.net/#glpi";
+    IRC         => "irc://irc.freenode.net/#assetsync";
 
 makemaker_args(
     test => {
@@ -185,9 +185,9 @@ sub constants {
         INSTALLMAN3DIR       => '$(PREFIX)/share/man/man3',
         INSTALLSITEMAN3DIR   => '$(PREFIX)/share/man/man3',
         INSTALLVENDORMAN3DIR => '$(PREFIX)/share/man/man3',
-        SYSCONFDIR           => '$(PREFIX)/etc/glpi-agent',
-        DATADIR              => '$(PREFIX)/share/glpi-agent',
-        LOCALSTATEDIR        => '$(PREFIX)/var/glpi-agent',
+        SYSCONFDIR           => '$(PREFIX)/etc/assetsync-agent',
+        DATADIR              => '$(PREFIX)/share/assetsync-agent',
+        LOCALSTATEDIR        => '$(PREFIX)/var/assetsync-agent',
         SNAPDIR              => '',
     );
 
@@ -261,7 +261,7 @@ config_install : pure_install
 	done
 	$(ABSPERLRUN) -pi \
 	    -e "s|=> undef, # SYSCONFDIR.*|=> '$(SNAPDIR)$(SYSCONFDIR)',|;" \
-	        $(DESTDIR)$(INSTALLSITELIB)/GLPI/Agent/Config.pm
+	        $(DESTDIR)$(INSTALLSITELIB)/AssetSync/Agent/Config.pm
 
 data_install : pure_install
 	$(MOD_INSTALL) "share" "$(DESTDIR)$(DATADIR)"
@@ -282,7 +282,7 @@ version_install : pure_install
 	    -e 'last if m|^__END__|;' \
 	    -e 's|^our \$$VERSION =.*|our \$$VERSION = "$(VERSION)";|;' \
 	    -e 's|^our \$$COMMENTS =.*|our \$$COMMENTS = [$(RAWCOMMENTS)];|;' \
-	        $(DESTDIR)$(INSTALLSITELIB)/GLPI/Agent/Version.pm
+	        $(DESTDIR)$(INSTALLSITELIB)/AssetSync/Agent/Version.pm
 EOF
     return $install;
 }
