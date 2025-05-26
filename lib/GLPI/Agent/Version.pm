@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 our $VERSION = "1.15-dev";
-our $PROVIDER = "GLPI";
+our $PROVIDER = "AssetSync";
 our $COMMENTS = [];
 
 1;
