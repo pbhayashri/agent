@@ -388,6 +388,13 @@ jobs:
           contrib/macosx/build/zlib*
           contrib/macosx/build/Applications
         key: macosx-packaging-restore-points-${{ matrix.os }}-${{ matrix.arch }}-${{ hashFiles('contrib/macosx/glpi-agent-packaging.sh') }}
+    
+    - name: Install cpanm
+      run: brew install cpanminus
+
+    - name: Install required Perl module
+      run: cpanm --notest Parallel::ForkManager
+    
     - name: Import Application Signing Cert
       id: application-signing-cert
       uses: slidoapp/import-codesign-certs@1923310662e8682dd05b76b612b53301f431cd5d
