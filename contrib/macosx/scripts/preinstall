@@ -3,7 +3,7 @@
 # Script output can be found in /var/log/install.log
 PKG="$1"
 DEST="$2"
-INSTALL_PATH="${DEST%/}/Applications/GLPI-Agent"
+INSTALL_PATH="${DEST%/}/Applications/AssetsSync-Agent"
 
 # Stop service and unload plist file if present
 # Case for glpi-agent > 1.6.1
